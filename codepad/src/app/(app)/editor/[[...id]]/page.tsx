@@ -12,7 +12,6 @@ import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from "reac
 
 
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8080";
 
 const BOILERPLATES: Record<string, string> = {
   "JAVA": `import java.util.Scanner;
@@ -213,7 +212,7 @@ export default function EditorPage({ params }: { params: Promise<{ id?: string[]
     try {
       
       
-      const response = await fetch(`${API_BASE}/api/run/stream`, {
+      const response = await fetch(`/api/run/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sourceCode: code, language }),
@@ -313,7 +312,7 @@ export default function EditorPage({ params }: { params: Promise<{ id?: string[]
     setCurrentLine("");
 
     try {
-      await fetch(`${API_BASE}/api/run/stdin/${sessionId}`, {
+      await fetch(`/api/run/stdin/${sessionId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ line }),
