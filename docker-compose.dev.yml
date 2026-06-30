@@ -1,0 +1,61 @@
+name: codepad
+
+services:
+  api-service:
+    build: 
+      context: ./api-service
+      dockerfile: Dockerfile
+    container_name: api-service
+    ports:
+      - "80:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      # RDS and S3 configs should be passed via env vars or .env in dev/prod
+      # - SPRING_DATASOURCE_URL=${RDS_URL}
+      # - SPRING_DATASOURCE_USERNAME=${RDS_USERNAME}
+      # - SPRING_DATASOURCE_PASSWORD=${RDS_PASSWORD}
+    restart: unless-stopped
+
+  judge-worker:
+    build:
+      context: ./worker-service
+      dockerfile: Dockerfile
+    container_name: worker-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - API_SERVICE_URL=http://api-service:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  env-cpp:
+    image: judge-cpp:latest
+    build:
+      context: ./worker-service/docker/envs/cpp
+    profiles: ["env-setup"]
+
+  env-java:
+    image: judge-java:latest
+    build:
+      context: ./worker-service/docker/envs/java
+    profiles: ["env-setup"]
+
+  env-javascript:
+    image: judge-javascript:latest
+    build:
+      context: ./worker-service/docker/envs/javascript
+    profiles: ["env-setup"]
+
+  env-python:
+    image: judge-python:latest
+    build:
+      context: ./worker-service/docker/envs/python
+    profiles: ["env-setup"]
+
+
+
+  env-java25:
+    image: judge-java25:latest
+    build:
+      context: ./worker-service/docker/envs/java25
+    profiles: ["env-setup"]

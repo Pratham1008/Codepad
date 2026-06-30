@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+debug: true
+
+spring:
+  application:
+    name: api-service
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      platform: postgresql
+
+
+app:
+  worker:
+    url: ${WORKER_URL:http://localhost:8081}
+  internal:
+    secret: ${INTERNAL_SECRET:change-me-in-production}
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-expiry-ms: 900000
+    refresh-token-expiry-ms: 604800000
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+
+logging:
+  level:
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    com.codepad.apiservice: DEBUG
+    org.springframework.security: TRACE
+    org.springframework.security.web.webauthn: DEBUG

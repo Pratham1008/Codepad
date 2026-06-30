@@ -1,0 +1,77 @@
+# =========================
+# Operating System Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# =========================
+# IDEs and Editors
+# =========================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# =========================
+# Node.js & Next.js (codepad)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.next/
+out/
+build/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# =========================
+# Java & Spring Boot (api-service, worker-service)
+# =========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+!/.mvn/wrapper/maven-wrapper.properties
+hs_err_pid*
+
+# =========================
+# Environment Variables & Secrets
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.ec2-1
+.env.ec2-2
+*.pem
+*.key
+*.cert
+
+# =========================
+# Docker & Volumes
+# =========================
+pgdata-local/
+pgdata-prod/
+codepad-source-code/

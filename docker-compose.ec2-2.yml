@@ -1,0 +1,47 @@
+name: codepad-node2
+
+services:
+  judge-worker:
+    build:
+      context: ./worker-service
+      dockerfile: Dockerfile
+    container_name: worker-service-prod
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - API_SERVICE_URL=http://${API_EC2_PRIVATE_IP}:80
+      - INTERNAL_SECRET=${INTERNAL_SECRET}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  env-cpp:
+    image: judge-cpp:latest
+    build:
+      context: ./worker-service/docker/envs/cpp
+    profiles: ["env-setup"]
+
+  env-java:
+    image: judge-java:latest
+    build:
+      context: ./worker-service/docker/envs/java
+    profiles: ["env-setup"]
+
+  env-javascript:
+    image: judge-javascript:latest
+    build:
+      context: ./worker-service/docker/envs/javascript
+    profiles: ["env-setup"]
+
+  env-python:
+    image: judge-python:latest
+    build:
+      context: ./worker-service/docker/envs/python
+    profiles: ["env-setup"]
+
+  env-java25:
+    image: judge-java25:latest
+    build:
+      context: ./worker-service/docker/envs/java25
+    profiles: ["env-setup"]

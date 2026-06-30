@@ -1,0 +1,60 @@
+name: codepad-node1
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-prod
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-codepad_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata-prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-codepad_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  api-service:
+    build: 
+      context: ./api-service
+      dockerfile: Dockerfile
+    container_name: api-service-prod
+    ports:
+      - "80:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-codepad_db}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
+      - SPRING_PROFILES_ACTIVE=prod
+      - WORKER_URL=http://${WORKER_EC2_PRIVATE_IP}:8081
+      - INTERNAL_SECRET=${INTERNAL_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - APP_WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}
+      - APP_WEBAUTHN_ALLOWED_ORIGINS=${FRONTEND_URL:-http://localhost:3000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./codepad
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /
+    container_name: codepad-frontend-prod
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_API_URL=http://api-service:8080
+    depends_on:
+      - api-service
+    restart: unless-stopped
+
+volumes:
+  pgdata-prod:
