@@ -67,6 +67,7 @@ public class SecurityConfig {
                 
                 .requestMatchers("/webauthn/authenticate/options").permitAll()
                 .requestMatchers("/login/webauthn").permitAll()
+                .requestMatchers("/swagger-ui.html").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
