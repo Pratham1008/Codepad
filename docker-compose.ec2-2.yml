@@ -10,7 +10,7 @@ services:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - API_SERVICE_URL=http://${API_EC2_PRIVATE_IP}:80
+      - API_SERVICE_URL=http://${API_EC2_PRIVATE_IP}:8080
       - INTERNAL_SECRET=${INTERNAL_SECRET}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
