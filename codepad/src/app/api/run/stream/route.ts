@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8080";
