@@ -8,7 +8,6 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
   const path = resolvedParams.path.join("/");
   const url = `${API_BASE}/webauthn/${path}`;
 
-  // Forward all headers, but drop ones that must not be forwarded as-is
   const headers = new Headers(req.headers);
   headers.delete("host");
   headers.delete("content-length");
@@ -38,9 +37,6 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
     headers: resHeaders,
   });
 
-  // Explicitly re-set every cookie the backend sent using Next's cookie API.
-  // Passing raw Set-Cookie strings through NextResponse's Headers constructor
-  // is unreliable in route handlers -- Next can silently drop them.
   const setCookies = response.headers.getSetCookie();
   const cookieStore = await cookies();
 

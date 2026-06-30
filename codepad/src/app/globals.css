@@ -2,7 +2,6 @@
 
 
 :root {
-  /* Light mode colors (inferred/default) */
   --primary-fixed: #ffdbca;
   --on-secondary-container: #5b3800;
   --on-surface-variant: #52443d;
@@ -10,7 +9,7 @@
   --inverse-on-surface: #fbeee9;
   --primary: #9d4300;
   --inverse-surface: #362f2c;
-  --surface-container-low: #fdfdfd; /* fallback */
+  --surface-container-low: #fdfdfd; 
   --inverse-primary: #ffb690;
   --tertiary-container: #ffdad6;
   --error: #ba1a1a;
@@ -51,7 +50,6 @@
   --on-error: #ffffff;
   --on-secondary-fixed-variant: #653e00;
 
-  /* Spacing */
   --spacing-gutter: 16px;
   --spacing-toolbar-height: 48px;
   --spacing-unit: 4px;
@@ -201,10 +199,66 @@ body {
   background: radial-gradient(circle at 50% -20%, rgba(249, 115, 22, 0.15) 0%, rgba(21, 19, 18, 1) 70%);
 }
 
+@media (max-width: 767px) {
+  .mobile-panel {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 30 !important;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  .mobile-visible {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+
 .shimmer {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
   background-size: 200% 100%;
-  animation: shimmer 2s infinite linear;
+  animation: shimmer 1.5s infinite linear;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  animation: clip 0.5s ease-in-out;
+}
+
+@keyframes clip {
+  0% {
+    clip-path: circle(0% at top right);
+  }
+  100% {
+    clip-path: circle(150% at top right);
+  }
+}
+
+.dark::view-transition-old(root) {
+  z-index: 2;
+  animation: clip 0.5s ease-in-out reverse;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
+  animation: none;
 }
 
 @keyframes shimmer {

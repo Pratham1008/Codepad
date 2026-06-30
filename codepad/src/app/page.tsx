@@ -2,13 +2,15 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Code, ArrowRight, Terminal, Users, Zap, Cloud, Sun, Moon } from "lucide-react";
+import { Code, ArrowRight, Terminal, Users, Zap, Cloud, Sun, Moon, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
+import { useThemeTransition } from "@/components/theme-provider";
+import { AnimatePresence } from "motion/react";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useThemeTransition();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -34,12 +36,35 @@ export default function Home() {
             <Code size={24} />
             CodePad
           </div>
+          
+          <div className="flex items-center gap-4 md:hidden">
+            <button 
+              onClick={toggleTheme}
+              className="relative flex items-center w-12 h-6 bg-surface-variant border border-outline-variant rounded-full p-1 transition-colors hover:bg-surface-container-highest shrink-0"
+              aria-label="Toggle Theme"
+            >
+              <Sun size={12} className="absolute left-1 text-on-surface-variant" />
+              <Moon size={12} className="absolute right-1 text-on-surface-variant" />
+              <div
+                className={`w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform duration-300 z-10 ${
+                  mounted && theme === 'dark' ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              />
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full transition-colors"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
           <nav className="hidden md:flex gap-6 items-center">
             <a href="#features" className="text-on-surface-variant hover:text-primary transition-colors">
               Features
             </a>
             <button 
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={toggleTheme}
               className="relative flex items-center w-14 h-7 bg-surface-variant border border-outline-variant rounded-full p-1 transition-colors hover:bg-surface-container-highest shrink-0"
               aria-label="Toggle Theme"
             >
@@ -59,6 +84,34 @@ export default function Home() {
             </Link>
           </nav>
         </div>
+        
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-surface-container border-b border-outline-variant overflow-hidden"
+            >
+              <div className="flex flex-col px-4 py-4 gap-4">
+                <a 
+                  href="#features" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-on-surface-variant font-semibold hover:text-primary transition-colors py-2 border-b border-outline-variant/50"
+                >
+                  Features
+                </a>
+                <Link
+                  href="/auth"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="bg-primary-container text-on-primary-container text-center font-semibold rounded px-4 py-2 mt-2 transition-colors"
+                >
+                  Login
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.header>
 
       
@@ -135,12 +188,12 @@ export default function Home() {
             <div className="w-3 h-3 rounded-full bg-secondary-container"></div>
             <div className="w-3 h-3 rounded-full bg-primary-container"></div>
           </div>
-          <div className="flex h-[400px]">
-            <div className="w-12 border-r border-outline-variant bg-surface-container-low flex flex-col items-center py-4 gap-4 text-on-surface-variant">
+          <div className="flex flex-col md:flex-row h-auto md:h-[400px]">
+            <div className="md:w-12 border-b md:border-b-0 md:border-r border-outline-variant bg-surface-container-low flex flex-row md:flex-col items-center justify-center md:py-4 p-2 gap-4 text-on-surface-variant">
               <Code size={20} />
               <Terminal size={20} />
             </div>
-            <div className="flex-1 p-6 font-code-md text-sm text-on-surface-variant bg-background overflow-hidden relative">
+            <div className="flex-1 p-4 md:p-6 font-code-md text-xs md:text-sm text-on-surface-variant bg-background overflow-x-auto relative">
               <pre>
                 <code>
                   <span className="text-primary-container">import</span> {"{ CodePad }"} <span className="text-primary-container">from</span> <span className="text-secondary">'@codepad/core'</span>;

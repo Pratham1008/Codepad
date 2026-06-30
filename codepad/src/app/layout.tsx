@@ -1,18 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
-
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
-
 export const metadata: Metadata = {
   title: "CodePad - The Editor with an Ember Heart",
   description: "A high-fidelity developer environment blending terminal aesthetics with modern warmth.",
@@ -23,31 +20,36 @@ export const metadata: Metadata = {
     description: "Enterprise Grade Code Editor",
     type: "website",
   },
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      dir="ltr"
-      suppressHydrationWarning
-      className={`${inter.variable} ${jetbrainsMono.variable} antialiased w-full h-full m-0 p-0`}
-    >
+      <html
+          lang="en"
+          dir="ltr"
+          suppressHydrationWarning
+          className={`${inter.variable} ${jetbrainsMono.variable} antialiased w-full h-full m-0 p-0`}
+      >
       <body className="min-h-screen w-full h-full m-0 p-0 flex flex-col ember-bg">
-        <ThemeProvider
+      <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+      >
+        {children}
+      </ThemeProvider>
       </body>
-    </html>
-  );
+      </html>
+);
 }
