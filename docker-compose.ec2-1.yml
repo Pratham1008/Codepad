@@ -45,11 +45,13 @@ services:
     build:
       context: ./codepad
       dockerfile: Dockerfile
+      args:
+        - BACKEND_API_URL=http://api-service:8080
     container_name: frontend-prod
     ports:
       - "80:3000"
     environment:
-      - BACKEND_API_URL=http://api-service-prod:8080
+      - BACKEND_API_URL=http://api-service:8080
     depends_on:
       - api-service
     restart: unless-stopped

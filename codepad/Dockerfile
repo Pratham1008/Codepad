@@ -15,6 +15,11 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
+# BACKEND_API_URL must be set at build time because next.config.ts rewrites()
+# are evaluated during `next build` and baked into the standalone output.
+ARG BACKEND_API_URL=http://api-service:8080
+ENV BACKEND_API_URL=${BACKEND_API_URL}
+
 RUN npm run build
 
 FROM base AS runner
