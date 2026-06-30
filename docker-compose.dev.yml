@@ -28,25 +28,25 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
-  env-cpp:
+  judge-cpp:
     image: judge-cpp:latest
     build:
       context: ./worker-service/docker/envs/cpp
     profiles: ["env-setup"]
 
-  env-java:
+  judge-java:
     image: judge-java:latest
     build:
       context: ./worker-service/docker/envs/java
     profiles: ["env-setup"]
 
-  env-javascript:
+  judge-javascript:
     image: judge-javascript:latest
     build:
       context: ./worker-service/docker/envs/javascript
     profiles: ["env-setup"]
 
-  env-python:
+  judge-python:
     image: judge-python:latest
     build:
       context: ./worker-service/docker/envs/python
@@ -54,7 +54,7 @@ services:
 
 
 
-  env-java25:
+  judge-java25:
     image: judge-java25:latest
     build:
       context: ./worker-service/docker/envs/java25
