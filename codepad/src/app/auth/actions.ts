@@ -2,7 +2,7 @@
 
 import { setSession, clearSession } from "@/lib/session";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
+const API_BASE = process.env.BACKEND_API_URL || "http://localhost:8080";
 
 export async function login(formData: FormData) {
   const username = formData.get("username") as string;

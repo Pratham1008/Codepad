@@ -2,7 +2,7 @@
 
 import { getSession } from "@/lib/session";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
+const API_BASE = process.env.BACKEND_API_URL || "http://localhost:8080";
 
 export async function getSnippets(page = 0, size = 20) {
   const { token } = await getSession();

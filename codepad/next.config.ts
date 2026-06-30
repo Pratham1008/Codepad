@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_API_BASE as string;
+    const backendUrl = process.env.BACKEND_API_URL || "http://localhost:8080";
     return [
       {
         source: "/api/:path*",
