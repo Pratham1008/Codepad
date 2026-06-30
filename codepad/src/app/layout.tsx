@@ -16,6 +16,14 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "CodePad - The Editor with an Ember Heart",
   description: "A high-fidelity developer environment blending terminal aesthetics with modern warmth.",
+  keywords: ["Code Editor", "Online Judge", "Developer Environment", "Next.js", "Spring Boot"],
+  authors: [{ name: "Enterprise Architects" }],
+  openGraph: {
+    title: "CodePad",
+    description: "Enterprise Grade Code Editor",
+    type: "website",
+  },
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 };
 
 export default function RootLayout({
@@ -26,10 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      dir="ltr"
       suppressHydrationWarning
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} antialiased w-full h-full m-0 p-0`}
     >
-      <body className="min-h-screen flex flex-col ember-bg">
+      <body className="min-h-screen w-full h-full m-0 p-0 flex flex-col ember-bg">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
