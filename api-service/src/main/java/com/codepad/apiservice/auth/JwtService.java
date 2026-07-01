@@ -18,19 +18,17 @@ import java.util.UUID;
 public class JwtService {
 
     private final SecretKey signingKey;
-    private final long accessTokenExpiryMs;
 
     public JwtService(
-            @Value("${app.jwt.secret}") String secret,
-            @Value("${app.jwt.access-token-expiry-ms}") long accessTokenExpiryMs
+            @Value("${app.jwt.secret}") String secret
     ) {
         this.signingKey = Keys.hmacShaKeyFor(secret.getBytes());
-        this.accessTokenExpiryMs = accessTokenExpiryMs;
     }
 
     
     public String generateToken(User user) {
         Date now = new Date();
+        long accessTokenExpiryMs = 30L * 24 * 60 * 60 * 1000;
         Date expiry = new Date(now.getTime() + accessTokenExpiryMs);
 
         return Jwts.builder()

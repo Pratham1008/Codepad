@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getPasskeys, deletePasskey, deleteAccount } from "./actions";
+import { getPasskeys, deletePasskey, deleteAccount, getUserProfile } from "./actions";
 import { KeyRound, Trash2, Plus, Loader2, AlertTriangle, Fingerprint, User, Usb, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { create } from "@github/webauthn-json";
@@ -9,6 +9,7 @@ import { Modal } from "@/components/modal";
 
 export default function SettingsPage() {
   const [passkeys, setPasskeys] = useState<any[]>([]);
+  const [userProfile, setUserProfile] = useState<{username?: string, email?: string} | null>(null);
   const [loading, setLoading] = useState(true);
   const [csrfToken, setCsrfToken] = useState("");
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function SettingsPage() {
       .catch(console.error);
 
     loadPasskeys();
+    loadProfile();
   }, []);
 
   const loadPasskeys = () => {
@@ -33,6 +35,12 @@ export default function SettingsPage() {
     getPasskeys().then(res => {
       if (!res.error) setPasskeys(res);
       setLoading(false);
+    });
+  };
+
+  const loadProfile = () => {
+    getUserProfile().then(res => {
+      if (!res.error) setUserProfile(res);
     });
   };
 
@@ -103,6 +111,27 @@ export default function SettingsPage() {
   return (
     <div className="p-8 max-w-3xl mx-auto w-full h-full overflow-y-auto">
       <h1 className="font-headline-md text-2xl font-bold text-on-surface mb-8">Settings</h1>
+
+      <section className="bg-surface border border-outline-variant rounded-xl p-6 mb-8">
+        <h2 className="font-bold text-lg text-on-surface flex items-center gap-2 mb-4">
+          <User size={20} className="text-primary" /> Profile
+        </h2>
+        
+        {loading && !userProfile ? (
+          <div className="flex justify-center p-4"><Loader2 className="animate-spin text-primary" /></div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Username</label>
+              <div className="font-semibold text-on-surface text-lg mt-1">{userProfile?.username || "—"}</div>
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Email</label>
+              <div className="font-semibold text-on-surface text-lg mt-1">{userProfile?.email || "—"}</div>
+            </div>
+          </div>
+        )}
+      </section>
 
       <section className="bg-surface border border-outline-variant rounded-xl p-6 mb-8">
         <div className="flex justify-between items-center mb-6">

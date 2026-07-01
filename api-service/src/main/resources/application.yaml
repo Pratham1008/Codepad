@@ -37,7 +37,6 @@ app:
     secret: ${INTERNAL_SECRET:change-me-in-production}
   jwt:
     secret: ${JWT_SECRET}
-    access-token-expiry-ms: 900000
     refresh-token-expiry-ms: 604800000
 
 springdoc:
