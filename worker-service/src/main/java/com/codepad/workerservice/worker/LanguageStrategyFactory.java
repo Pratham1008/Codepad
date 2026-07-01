@@ -14,7 +14,7 @@ public class LanguageStrategyFactory {
     public LanguageStrategyFactory() {
         this.strategies = new EnumMap<>(Language.class);
         strategies.put(Language.JAVA, new JavaStrategy());
-        strategies.put(Language.JAVA_25, new Java25Strategy());
+
         strategies.put(Language.PYTHON, new PythonStrategy());
         strategies.put(Language.CPP, new CppStrategy());
         strategies.put(Language.C, new CStrategy());

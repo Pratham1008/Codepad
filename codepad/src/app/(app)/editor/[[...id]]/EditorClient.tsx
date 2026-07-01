@@ -26,16 +26,6 @@ public class Main {
         }
     }
 }`,
-  "JAVA_25": `import java.util.Scanner;
-
-void main() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Hello from codepad");
-    if (scanner.hasNextLine()) {
-        String input = scanner.nextLine();
-        System.out.println("Received: " + input);
-    }
-}`,
   "C": `#include <stdio.h>
 
 int main() {
@@ -86,8 +76,7 @@ rl.on('line', (line) => {
 };
 
 const SUPPORTED_LANGUAGES = [
-  { id: "JAVA", label: "Java 21", monaco: "java" },
-  { id: "JAVA_25", label: "Java 25", monaco: "java" },
+  { id: "JAVA", label: "Java", monaco: "java" },
   { id: "C", label: "C", monaco: "c" },
   { id: "CPP", label: "C++", monaco: "cpp" },
   { id: "PYTHON", label: "Python", monaco: "python" },
