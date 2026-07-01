@@ -40,8 +40,4 @@ services:
       context: ./worker-service/docker/envs/python
     profiles: ["env-setup"]
 
-  env-java25:
-    image: judge-java25:latest
-    build:
-      context: ./worker-service/docker/envs/java25
-    profiles: ["env-setup"]
+
