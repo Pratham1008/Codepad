@@ -1,13 +1,9 @@
--- Drop old tables if they exist (for clean migration approach)
 DROP TABLE IF EXISTS test_case_results CASCADE;
 DROP TABLE IF EXISTS submission_results CASCADE;
 DROP TABLE IF EXISTS submissions CASCADE;
 DROP TABLE IF EXISTS test_cases CASCADE;
 DROP TABLE IF EXISTS problems CASCADE;
 
--- Core user tables (managed by Hibernate/JPA via @Entity User)
--- Note: The 'users' table is auto-managed by Hibernate ddl-auto=update
--- but we define it here for Flyway to create on first run.
 CREATE TABLE IF NOT EXISTS users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -17,9 +13,6 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Spring Security WebAuthn tables
--- These are managed by JdbcPublicKeyCredentialUserEntityRepository
--- and JdbcUserCredentialRepository (Spring Security 7.1.0)
 CREATE TABLE IF NOT EXISTS user_entities (
     id VARCHAR(1000) NOT NULL PRIMARY KEY,
     name VARCHAR(1000) NOT NULL,
@@ -44,7 +37,6 @@ CREATE TABLE IF NOT EXISTS user_credentials (
     FOREIGN KEY (user_entity_user_id) REFERENCES user_entities(id) ON DELETE CASCADE
 );
 
--- Code snippet history
 CREATE TABLE IF NOT EXISTS code_snippets (
     snippet_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,

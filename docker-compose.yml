@@ -1,5 +1,3 @@
-name: codepad-node1
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -23,7 +21,7 @@ services:
     build: 
       context: ./api-service
       dockerfile: Dockerfile
-    container_name: api-service-prod
+    container_name: api-service
     ports:
       - "8080:8080"
     environment:

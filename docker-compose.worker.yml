@@ -1,11 +1,9 @@
-name: codepad-node2
-
 services:
   judge-worker:
     build:
       context: ./worker-service
       dockerfile: Dockerfile
-    container_name: worker-service-prod
+    container_name: worker-service
     ports:
       - "8081:8081"
     environment:
@@ -16,25 +14,25 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
-  env-cpp:
+  judge-cpp:
     image: judge-cpp:latest
     build:
       context: ./worker-service/docker/envs/cpp
     profiles: ["env-setup"]
 
-  env-java:
+  judge-java:
     image: judge-java:latest
     build:
       context: ./worker-service/docker/envs/java
     profiles: ["env-setup"]
 
-  env-javascript:
+  judge-javascript:
     image: judge-javascript:latest
     build:
       context: ./worker-service/docker/envs/javascript
     profiles: ["env-setup"]
 
-  env-python:
+  judge-python:
     image: judge-python:latest
     build:
       context: ./worker-service/docker/envs/python

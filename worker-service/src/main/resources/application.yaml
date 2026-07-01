@@ -14,7 +14,7 @@ app:
   internal:
     secret: ${INTERNAL_SECRET:change-me-in-production}
   judge:
-    pool-size-per-language: ${POOL_SIZE_PER_LANGUAGE:2}
+    pool-size-per-language: ${POOL_SIZE_PER_LANGUAGE:3}
 
 logging:
   level:

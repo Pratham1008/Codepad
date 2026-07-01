@@ -1,6 +1,3 @@
-# =========================
-# Operating System Files
-# =========================
 .DS_Store
 .DS_Store?
 ._*
@@ -10,9 +7,6 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
-# =========================
-# IDEs and Editors
-# =========================
 .idea/
 .vscode/
 *.swp
@@ -26,9 +20,6 @@ Desktop.ini
 *.sublime-workspace
 *.sublime-project
 
-# =========================
-# Node.js & Next.js (codepad)
-# =========================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -41,9 +32,6 @@ build/
 *.tsbuildinfo
 next-env.d.ts
 
-# =========================
-# Java & Spring Boot (api-service, worker-service)
-# =========================
 target/
 *.class
 *.jar
@@ -55,9 +43,6 @@ target/
 !**/.mvn/wrapper/maven-wrapper.properties
 hs_err_pid*
 
-# =========================
-# Environment Variables & Secrets
-# =========================
 .env
 .env.local
 .env.development.local
@@ -69,9 +54,6 @@ hs_err_pid*
 *.key
 *.cert
 
-# =========================
-# Docker & Volumes
-# =========================
 pgdata-local/
 pgdata-prod/
 codepad-source-code/
