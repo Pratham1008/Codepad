@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GlobalBackground } from "@/components/GlobalBackground";
+import { Suspense } from "react";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -58,7 +59,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
       >
-        <GlobalBackground />
+        <Suspense fallback={null}>
+          <GlobalBackground />
+        </Suspense>
         {children}
       </ThemeProvider>
       </body>
