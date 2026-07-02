@@ -54,15 +54,16 @@ export function AppNavigation() {
         <div className="flex-1 py-4 flex flex-col gap-2 px-3">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+            const LinkComponent = item.href === "/editor" ? "a" : Link;
             return (
-              <Link key={item.href} href={item.href}>
+              <LinkComponent key={item.href} href={item.href}>
                 <div className={`flex items-center gap-3 px-3 py-2 rounded transition-colors ${
                   isActive ? "bg-primary-container text-on-primary-container" : "hover:bg-surface-variant text-on-surface-variant hover:text-on-surface"
                 }`}>
                   {item.icon}
                   {sidebarOpen && <span className="font-semibold text-sm">{item.name}</span>}
                 </div>
-              </Link>
+              </LinkComponent>
             );
           })}
         </div>
@@ -108,15 +109,16 @@ export function AppNavigation() {
       <nav className="md:hidden border-t border-outline-variant bg-surface-container flex items-center justify-around px-2 py-3 z-20 shrink-0">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const LinkComponent = item.href === "/editor" ? "a" : Link;
           return (
-            <Link key={item.href} href={item.href} className="flex-1 flex justify-center">
+            <LinkComponent key={item.href} href={item.href} className="flex-1 flex justify-center">
               <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${
                 isActive ? "bg-primary-container text-on-primary-container" : "text-on-surface-variant hover:bg-surface-variant"
               }`}>
                 {item.icon}
                 <span className="text-[10px] font-semibold">{item.name}</span>
               </div>
-            </Link>
+            </LinkComponent>
           );
         })}
         <button

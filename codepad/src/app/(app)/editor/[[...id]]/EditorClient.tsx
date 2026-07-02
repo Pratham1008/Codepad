@@ -97,10 +97,24 @@ export function EditorClient({
   const [language, setLanguage] = useState(initialSnippet?.language || "JAVA");
   const [title, setTitle] = useState(initialSnippet?.title || "Untitled Snippet");
 
+  useEffect(() => {
+    setCode(initialSnippet?.sourceCode || (snippetId ? "" : BOILERPLATES["JAVA"]));
+    setLanguage(initialSnippet?.language || "JAVA");
+    setTitle(initialSnippet?.title || "Untitled Snippet");
+    setOutput(null);
+    setConsoleLines([]);
+  }, [snippetId, initialSnippet]);
+
   
   const [output, setOutput] = useState<{ stdout?: string, stderr?: string, exitCode?: number, executionTimeMs?: number, memoryUsageKb?: number } | null>(null);
   const [interactiveMode, setInteractiveMode] = useState(false);
   const [staticStdin, setStaticStdin] = useState("");
+
+  const [editorReady, setEditorReady] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setEditorReady(true), 50);
+    return () => clearTimeout(t);
+  }, []);
 
   
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -164,10 +178,14 @@ export function EditorClient({
         e.preventDefault();
         if (!saving) handleSave();
       }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (!loading) handleRun();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [code, language, title, snippetId, saving]);
+  }, [code, language, title, snippetId, saving, loading]);
 
   const handleRunStatic = async () => {
     setLoading(true);
@@ -297,8 +315,37 @@ export function EditorClient({
     }
   };
 
-  
-  
+  const saveRef = useRef(handleSave);
+  const runRef = useRef(handleRun);
+  useEffect(() => {
+    saveRef.current = handleSave;
+    runRef.current = handleRun;
+  });
+
+  const handleEditorMount = (editor: any, monaco: any) => {
+    editor.addAction({
+      id: "save-snippet",
+      label: "Save Snippet",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
+      contextMenuGroupId: 'navigation',
+      contextMenuOrder: 1.5,
+      run: () => {
+        if (!saving) saveRef.current();
+      }
+    });
+
+    editor.addAction({
+      id: "run-code",
+      label: "Run Code",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+      contextMenuGroupId: 'navigation',
+      contextMenuOrder: 1,
+      run: () => {
+        if (!loading) runRef.current();
+      }
+    });
+  };
+
   const handleConsoleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
     if (!sessionId) return;
@@ -401,20 +448,22 @@ export function EditorClient({
       </div>
 
       <div className="flex-1 overflow-hidden relative">
-        <PanelGroup orientation="horizontal" id="codepad-editor-layout" key={`editor-layout-${snippetId || 'new'}`}>
+        <PanelGroup orientation="horizontal" id="codepad-editor-layout">
           
           <Panel defaultSize={60} minSize={30} className={`relative bg-background h-full mobile-panel ${activeTab === 'console' ? 'mobile-hidden' : 'mobile-visible'}`}>
-            {loading && !code && (
+            {(!editorReady || (loading && !code)) && (
               <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-40 backdrop-blur-sm">
                 <Loader2 className="animate-spin text-primary" size={32} />
               </div>
             )}
-            <Editor
+            {editorReady && (
+              <Editor
               height="100%"
               language={activeLangMeta.monaco}
               theme={theme === "dark" ? "vs-dark" : "light"}
               value={code}
               onChange={(val) => setCode(val || "")}
+              onMount={handleEditorMount}
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
@@ -425,6 +474,7 @@ export function EditorClient({
                 cursorBlinking: "smooth",
               }}
             />
+            )}
           </Panel>
 
           <PanelResizeHandle className="w-1.5 bg-outline-variant/30 hover:bg-primary transition-colors cursor-col-resize z-10 hidden md:block" />

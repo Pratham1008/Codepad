@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { DashboardList } from "./DashboardList";
 import { DashboardSkeleton } from "./DashboardSkeleton";
@@ -11,12 +10,12 @@ export default function DashboardPage({ searchParams }: { searchParams: Promise<
           <h1 className="font-headline-md text-2xl font-bold text-on-surface">Snippets Dashboard</h1>
           <p className="text-sm text-on-surface-variant mt-1">Manage and view your saved code snippets.</p>
         </div>
-        <Link
+        <a
           href="/editor"
           className="bg-primary text-on-primary font-semibold py-2 px-4 rounded hover:bg-orange-600 transition-colors shadow"
         >
           New Snippet
-        </Link>
+        </a>
       </div>
 
       <Suspense fallback={<DashboardSkeleton />}>

@@ -35,7 +35,7 @@ export async function DashboardList({ searchParams }: { searchParams: Promise<{ 
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {snippets.map((snippet: any) => (
-          <Link key={snippet.snippetId} href={`/editor/${snippet.snippetId}`}>
+          <a key={snippet.snippetId} href={`/editor/${snippet.snippetId}`}>
             <div className="bg-surface border border-outline-variant rounded-xl p-5 hover:border-primary transition-all group flex flex-col h-full cursor-pointer hover:shadow-md">
               <div className="flex justify-between items-start mb-3">
                 <h3 className="font-bold text-lg text-on-surface truncate pr-4 group-hover:text-primary transition-colors">
@@ -55,7 +55,7 @@ export async function DashboardList({ searchParams }: { searchParams: Promise<{ 
                 <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
               </div>
             </div>
-          </Link>
+          </a>
         ))}
       </div>
 
