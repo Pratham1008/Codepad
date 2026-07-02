@@ -158,6 +158,17 @@ export function EditorClient({
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        if (!saving) handleSave();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [code, language, title, snippetId, saving]);
+
   const handleRunStatic = async () => {
     setLoading(true);
     setActiveTab('console');
@@ -390,7 +401,7 @@ export function EditorClient({
       </div>
 
       <div className="flex-1 overflow-hidden relative">
-        <PanelGroup orientation="horizontal" id="editor-layout">
+        <PanelGroup orientation="horizontal" id="codepad-editor-layout" key={`editor-layout-${snippetId || 'new'}`}>
           
           <Panel defaultSize={60} minSize={30} className={`relative bg-background h-full mobile-panel ${activeTab === 'console' ? 'mobile-hidden' : 'mobile-visible'}`}>
             {loading && !code && (
