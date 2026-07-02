@@ -21,8 +21,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col font-body-md overflow-x-hidden">
-      
+    <div className="flex-1 flex flex-col font-body-md overflow-x-hidden relative">
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -135,7 +134,7 @@ export default function Home() {
           className="font-headline-lg text-[48px] leading-[56px] md:text-[64px] md:leading-[72px] font-bold tracking-tight mb-6 max-w-4xl text-transparent bg-clip-text bg-gradient-to-br from-on-background to-on-surface-variant"
         >
           The Editor with an <br />
-          <span className="text-primary-container drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]">Ember Heart</span>
+          <span className="text-primary drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]">Ember Heart</span>
         </motion.h1>
 
         <motion.p 

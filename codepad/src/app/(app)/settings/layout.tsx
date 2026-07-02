@@ -1,6 +1,3 @@
-import { requireAuth } from "@/lib/session";
-
-export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
-  await requireAuth();
+export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

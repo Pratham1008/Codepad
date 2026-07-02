@@ -96,9 +96,10 @@ export function AppNavigation() {
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2 text-sm font-semibold text-error hover:bg-error-container hover:text-on-error-container rounded transition-colors w-full text-left"
+            className={`flex items-center gap-3 px-3 py-2 text-sm font-semibold text-error hover:bg-error-container hover:text-on-error-container rounded transition-colors w-full ${sidebarOpen ? 'text-left' : 'justify-center'}`}
+            title="Sign Out"
           >
-            <LogOut size={18} />
+            <LogOut size={18} className="shrink-0" />
             {sidebarOpen && "Sign Out"}
           </button>
         </div>

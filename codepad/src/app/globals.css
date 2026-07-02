@@ -196,7 +196,7 @@ body {
 }
 
 .ember-bg {
-  background: radial-gradient(circle at 50% -20%, rgba(249, 115, 22, 0.15) 0%, rgba(21, 19, 18, 1) 70%);
+  background: radial-gradient(circle at 50% -20%, rgba(249, 115, 22, 0.15) 0%, var(--background) 70%);
 }
 
 @media (max-width: 767px) {
