@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Project</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#5a4400",
+                      "on-tertiary-fixed": "#31111d",
+                      "on-primary": "#ffffff",
+                      "outline": "#897267",
+                      "surface-container-high": "#f2e5e2",
+                      "primary-fixed": "#ffdbca",
+                      "on-primary-fixed-variant": "#783200",
+                      "on-error-container": "#93000a",
+                      "on-background": "#201a18",
+                      "surface-variant": "#ece0dc",
+                      "primary-fixed-dim": "#ffb690",
+                      "inverse-primary": "#ffb690",
+                      "surface-container-highest": "#ece0dc",
+                      "secondary-fixed-dim": "#e8c266",
+                      "tertiary-container": "#7d5260",
+                      "surface-dim": "#e4d7d4",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#633b48",
+                      "surface-bright": "#fff8f6",
+                      "on-surface-variant": "#564339",
+                      "surface-container": "#f8ebe7",
+                      "primary-container": "#9d4300",
+                      "surface-container-low": "#fef1ed",
+                      "inverse-surface": "#362f2d",
+                      "background": "#fff8f6",
+                      "on-secondary": "#ffffff",
+                      "surface": "#fff8f6",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#ddc1b4",
+                      "tertiary": "#633b48",
+                      "inverse-on-surface": "#fbeeea",
+                      "on-secondary-fixed": "#251a00",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#fdd677",
+                      "error": "#ba1a1a",
+                      "primary": "#783100",
+                      "on-secondary-container": "#775b01",
+                      "on-primary-container": "#ffceb6",
+                      "secondary": "#765a00",
+                      "tertiary-fixed": "#ffd9e3",
+                      "surface-tint": "#9d4300",
+                      "on-primary-fixed": "#341100",
+                      "tertiary-fixed-dim": "#eeb8c8",
+                      "on-surface": "#201a18",
+                      "on-tertiary-container": "#ffcbda",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#ffdf96"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "sidebar_width": "260px",
+                      "gutter": "1px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "sm": "8px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "code-table": [
+                              "JetBrains Mono"
+                      ],
+                      "code-body": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "code-table": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-body": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+      </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface h-screen w-screen overflow-hidden antialiased">
+<!-- Background Dashboard (Dimmed and Blurred) -->
+<div class="fixed inset-0 z-0">
+<img alt="Dashboard Background" class="w-full h-full object-cover filter blur-sm brightness-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzXw52D_KeTGmy7GOVl2grrv3SJCsG-2RRYsrsH7uQ5B-fI3I3IGrN69ZEU2wJbbKY6Hv32lL3s42o5ZDeBuCQZkjwUkPuZkiDbWi8jZFi9s4ZN1KFgt73YniWDtC-MIwmEQuO7L87AnGeMNQWp7DDhadWiqMqa-ONkKs0Wfpx5u1sGv7jkUHlGInF1V5qs03iGg0Xv1JXRCC0iUAo6ids9IU1goSCFjT1NKH7duuXzSP5ZC8HdIeD"/>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-scrim/50 backdrop-blur-sm">
+<!-- Modal Container -->
+<div class="bg-surface-container-lowest w-full max-w-[520px] rounded-[24px] shadow-lg flex flex-col transform transition-all">
+<!-- Header -->
+<div class="flex items-center justify-between p-lg border-b border-outline-variant">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Create New Project</h2>
+<button class="text-on-surface-variant hover:text-on-surface hover:bg-on-surface/[0.08] p-2 rounded-full transition-colors active:scale-[0.97] duration-150">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Body -->
+<div class="p-lg flex flex-col gap-lg">
+<!-- Project Name Input -->
+<div class="flex flex-col gap-sm">
+<label class="font-title-md text-title-md text-on-surface font-medium" for="projectName">Project Name</label>
+<input class="w-full bg-surface-container text-on-surface font-body-md text-body-md px-md py-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface-variant/70" id="projectName" placeholder="e.g. Student Management System" type="text"/>
+</div>
+<!-- Language Selection -->
+<div class="flex flex-col gap-sm">
+<label class="font-title-md text-title-md text-on-surface font-medium">Language</label>
+<div class="grid grid-cols-3 gap-md" id="languageSelector">
+<!-- Java Card (Selected) -->
+<div class="language-card cursor-pointer flex flex-col items-center justify-center p-lg rounded-xl border-2 border-primary bg-primary-container/[0.08] active:scale-[0.97] transition-all duration-150" data-lang="java">
+<span class="material-symbols-outlined text-4xl text-primary mb-sm" data-icon="local_cafe" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
+<span class="font-title-md text-title-md text-on-surface font-medium">Java</span>
+</div>
+<!-- Python Card -->
+<div class="language-card cursor-pointer flex flex-col items-center justify-center p-lg rounded-xl border-2 border-outline-variant hover:border-primary/50 hover:bg-on-surface/[0.04] bg-surface-container-lowest active:scale-[0.97] transition-all duration-150" data-lang="python">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-sm" data-icon="code">code</span>
+<span class="font-title-md text-title-md text-on-surface font-medium">Python</span>
+</div>
+<!-- C++ Card -->
+<div class="language-card cursor-pointer flex flex-col items-center justify-center p-lg rounded-xl border-2 border-outline-variant hover:border-primary/50 hover:bg-on-surface/[0.04] bg-surface-container-lowest active:scale-[0.97] transition-all duration-150" data-lang="cpp">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-sm" data-icon="terminal">terminal</span>
+<span class="font-title-md text-title-md text-on-surface font-medium">C++</span>
+</div>
+</div>
+</div>
+<!-- File Preview -->
+<div class="flex items-center gap-sm bg-surface-container-highest p-md rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="description">description</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Entry file:</span>
+<span class="font-code-body text-code-body text-on-surface font-medium" id="entryFilePreview">Main.java</span>
+</div>
+</div>
+<!-- Footer -->
+<div class="flex items-center justify-end gap-md p-lg border-t border-outline-variant bg-surface-container-low rounded-b-[24px]">
+<button class="font-title-md text-title-md text-primary px-lg py-2.5 rounded-lg hover:bg-primary/10 transition-colors active:scale-[0.97] duration-150">
+                    Cancel
+                </button>
+<button class="font-title-md text-title-md text-on-primary bg-primary px-lg py-2.5 rounded-lg hover:bg-primary/90 shadow-sm transition-colors active:scale-[0.97] duration-150 flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-primary text-sm" data-icon="add">add</span>
+                    Create Project
+                </button>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.language-card');
+            const previewText = document.getElementById('entryFilePreview');
+
+            const fileMap = {
+                'java': 'Main.java',
+                'python': 'main.py',
+                'cpp': 'main.cpp'
+            };
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    // Reset all cards
+                    cards.forEach(c => {
+                        c.classList.remove('border-primary', 'bg-primary-container/[0.08]');
+                        c.classList.add('border-outline-variant', 'bg-surface-container-lowest');
+                        const icon = c.querySelector('.material-symbols-outlined');
+                        icon.classList.remove('text-primary');
+                        icon.classList.add('text-on-surface-variant');
+                        icon.style.fontVariationSettings = "'FILL' 0";
+                    });
+
+                    // Set active card
+                    card.classList.remove('border-outline-variant', 'bg-surface-container-lowest');
+                    card.classList.add('border-primary', 'bg-primary-container/[0.08]');
+                    const icon = card.querySelector('.material-symbols-outlined');
+                    icon.classList.remove('text-on-surface-variant');
+                    icon.classList.add('text-primary');
+                    icon.style.fontVariationSettings = "'FILL' 1";
+
+                    // Update preview text
+                    const lang = card.getAttribute('data-lang');
+                    previewText.textContent = fileMap[lang];
+                });
+            });
+        });
+    </script>
+</body></html>

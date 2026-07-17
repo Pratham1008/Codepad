@@ -1,22 +1,22 @@
-import { getSnippet } from "../actions";
+import { getProject } from "../actions";
 import { EditorClient } from "./EditorClient";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
 async function EditorFetcher({ params }: { params: Promise<{ id?: string[] }> }) {
   const resolvedParams = await params;
-  const snippetId = resolvedParams.id?.[0] || null;
+  const projectId = resolvedParams.id?.[0] || null;
 
-  let initialSnippet = null;
+  let initialProject = null;
   
-  if (snippetId) {
-    const res = await getSnippet(snippetId);
+  if (projectId) {
+    const res = await getProject(projectId);
     if (!res.error) {
-      initialSnippet = res;
+      initialProject = res;
     }
   }
 
-  return <EditorClient snippetId={snippetId} initialSnippet={initialSnippet} />;
+  return <EditorClient projectId={projectId} initialProject={initialProject} />;
 }
 
 export default function EditorPage({ params }: { params: Promise<{ id?: string[] }> }) {

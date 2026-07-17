@@ -15,6 +15,8 @@ app:
     secret: ${INTERNAL_SECRET:change-me-in-production}
   judge:
     pool-size-per-language: ${POOL_SIZE_PER_LANGUAGE:3}
+  projects:
+    root: ${PROJECTS_ROOT:/data/projects}
 
 logging:
   level:

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Create New Project</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#5a4400",
+                      "on-tertiary-fixed": "#31111d",
+                      "on-primary": "#ffffff",
+                      "outline": "#897267",
+                      "surface-container-high": "#f2e5e2",
+                      "primary-fixed": "#ffdbca",
+                      "on-primary-fixed-variant": "#783200",
+                      "on-error-container": "#93000a",
+                      "on-background": "#201a18",
+                      "surface-variant": "#ece0dc",
+                      "primary-fixed-dim": "#ffb690",
+                      "inverse-primary": "#ffb690",
+                      "surface-container-highest": "#ece0dc",
+                      "secondary-fixed-dim": "#e8c266",
+                      "tertiary-container": "#7d5260",
+                      "surface-dim": "#e4d7d4",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#633b48",
+                      "surface-bright": "#fff8f6",
+                      "on-surface-variant": "#564339",
+                      "surface-container": "#f8ebe7",
+                      "primary-container": "#9d4300",
+                      "surface-container-low": "#fef1ed",
+                      "inverse-surface": "#362f2d",
+                      "background": "#fff8f6",
+                      "on-secondary": "#ffffff",
+                      "surface": "#fff8f6",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#ddc1b4",
+                      "tertiary": "#633b48",
+                      "inverse-on-surface": "#fbeeea",
+                      "on-secondary-fixed": "#251a00",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#fdd677",
+                      "error": "#ba1a1a",
+                      "primary": "#783100",
+                      "on-secondary-container": "#775b01",
+                      "on-primary-container": "#ffceb6",
+                      "secondary": "#765a00",
+                      "tertiary-fixed": "#ffd9e3",
+                      "surface-tint": "#9d4300",
+                      "on-primary-fixed": "#341100",
+                      "tertiary-fixed-dim": "#eeb8c8",
+                      "on-surface": "#201a18",
+                      "on-tertiary-container": "#ffcbda",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#ffdf96"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "sidebar_width": "260px",
+                      "gutter": "1px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "sm": "8px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "code-table": [
+                              "JetBrains Mono"
+                      ],
+                      "code-body": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "code-table": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-body": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+          .material-symbols-outlined {
+              font-variation-settings: 'FILL' 1;
+          }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen w-screen overflow-hidden flex flex-col antialiased">
+<!-- Dimmed Background Overlay using Previous Screen -->
+<div class="absolute inset-0 z-0">
+<iframe class="w-full h-full border-none pointer-events-none" src="{{DATA:SCREEN:SCREEN_4}}"></iframe>
+</div>
+<!-- Scrim / Dimmer -->
+<div class="absolute inset-0 bg-surface/80 dark:bg-background/80 backdrop-blur-md z-10"></div>
+<!-- Bottom Sheet Container -->
+<div class="fixed inset-x-0 bottom-0 z-50 flex flex-col justify-end pointer-events-none">
+<!-- Sheet Content -->
+<div class="bg-surface-container dark:bg-surface-container-highest rounded-t-[24px] pointer-events-auto flex flex-col w-full max-h-[90vh] shadow-[0_-8px_32px_rgba(0,0,0,0.2)]">
+<!-- Drag Handle Area -->
+<div class="flex justify-center pt-4 pb-2 cursor-grab active:cursor-grabbing shrink-0">
+<div class="w-8 h-1 bg-on-surface-variant/40 dark:bg-outline/50 rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="px-lg pb-md flex items-center justify-between shrink-0">
+<h2 class="font-title-md text-title-md text-on-surface dark:text-on-background">Create New Project</h2>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-on-surface/[0.08] active:scale-[0.97] transition-all text-on-surface-variant dark:text-outline">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="px-lg pb-xl overflow-y-auto flex-1 custom-scrollbar space-y-lg">
+<!-- Project Name Input -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline uppercase tracking-wider">Project Name</label>
+<div class="relative">
+<input class="w-full bg-surface dark:bg-surface-container-low border border-outline-variant dark:border-outline rounded-lg px-md py-sm font-body-md text-body-md text-on-surface dark:text-on-background focus:outline-none focus:border-primary dark:focus:border-primary-fixed-dim focus:border-2 transition-colors placeholder:text-on-surface-variant/50" placeholder="e.g. awesome-app" type="text"/>
+</div>
+</div>
+<!-- Language Selection -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline uppercase tracking-wider">Language</label>
+<div class="grid grid-cols-1 gap-xs">
+<!-- Card 1: Java (Selected) -->
+<button class="w-full flex items-center gap-md p-md rounded-xl bg-primary-container dark:bg-primary-container text-on-primary-container border border-primary dark:border-primary-fixed-dim active:scale-[0.97] transition-all text-left">
+<div class="w-10 h-10 rounded-lg bg-surface dark:bg-surface-container-lowest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="coffee">coffee</span>
+</div>
+<div class="flex-1">
+<div class="font-title-md text-title-md">Java</div>
+<div class="font-label-sm text-label-sm opacity-80">JDK 17 • Maven</div>
+</div>
+<span class="material-symbols-outlined text-on-primary-container" data-icon="check_circle" data-weight="fill">check_circle</span>
+</button>
+<!-- Card 2: Python -->
+<button class="w-full flex items-center gap-md p-md rounded-xl bg-surface dark:bg-surface-container-low text-on-surface dark:text-on-background border border-outline-variant hover:bg-on-surface/[0.04] active:scale-[0.97] transition-all text-left">
+<div class="w-10 h-10 rounded-lg bg-surface-container dark:bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant dark:text-outline" data-icon="terminal">terminal</span>
+</div>
+<div class="flex-1">
+<div class="font-title-md text-title-md">Python</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline">Python 3.11 • Pip</div>
+</div>
+</button>
+<!-- Card 3: C++ -->
+<button class="w-full flex items-center gap-md p-md rounded-xl bg-surface dark:bg-surface-container-low text-on-surface dark:text-on-background border border-outline-variant hover:bg-on-surface/[0.04] active:scale-[0.97] transition-all text-left">
+<div class="w-10 h-10 rounded-lg bg-surface-container dark:bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant dark:text-outline" data-icon="memory">memory</span>
+</div>
+<div class="flex-1">
+<div class="font-title-md text-title-md">C++</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline">C++20 • CMake</div>
+</div>
+</button>
+</div>
+</div>
+<!-- Template Preview -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline uppercase tracking-wider">Preview (Main.java)</label>
+</div>
+<div class="bg-inverse-surface dark:bg-[#1e1e1e] rounded-xl p-md overflow-x-auto relative">
+<pre class="font-code-body text-code-body text-surface dark:text-[#d4d4d4] m-0"><code class="language-java"><span class="text-tertiary-fixed-dim">public</span> <span class="text-tertiary-fixed-dim">class</span> <span class="text-secondary-fixed">Main</span> {
+    <span class="text-tertiary-fixed-dim">public</span> <span class="text-tertiary-fixed-dim">static</span> <span class="text-tertiary-fixed-dim">void</span> <span class="text-secondary-fixed">main</span>(String[] args) {
+        System.out.println(<span class="text-primary-fixed-dim">"Hello, World!"</span>);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="p-lg pt-sm shrink-0 bg-surface-container dark:bg-surface-container-highest border-t border-outline-variant/30">
+<button class="w-full h-12 flex items-center justify-center rounded-xl bg-primary dark:bg-primary-fixed-dim text-on-primary dark:text-on-primary-fixed-variant font-title-md text-title-md active:scale-[0.97] transition-transform duration-150 shadow-sm">
+                    Create Project
+                </button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Write it. Run it. Perfect it.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#f8ebe7",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#633b48",
+                      "tertiary-fixed": "#ffd9e3",
+                      "tertiary-fixed-dim": "#eeb8c8",
+                      "background": "#fff8f6",
+                      "secondary-fixed-dim": "#e8c266",
+                      "on-surface-variant": "#564339",
+                      "on-secondary-fixed": "#251a00",
+                      "on-surface": "#201a18",
+                      "outline-variant": "#ddc1b4",
+                      "primary-container": "#9d4300",
+                      "primary": "#783100",
+                      "tertiary": "#633b48",
+                      "secondary-fixed": "#ffdf96",
+                      "surface-tint": "#9d4300",
+                      "outline": "#897267",
+                      "on-primary-fixed": "#341100",
+                      "surface-container-highest": "#ece0dc",
+                      "on-background": "#201a18",
+                      "on-secondary-container": "#775b01",
+                      "inverse-primary": "#ffb690",
+                      "primary-fixed": "#ffdbca",
+                      "surface-container-high": "#f2e5e2",
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#fbeeea",
+                      "surface-dim": "#e4d7d4",
+                      "secondary-container": "#fdd677",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-container": "#ffceb6",
+                      "primary-fixed-dim": "#ffb690",
+                      "on-primary-fixed-variant": "#783200",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "tertiary-container": "#7d5260",
+                      "on-tertiary-container": "#ffcbda",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#fef1ed",
+                      "surface": "#fff8f6",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "surface-variant": "#ece0dc",
+                      "on-secondary-fixed-variant": "#5a4400",
+                      "surface-bright": "#fff8f6",
+                      "inverse-surface": "#362f2d",
+                      "secondary": "#765a00",
+                      "on-tertiary-fixed": "#31111d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xl": "32px",
+                      "xs": "4px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "sidebar_width": "260px",
+                      "gutter": "1px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "code-body": [
+                              "JetBrains Mono"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "code-table": [
+                              "JetBrains Mono"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-body": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-table": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .typewriter-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased overflow-x-hidden w-full max-w-[390px] mx-auto min-h-screen flex flex-col relative">
+<!-- TopNavBar Placeholder -->
+<header class="fixed top-0 w-full max-w-[390px] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-md h-16">
+<div class="font-headline-sm text-headline-sm font-bold text-primary">CodePad</div>
+<div class="flex items-center gap-sm">
+<button class="text-on-surface-variant hover:text-primary active:scale-[0.97] transition-transform duration-150 p-sm rounded-full hover:bg-on-surface/[0.08]">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow pt-24 px-md pb-xl">
+<!-- Hero Section -->
+<section class="flex flex-col items-start gap-lg mb-xl">
+<h1 class="font-display-lg text-display-lg text-on-surface font-bold leading-tight fade-up stagger-1">
+                Write it.<br/>
+                Run it.<br/>
+                Perfect it<span class="typewriter-cursor text-primary">|</span>
+</h1>
+<p class="font-title-md text-title-md text-on-surface-variant fade-up stagger-2">
+                A focused environment for multi-file orchestration. Built for developers who demand precision.
+            </p>
+<div class="w-full flex flex-col gap-sm fade-up stagger-3">
+<button class="w-full bg-primary text-on-primary font-title-md text-title-md py-sm px-md rounded-lg active:scale-[0.97] transition-transform duration-150 text-center">
+                    Get Started Free
+                </button>
+<button class="w-full border border-outline text-on-surface font-title-md text-title-md py-sm px-md rounded-lg active:scale-[0.97] transition-transform duration-150 text-center hover:bg-on-surface/[0.08]">
+                    View Documentation
+                </button>
+</div>
+</section>
+<!-- IDE Mockup -->
+<section class="mb-xl w-full fade-up stagger-1">
+<div class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant">
+<div class="bg-surface-container-highest flex items-center justify-between px-md py-sm border-b border-outline-variant">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<div class="w-3 h-3 rounded-full bg-secondary-fixed"></div>
+<div class="w-3 h-3 rounded-full bg-outline"></div>
+</div>
+<span class="font-code-table text-code-table text-on-surface-variant">Main.java</span>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 16px;">play_arrow</span>
+</div>
+<div class="p-md font-code-body text-code-body text-on-surface overflow-x-auto">
+<pre><code class="language-java">
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        <span class="text-error border-b-2 border-error border-dashed">int x = "error";</span>
+    }
+}
+                    </code></pre>
+</div>
+<div class="bg-surface-container-highest p-sm font-code-table text-code-table border-t border-outline-variant text-error">
+                    Line 4: incompatible types: String cannot be converted to int
+                </div>
+</div>
+</section>
+<!-- Feature List -->
+<section class="mb-xl fade-up stagger-2 flex flex-col gap-md">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface mb-sm">Why CodePad?</h2>
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant flex items-start gap-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Lightning Fast</h3>
+<p class="text-on-surface-variant">Instant boot times and zero lag typing experience.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant flex items-start gap-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">cloud_sync</span>
+<div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Cloud Native</h3>
+<p class="text-on-surface-variant">Your workspace syncs instantly across all devices.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant flex items-start gap-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">integration_instructions</span>
+<div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Multi-file Ready</h3>
+<p class="text-on-surface-variant">Orchestrate complex projects with an intuitive sidebar.</p>
+</div>
+</div>
+</section>
+<!-- Language Chips -->
+<section class="mb-xl fade-up stagger-3 text-center">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface mb-md">Supports Your Stack</h2>
+<div class="flex flex-wrap justify-center gap-sm">
+<span class="bg-surface-container-high text-on-surface px-md py-xs rounded-full font-label-sm text-label-sm border border-outline-variant">Java</span>
+<span class="bg-surface-container-high text-on-surface px-md py-xs rounded-full font-label-sm text-label-sm border border-outline-variant">Python</span>
+<span class="bg-surface-container-high text-on-surface px-md py-xs rounded-full font-label-sm text-label-sm border border-outline-variant">JavaScript</span>
+<span class="bg-surface-container-high text-on-surface px-md py-xs rounded-full font-label-sm text-label-sm border border-outline-variant">C++</span>
+<span class="bg-surface-container-high text-on-surface px-md py-xs rounded-full font-label-sm text-label-sm border border-outline-variant">Go</span>
+<span class="bg-surface-container-high text-on-surface px-md py-xs rounded-full font-label-sm text-label-sm border border-outline-variant">Rust</span>
+</div>
+</section>
+</main>
+<!-- Footer Placeholder -->
+<footer class="bg-surface-container w-full flex flex-col items-start px-lg py-xl gap-md mt-auto border-t border-outline-variant/30">
+<div class="font-title-md text-title-md font-bold text-on-surface mb-sm">CodePad</div>
+<div class="flex flex-col gap-sm w-full">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors py-xs border-b border-outline-variant/20 w-full" href="#">Privacy</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors py-xs border-b border-outline-variant/20 w-full" href="#">Terms</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors py-xs border-b border-outline-variant/20 w-full" href="#">Github</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors py-xs border-b border-outline-variant/20 w-full" href="#">Twitter</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors py-xs w-full" href="#">Contact</a>
+</div>
+<div class="text-on-surface-variant font-body-md text-body-md mt-md text-sm opacity-70">
+            © 2024 CodePad IDE. Built for orchestrators.
+        </div>
+</footer>
+<script>
+        // Simple Intersection Observer for fade-up animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-up').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body></html>

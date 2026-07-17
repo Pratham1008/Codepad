@@ -1,39 +1,25 @@
 package com.codepad.workerservice.worker;
 
 public class JavaStrategy implements LanguageStrategy {
+    @Override public String getDockerImage() { return "judge-java:latest"; }
 
     @Override
-    public String getDockerImage() {
-        return "judge-java:latest";
-    }
-
-    private String extractClassName(String sourceCode) {
-        if (sourceCode == null) return "Main";
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("class\\s+([a-zA-Z_$][a-zA-Z\\d_$]*)\\s*\\{?").matcher(sourceCode);
-        if (m.find()) return m.group(1);
-        return "Main";
+    public String[] getCompileCommand() {
+        return new String[]{"sh", "-c", "find /workspace -name '*.java' > /workspace/sources.txt && javac -d /workspace @/workspace/sources.txt"};
     }
 
     @Override
-    public String getSourceFileName(String sourceCode) {
-        return extractClassName(sourceCode) + ".java";
+    public String[] getRunCommand() {
+        // Auto-detect entrypoint using grep and execute
+        String script = "MAIN_CLASS=$(grep -rl 'public static void main' /workspace | grep '\\.java$' | head -n 1 | xargs basename -s .java); " +
+                        "if [ -z \"$MAIN_CLASS\" ]; then echo 'No main class found' >&2; exit 1; fi; " +
+                        "t=$(date +%s%3N); /usr/bin/time -f \"\\n__MEM__%M\" java -Xms64m -Xmx256m -XX:TieredStopAtLevel=1 -cp /workspace $MAIN_CLASS; " +
+                        "EXIT_CODE=$?; echo \"\" >&2; echo \"__TIME__$(($(date +%s%3N)-t))\" >&2; exit $EXIT_CODE";
+        return new String[]{"sh", "-c", script};
     }
 
     @Override
-    public String[] getPipelineCommand(String sourceCode) {
-        String fileName = getSourceFileName(sourceCode);
-        String className = extractClassName(sourceCode);
-        String compileCmd = "javac /sandbox/" + fileName;
-        String runCmd = "java -Xms64m -Xmx256m -XX:TieredStopAtLevel=1 -cp /sandbox " + className;
-        return new String[]{"sh", "-c", buildPipeline(sourceCode, fileName, compileCmd, runCmd)};
-    }
-
-    @Override
-    public String[] getInteractivePipelineCommand(String sourceCode) {
-        String fileName = getSourceFileName(sourceCode);
-        String className = extractClassName(sourceCode);
-        String compileCmd = "javac /sandbox/" + fileName;
-        String runCmd = "java -Xms64m -Xmx256m -XX:TieredStopAtLevel=1 -cp /sandbox " + className;
-        return new String[]{"sh", "-c", buildInteractivePipeline(sourceCode, fileName, compileCmd, runCmd)};
+    public String[] getDiagnosticsCommand() {
+        return new String[]{"sh", "-c", "find /workspace -name '*.java' > /workspace/sources.txt && javac -Xlint -d /tmp/out @/workspace/sources.txt"};
     }
 }

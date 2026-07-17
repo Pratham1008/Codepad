@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Mobile Dark Mode Design Tokens</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#ece0dc",
+                        "background": "#fff8f6",
+                        "primary-container": "#9d4300",
+                        "outline": "#897267",
+                        "surface-dim": "#e4d7d4",
+                        "on-primary-container": "#ffceb6",
+                        "on-tertiary-fixed-variant": "#633b48",
+                        "on-surface": "#201a18",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#fbeeea",
+                        "tertiary-fixed-dim": "#eeb8c8",
+                        "tertiary-fixed": "#ffd9e3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#31111d",
+                        "on-surface-variant": "#564339",
+                        "surface-container-high": "#f2e5e2",
+                        "inverse-primary": "#ffb690",
+                        "surface-container-low": "#fef1ed",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#251a00",
+                        "secondary-fixed": "#ffdf96",
+                        "tertiary-container": "#7d5260",
+                        "on-primary-fixed-variant": "#783200",
+                        "on-secondary-container": "#775b01",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#ddc1b4",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#633b48",
+                        "inverse-surface": "#362f2d",
+                        "on-error": "#ffffff",
+                        "on-background": "#201a18",
+                        "primary-fixed-dim": "#ffb690",
+                        "secondary": "#765a00",
+                        "secondary-container": "#fdd677",
+                        "surface-container-highest": "#ece0dc",
+                        "secondary-fixed-dim": "#e8c266",
+                        "primary": "#783100",
+                        "on-primary-fixed": "#341100",
+                        "surface-container": "#f8ebe7",
+                        "on-tertiary-container": "#ffcbda",
+                        "surface-bright": "#fff8f6",
+                        "on-secondary-fixed-variant": "#5a4400",
+                        "surface": "#fff8f6",
+                        "surface-tint": "#9d4300",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdbca"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "lg": "24px",
+                        "sidebar_width": "260px",
+                        "gutter": "1px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "code-table": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "code-body": ["JetBrains Mono"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "code-table": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code-body": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Force Dark Mode for this specific token reference sheet as requested */
+        body {
+            background-color: #201a18; /* on-background dark equivalent approximation */
+            color: #ece0dc; /* surface-variant text */
+        }
+        .dark-surface { background-color: #201a18; }
+        .dark-surface-container { background-color: #362f2d; }
+        .dark-surface-container-high { background-color: #564339; }
+        
+        /* Typography util overrides since config is light-mode heavy */
+        .text-dark-primary { color: #ffb690; }
+        .bg-dark-primary { background-color: #ffb690; color: #341100; }
+        .bg-dark-primary-container { background-color: #783100; color: #ffdbca; }
+        
+        .bg-dark-secondary { background-color: #e8c266; color: #251a00; }
+        .bg-dark-error { background-color: #ffb4ab; color: #690005; }
+    </style>
+</head>
+<body class="dark-surface min-h-screen font-body-md text-body-md antialiased p-md pb-xl">
+<!-- Header -->
+<header class="mb-lg border-b border-outline/30 pb-md">
+<h1 class="font-headline-sm text-headline-sm font-bold text-dark-primary mb-xs">CodePad Tokens</h1>
+<p class="text-surface-variant font-label-sm uppercase tracking-wider opacity-70">Mobile – Dark Reference</p>
+</header>
+<div class="flex flex-col gap-lg">
+<!-- Surface Levels -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md font-semibold text-white border-b border-outline/30 pb-xs">Surface Hierarchy</h2>
+<div class="grid grid-cols-1 gap-sm">
+<!-- Level 0 -->
+<div class="dark-surface p-md rounded-xl border border-outline/20 flex justify-between items-center">
+<div>
+<div class="font-title-md text-title-md text-white">Background</div>
+<div class="font-code-table text-code-table opacity-70">Level 0 (App Shell)</div>
+</div>
+<div class="w-8 h-8 rounded-full border border-outline/50 bg-[#201a18]"></div>
+</div>
+<!-- Level 1 -->
+<div class="dark-surface-container p-md rounded-xl border border-outline/20 flex justify-between items-center shadow-sm">
+<div>
+<div class="font-title-md text-title-md text-white">Surface Container</div>
+<div class="font-code-table text-code-table opacity-70">Level 1 (Canvas)</div>
+</div>
+<div class="w-8 h-8 rounded-full border border-outline/50 bg-[#362f2d]"></div>
+</div>
+<!-- Level 2 -->
+<div class="dark-surface-container-high p-md rounded-xl border border-outline/20 flex justify-between items-center shadow-md">
+<div>
+<div class="font-title-md text-title-md text-white">Surface High</div>
+<div class="font-code-table text-code-table opacity-70">Level 2 (Panels/Active)</div>
+</div>
+<div class="w-8 h-8 rounded-full border border-outline/50 bg-[#564339]"></div>
+</div>
+</div>
+</section>
+<!-- Components (Buttons & Chips) -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md font-semibold text-white border-b border-outline/30 pb-xs">Interactive Elements</h2>
+<div class="flex flex-col gap-md dark-surface-container p-md rounded-xl">
+<!-- Primary Button -->
+<div class="flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm uppercase text-outline">Primary Action</span>
+<button class="bg-dark-primary font-title-md text-title-md py-sm px-md rounded-xl flex items-center justify-center gap-xs active:scale-95 transition-transform w-full">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                        Run Build
+                    </button>
+</div>
+<!-- Badges / Chips -->
+<div class="flex flex-col gap-xs pt-sm border-t border-outline/20">
+<span class="font-label-sm text-label-sm uppercase text-outline">Status Chips</span>
+<div class="flex flex-wrap gap-sm">
+<!-- Primary Container Badge -->
+<div class="bg-dark-primary-container font-label-sm text-label-sm py-1 px-3 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                            Active
+                        </div>
+<!-- Secondary Badge -->
+<div class="bg-dark-secondary font-label-sm text-label-sm py-1 px-3 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">extension</span>
+                            Plugin
+                        </div>
+<!-- Outlined Chip -->
+<div class="border border-outline font-label-sm text-label-sm text-white py-1 px-3 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">folder</span>
+                            src
+                        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Alerts & Feedback -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md font-semibold text-white border-b border-outline/30 pb-xs">Feedback</h2>
+<!-- Error Alert -->
+<div class="bg-dark-error p-md rounded-xl flex items-start gap-sm">
+<span class="material-symbols-outlined shrink-0 mt-0.5">error</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-medium">Compilation Error</span>
+<span class="font-body-md text-body-md opacity-90">Unexpected token in main.js at line 42.</span>
+</div>
+</div>
+</section>
+<!-- Typography Specimens -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md font-semibold text-white border-b border-outline/30 pb-xs">Typography</h2>
+<div class="dark-surface-container p-md rounded-xl flex flex-col gap-md overflow-hidden">
+<!-- UI Font -->
+<div class="flex flex-col gap-1 border-b border-outline/20 pb-md">
+<span class="font-label-sm text-label-sm text-outline">UI Font (Inter) - Headline Sm</span>
+<span class="font-headline-sm text-headline-sm text-white">The quick brown fox</span>
+</div>
+<div class="flex flex-col gap-1 border-b border-outline/20 pb-md">
+<span class="font-label-sm text-label-sm text-outline">UI Font (Inter) - Title Md</span>
+<span class="font-title-md text-title-md text-white">Jumps over the lazy dog</span>
+</div>
+<!-- Code Font -->
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-outline">Code Font (JetBrains Mono) - Body</span>
+<div class="bg-black/30 p-sm rounded-lg overflow-x-auto">
+<pre class="font-code-body text-code-body text-dark-primary m-0"><code>function init() {
+  console.log("Dark Mode");
+}</code></pre>
+</div>
+</div>
+</div>
+</section>
+</div>
+</body></html>

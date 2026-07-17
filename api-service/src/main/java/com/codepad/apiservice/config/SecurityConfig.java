@@ -21,14 +21,12 @@ import org.springframework.security.web.webauthn.authentication.WebAuthnAuthenti
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final JwtService jwtService;
     private final UserRepositoryPort UserRepositoryPort;
     private final UserDetailsService userDetailsService;
@@ -36,36 +34,20 @@ public class SecurityConfig {
 
     @org.springframework.beans.factory.annotation.Value("${app.webauthn.rp-id:localhost}")
     private String rpId;
-
-    @org.springframework.beans.factory.annotation.Value("${app.webauthn.allowed-origins:http://localhost:3000,http://192.168.31.206:3000}")
+    @org.springframework.beans.factory.annotation.Value("${app.webauthn.allowed-origins:http://localhost:3000}")
     private String[] allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthFilter =
-                new JwtAuthenticationFilter(jwtService, UserRepositoryPort);
+        JwtAuthenticationFilter jwtAuthFilter = new JwtAuthenticationFilter(jwtService, UserRepositoryPort);
 
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-            
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
-
-            
-            
-            
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            )
-
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
-                
                 .requestMatchers("/api/auth/**").permitAll()
-                
-                
                 .requestMatchers("/webauthn/register/options").authenticated()
                 .requestMatchers("/webauthn/register").authenticated()
-                
                 .requestMatchers("/webauthn/authenticate/options").permitAll()
                 .requestMatchers("/login/webauthn").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
@@ -73,13 +55,10 @@ public class SecurityConfig {
                 .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/api/run/**").permitAll()
-                .requestMatchers("/api/snippets/**").authenticated()
+                .requestMatchers("/api/projects/**").authenticated()
                 .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().authenticated()
             )
-
-            
             .webAuthn(webAuthn -> webAuthn
                 .rpName("CodePad Online Judge")
                 .rpId(rpId)
@@ -92,17 +71,13 @@ public class SecurityConfig {
                     }
                 })
             )
-
-            
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

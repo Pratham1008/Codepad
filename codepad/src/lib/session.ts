@@ -1,13 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-export type AuthResponse = {
-  accessToken: string;
-  refreshToken: string;
-  userId: string;
-  username: string;
-  role: string;
-};
+import type { AuthResponse } from "./types";
 
 export async function setSession(data: AuthResponse) {
   const cookieStore = await cookies();

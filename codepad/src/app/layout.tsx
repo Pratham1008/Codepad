@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { Suspense } from "react";
+import { NetworkChecker } from "@/components/NetworkChecker";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -62,6 +63,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GlobalBackground />
         </Suspense>
+        <NetworkChecker />
         {children}
       </ThemeProvider>
       </body>

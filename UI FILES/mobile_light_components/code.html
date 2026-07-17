@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Mobile Component Reference (Light)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface": "#fff8f6",
+                "error-container": "#ffdad6",
+                "background": "#fff8f6",
+                "surface-dim": "#e4d7d4",
+                "on-surface-variant": "#564339",
+                "on-surface": "#201a18",
+                "error": "#ba1a1a",
+                "surface-container-high": "#f2e5e2",
+                "on-tertiary-fixed-variant": "#633b48",
+                "on-secondary": "#ffffff",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "tertiary-fixed": "#ffd9e3",
+                "secondary-fixed-dim": "#e8c266",
+                "on-tertiary-container": "#ffcbda",
+                "on-primary-fixed-variant": "#783200",
+                "on-secondary-fixed-variant": "#5a4400",
+                "on-secondary-container": "#775b01",
+                "surface-container-highest": "#ece0dc",
+                "outline-variant": "#ddc1b4",
+                "inverse-primary": "#ffb690",
+                "on-secondary-fixed": "#251a00",
+                "surface-tint": "#9d4300",
+                "secondary-fixed": "#ffdf96",
+                "primary-container": "#9d4300",
+                "tertiary-container": "#7d5260",
+                "primary-fixed-dim": "#ffb690",
+                "on-background": "#201a18",
+                "inverse-surface": "#362f2d",
+                "on-primary-fixed": "#341100",
+                "tertiary-fixed-dim": "#eeb8c8",
+                "surface-container-low": "#fef1ed",
+                "surface-container-lowest": "#ffffff",
+                "surface-variant": "#ece0dc",
+                "secondary": "#765a00",
+                "on-error-container": "#93000a",
+                "surface-bright": "#fff8f6",
+                "inverse-on-surface": "#fbeeea",
+                "on-tertiary": "#ffffff",
+                "primary": "#783100",
+                "on-tertiary-fixed": "#31111d",
+                "tertiary": "#633b48",
+                "secondary-container": "#fdd677",
+                "surface-container": "#f8ebe7",
+                "outline": "#897267",
+                "on-primary-container": "#ffceb6",
+                "primary-fixed": "#ffdbca"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "sm": "8px",
+                "base": "4px",
+                "gutter": "1px",
+                "xs": "4px",
+                "xl": "32px",
+                "md": "16px",
+                "lg": "24px",
+                "sidebar_width": "260px"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Inter"
+                ],
+                "code-table": [
+                        "JetBrains Mono"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Inter"
+                ],
+                "code-body": [
+                        "JetBrains Mono"
+                ],
+                "title-md": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "11px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.5px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm-mobile": [
+                        "10px",
+                        {
+                                "lineHeight": "14px",
+                                "letterSpacing": "0.5px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "code-table": [
+                        "12px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-sm-mobile": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "57px",
+                        {
+                                "lineHeight": "64px",
+                                "letterSpacing": "-0.25px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "code-body": [
+                        "14px",
+                        {
+                                "lineHeight": "22px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "title-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "letterSpacing": "0.15px",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+  body {
+    background-color: #fff8f6; /* bg-surface */
+    color: #201a18; /* text-on-surface */
+  }
+  .shimmer {
+    background: linear-gradient(90deg, #ece0dc 25%, #f2e5e2 50%, #ece0dc 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+  @keyframes shimmer {
+    to { background-position: -200% 0; }
+  }
+</style>
+</head>
+<body class="font-body-md text-body-md bg-surface text-on-surface pb-24">
+<!-- Mobile Top App Bar -->
+<header class="flex justify-between items-center px-md w-full h-[48px] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant sticky top-0">
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-on-surface/[0.08] rounded-full active:scale-[0.97] duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+<div class="font-headline-sm-mobile text-headline-sm-mobile font-bold text-primary">CodePad</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-on-surface/[0.08] rounded-full active:scale-[0.97] duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">light_mode</span>
+</button>
+</div>
+</header>
+<main class="p-md space-y-xl max-w-md mx-auto">
+<h1 class="font-display-lg text-display-lg text-primary mb-lg hidden">Component Reference</h1>
+<div class="font-title-md text-title-md text-on-surface-variant mb-4 border-b border-outline-variant pb-2">Component Reference (Mobile Light)</div>
+<!-- 1. Buttons -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">1. Buttons</h2>
+<div class="space-y-4">
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Primary Filled</span>
+<button class="w-full bg-primary text-on-primary font-title-md text-title-md py-3 px-6 rounded-xl hover:bg-primary/90 active:scale-[0.97] duration-150 flex justify-center items-center gap-2 shadow-sm">
+<span>Run Project</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Secondary Tonal</span>
+<button class="w-full bg-secondary-container text-on-secondary-container font-title-md text-title-md py-3 px-6 rounded-xl hover:bg-secondary-container/90 active:scale-[0.97] duration-150 flex justify-center items-center gap-2">
+<span>Commit Changes</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Outlined</span>
+<button class="w-full border border-outline text-primary font-title-md text-title-md py-3 px-6 rounded-xl hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 flex justify-center items-center gap-2 bg-surface">
+<span>Cancel</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16">Icon</span>
+<button class="p-3 rounded-full hover:bg-on-surface/[0.08] active:scale-[0.97] duration-150 text-primary bg-surface-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</button>
+<button class="p-3 rounded-full hover:bg-on-surface/[0.08] active:scale-[0.97] duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">share</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 2. Form Fields -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">2. Form Fields</h2>
+<div class="space-y-6">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface">Project Name</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:border-primary focus:border-2 focus:ring-0 transition-all font-body-md text-body-md" type="text" value="Matrix Multiplication"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-error">Environment</label>
+<select class="w-full bg-surface border-2 border-error rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:border-error focus:ring-0 transition-all font-body-md text-body-md appearance-none">
+<option>Select Environment...</option>
+<option>C++ (Clang)</option>
+<option>Java 17</option>
+</select>
+<span class="font-label-sm text-label-sm text-error mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">error</span>
+            Environment selection is required
+          </span>
+</div>
+</div>
+</section>
+<!-- 3. Selection Controls -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">3. Selection Controls</h2>
+<div class="space-y-4 bg-surface-container rounded-xl p-md">
+<label class="flex items-center justify-between cursor-pointer active:scale-[0.99] duration-150">
+<span class="font-body-md text-body-md text-on-surface">Auto-save files</span>
+<div class="relative">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:after:bg-on-primary border border-outline-variant"></div>
+</div>
+</label>
+<div class="h-px bg-outline-variant w-full"></div>
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-5 h-5 rounded border-outline text-primary focus:ring-primary focus:ring-offset-surface bg-surface" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Show line numbers</span>
+</label>
+</div>
+</section>
+<!-- 4. Tabs -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">4. Tabs</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-2 block">Scrollable Pills</span>
+<div class="flex overflow-x-auto gap-2 pb-2 scrollbar-hide mb-4">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm active:scale-[0.97] duration-150">All Projects</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm active:scale-[0.97] duration-150 border border-outline-variant">C++</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm active:scale-[0.97] duration-150 border border-outline-variant">Java</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm active:scale-[0.97] duration-150 border border-outline-variant">Python</button>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-2 block">Editor Tabs</span>
+<div class="flex bg-surface-container border-b border-outline-variant">
+<div class="flex-1 text-center py-3 border-b-2 border-primary bg-surface-container-highest text-primary font-label-sm text-label-sm flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">code</span>
+          main.cpp
+        </div>
+<div class="flex-1 text-center py-3 text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container-high flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">description</span>
+          utils.h
+        </div>
+</div>
+</section>
+<!-- 5. Cards -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">5. Cards</h2>
+<div class="bg-surface-container rounded-xl p-md border border-outline-variant flex flex-col gap-3 active:scale-[0.98] duration-150 cursor-pointer hover:bg-surface-container-high transition-colors shadow-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Matrix Multiplication</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">C++ • 3 days ago</p>
+</div>
+</div>
+<button class="p-1 text-on-surface-variant hover:bg-on-surface/[0.08] rounded-full">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="px-2 py-1 bg-error-container text-on-error-container rounded font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+            Build Failed
+          </span>
+</div>
+</div>
+</section>
+<!-- 7. Overlays -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">7. Overlays</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-2 block">Bottom Sheet (Context Menu)</span>
+<div class="bg-surface-container-high rounded-t-xl border border-outline-variant pb-md pt-2 px-2 shadow-lg mb-4">
+<div class="w-10 h-1 bg-outline-variant rounded-full mx-auto mb-4"></div>
+<div class="px-4 pb-2 mb-2 border-b border-outline-variant">
+<h4 class="font-title-md text-title-md text-on-surface">main.cpp</h4>
+</div>
+<button class="w-full flex items-center gap-3 px-4 py-3 hover:bg-on-surface/[0.08] rounded-lg text-on-surface active:scale-[0.98]">
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+<span class="font-body-md text-body-md">Rename</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-3 hover:bg-on-surface/[0.08] rounded-lg text-on-surface active:scale-[0.98]">
+<span class="material-symbols-outlined text-on-surface-variant">flag</span>
+<span class="font-body-md text-body-md">Set as Entry Point</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-3 hover:bg-error-container text-error rounded-lg active:scale-[0.98]">
+<span class="material-symbols-outlined">delete</span>
+<span class="font-body-md text-body-md">Delete</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-2 block">Toast</span>
+<div class="bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg flex items-center justify-between font-body-md text-body-md shadow-md mb-4">
+<span>File saved successfully.</span>
+<button class="text-inverse-primary font-label-sm text-label-sm uppercase ml-4">Undo</button>
+</div>
+</section>
+<!-- 8. Loading -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-md">8. Loading</h2>
+<div class="bg-surface-container rounded-xl p-md border border-outline-variant flex flex-col gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant shimmer"></div>
+<div class="space-y-2 flex-1">
+<div class="h-4 bg-surface-variant rounded w-3/4 shimmer"></div>
+<div class="h-3 bg-surface-variant rounded w-1/2 shimmer"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-center p-4">
+<div class="w-8 h-8 border-4 border-surface-variant border-t-primary rounded-full animate-spin"></div>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 bg-surface border-t border-outline-variant z-50 px-4 md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-16 h-full">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">description</span>
+<span class="font-label-sm text-label-sm-mobile">Files</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-[0.97] duration-150 h-[80%]">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">code</span>
+<span class="font-label-sm text-label-sm-mobile">Editor</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-16 h-full">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">terminal</span>
+<span class="font-label-sm text-label-sm-mobile">Terminal</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-16 h-full">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-sm text-label-sm-mobile">Settings</span>
+</button>
+</nav>
+</body></html>

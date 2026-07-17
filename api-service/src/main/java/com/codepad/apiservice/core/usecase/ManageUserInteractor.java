@@ -4,7 +4,6 @@ import com.codepad.apiservice.core.NotFoundException;
 import com.codepad.apiservice.core.User;
 import com.codepad.apiservice.core.ManageUserUseCase;
 import com.codepad.apiservice.core.UserResponse;
-import com.codepad.apiservice.core.CodeSnippetRepositoryPort;
 import com.codepad.apiservice.core.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import java.util.UUID;
 public class ManageUserInteractor implements ManageUserUseCase {
 
     private final UserRepositoryPort UserRepositoryPort;
-    private final CodeSnippetRepositoryPort snippetRepository;
     private final JdbcOperations jdbcOperations;
 
     @Override
@@ -49,9 +47,6 @@ public class ManageUserInteractor implements ManageUserUseCase {
         
         User user = UserRepositoryPort.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-
-        
-        snippetRepository.deleteAllByUserId(userId);
 
         
         jdbcOperations.update("DELETE FROM user_credentials WHERE user_entity_user_id IN (SELECT id FROM user_entities WHERE name = ?)", user.getUsername());

@@ -4,53 +4,76 @@ import { getSession } from "@/lib/session";
 
 const API_BASE = process.env.BACKEND_API_URL || "http://localhost:8080";
 
-export async function getSnippet(id: string) {
+export async function getProject(id: string) {
   const { token } = await getSession();
   if (!token) return { error: "Unauthorized" };
 
   try {
-    const res = await fetch(`${API_BASE}/api/snippets/${id}`, {
+    const res = await fetch(`${API_BASE}/api/projects/${id}`, {
       headers: { "Authorization": `Bearer ${token}` },
       cache: "no-store"
     });
-    if (!res.ok) return { error: "Failed to load snippet" };
+    if (!res.ok) return { error: "Failed to load project" };
     return await res.json();
   } catch (error) {
     return { error: "Connection error" };
   }
 }
 
-export async function saveSnippet(id: string | null, data: { title: string, code: string, language: string }) {
+export async function getProjectTree(id: string) {
   const { token } = await getSession();
   if (!token) return { error: "Unauthorized" };
 
   try {
-    const url = `${API_BASE}/api/snippets`;
-
-        const payload = {
-      snippetId: id,
-      title: data.title,
-      sourceCode: data.code,
-      language: data.language
-    };
-
-        const res = await fetch(url, {
-      method: "POST",
-      headers: { 
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+    const res = await fetch(`${API_BASE}/api/projects/${id}/files/tree`, {
+      headers: { "Authorization": `Bearer ${token}` },
+      cache: "no-store"
     });
-
-        if (!res.ok) return { error: "Failed to save snippet" };
+    if (!res.ok) return { error: "Failed to load project tree" };
     return await res.json();
   } catch (error) {
     return { error: "Connection error" };
   }
 }
 
-export async function runCode(data: { code: string, language: string, stdin?: string }) {
+export async function readFile(id: string, path: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${id}/files?path=${encodeURIComponent(path)}`, {
+      headers: { "Authorization": `Bearer ${token}` },
+      cache: "no-store"
+    });
+    if (!res.ok) return { error: "Failed to read file" };
+    return await res.text();
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function writeFile(id: string, path: string, content: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${id}/files?path=${encodeURIComponent(path)}`, {
+      method: "PUT",
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "text/plain"
+      },
+      body: content
+    });
+
+    if (!res.ok) return { error: "Failed to save file" };
+    return { success: true };
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function runProject(projectId: string, stdin?: string) {
   const { token } = await getSession();
 
   try {
@@ -59,17 +82,13 @@ export async function runCode(data: { code: string, language: string, stdin?: st
     };
     if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_BASE}/api/run`, {
+    const res = await fetch(`${API_BASE}/api/projects/${projectId}/run`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ 
-        sourceCode: data.code, 
-        language: data.language, 
-        stdin: data.stdin 
-      })
+      body: JSON.stringify(stdin ? { stdin } : {})
     });
 
-        if (!res.ok) {
+    if (!res.ok) {
       const text = await res.text();
       console.error("RunCode backend error:", res.status, text);
       return { error: "Execution failed: " + res.status + " " + text };

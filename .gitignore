@@ -57,3 +57,6 @@ hs_err_pid*
 pgdata-local/
 pgdata-prod/
 codepad-source-code/
+
+# Flutter desktop app (local only, not deployed)
+codepad_desktop/

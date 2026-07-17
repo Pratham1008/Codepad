@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Desktop Light Component Reference</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fff8f6",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f6",
+                        "surface-dim": "#e4d7d4",
+                        "on-surface-variant": "#564339",
+                        "on-surface": "#201a18",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#f2e5e2",
+                        "on-tertiary-fixed-variant": "#633b48",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffd9e3",
+                        "secondary-fixed-dim": "#e8c266",
+                        "on-tertiary-container": "#ffcbda",
+                        "on-primary-fixed-variant": "#783200",
+                        "on-secondary-fixed-variant": "#5a4400",
+                        "on-secondary-container": "#775b01",
+                        "surface-container-highest": "#ece0dc",
+                        "outline-variant": "#ddc1b4",
+                        "inverse-primary": "#ffb690",
+                        "on-secondary-fixed": "#251a00",
+                        "surface-tint": "#9d4300",
+                        "secondary-fixed": "#ffdf96",
+                        "primary-container": "#9d4300",
+                        "tertiary-container": "#7d5260",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-background": "#201a18",
+                        "inverse-surface": "#362f2d",
+                        "on-primary-fixed": "#341100",
+                        "tertiary-fixed-dim": "#eeb8c8",
+                        "surface-container-low": "#fef1ed",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#ece0dc",
+                        "secondary": "#765a00",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fff8f6",
+                        "inverse-on-surface": "#fbeeea",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#783100",
+                        "on-tertiary-fixed": "#31111d",
+                        "tertiary": "#633b48",
+                        "secondary-container": "#fdd677",
+                        "surface-container": "#f8ebe7",
+                        "outline": "#897267",
+                        "on-primary-container": "#ffceb6",
+                        "primary-fixed": "#ffdbca"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem",
+                        "card": "12px",
+                        "ui": "8px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "gutter": "1px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "sidebar_width": "260px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "code-table": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "code-body": ["JetBrains Mono"],
+                        "title-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "code-table": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+                        "code-body": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Shimmer animation */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .animate-shimmer {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, theme('colors.surface-container') 4%, theme('colors.surface-container-high') 25%, theme('colors.surface-container') 36%);
+            background-size: 1000px 100%;
+        }
+
+        /* Spinner animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-custom {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen p-lg font-body-md">
+<div class="max-w-[1440px] mx-auto space-y-xl">
+<!-- Header -->
+<header class="pb-md border-b border-outline-variant">
+<h1 class="font-headline-sm text-headline-sm text-primary font-bold">CodePad UI Component Reference</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Desktop - Light Theme (Material 3 + Custom Brand)</p>
+</header>
+<!-- 1. Buttons -->
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30">
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">1. Buttons</h2>
+<div class="grid grid-cols-6 gap-md items-center mb-md pb-md border-b border-outline-variant/50 font-label-sm text-label-sm text-on-surface-variant">
+<div>Type</div>
+<div>Default</div>
+<div>Hover</div>
+<div>Active</div>
+<div>Focus</div>
+<div>Disabled</div>
+</div>
+<!-- Filled Button -->
+<div class="grid grid-cols-6 gap-md items-center mb-lg">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Filled (Primary)</div>
+<!-- Default -->
+<button class="bg-primary text-on-primary rounded-ui px-md py-sm font-label-sm text-label-sm transition-colors w-fit">Run Code</button>
+<!-- Hover -->
+<button class="bg-primary text-on-primary rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit after:absolute after:inset-0 after:bg-white/[0.08] after:rounded-ui">Run Code</button>
+<!-- Active -->
+<button class="bg-primary text-on-primary rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit scale-[0.97] after:absolute after:inset-0 after:bg-white/[0.12] after:rounded-ui">Run Code</button>
+<!-- Focus -->
+<button class="bg-primary text-on-primary rounded-ui px-md py-sm font-label-sm text-label-sm outline outline-2 outline-offset-2 outline-primary w-fit">Run Code</button>
+<!-- Disabled -->
+<button class="bg-on-surface/[0.12] text-on-surface/[0.38] rounded-ui px-md py-sm font-label-sm text-label-sm w-fit cursor-not-allowed">Run Code</button>
+</div>
+<!-- Tonal Button -->
+<div class="grid grid-cols-6 gap-md items-center mb-lg">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Tonal (Secondary)</div>
+<button class="bg-secondary-container text-on-secondary-container rounded-ui px-md py-sm font-label-sm text-label-sm transition-colors w-fit">Format</button>
+<button class="bg-secondary-container text-on-secondary-container rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit after:absolute after:inset-0 after:bg-on-surface/[0.08] after:rounded-ui">Format</button>
+<button class="bg-secondary-container text-on-secondary-container rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit scale-[0.97] after:absolute after:inset-0 after:bg-on-surface/[0.12] after:rounded-ui">Format</button>
+<button class="bg-secondary-container text-on-secondary-container rounded-ui px-md py-sm font-label-sm text-label-sm outline outline-2 outline-offset-2 outline-secondary w-fit">Format</button>
+<button class="bg-on-surface/[0.12] text-on-surface/[0.38] rounded-ui px-md py-sm font-label-sm text-label-sm w-fit cursor-not-allowed">Format</button>
+</div>
+<!-- Outlined Button -->
+<div class="grid grid-cols-6 gap-md items-center mb-lg">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Outlined</div>
+<button class="border border-outline text-primary rounded-ui px-md py-sm font-label-sm text-label-sm transition-colors w-fit">Cancel</button>
+<button class="border border-outline text-primary rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit after:absolute after:inset-0 after:bg-primary/[0.08] after:rounded-ui">Cancel</button>
+<button class="border border-outline text-primary rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit scale-[0.97] after:absolute after:inset-0 after:bg-primary/[0.12] after:rounded-ui bg-primary/[0.12]">Cancel</button>
+<button class="border border-outline text-primary rounded-ui px-md py-sm font-label-sm text-label-sm outline outline-2 outline-offset-2 outline-primary w-fit">Cancel</button>
+<button class="border border-on-surface/[0.12] text-on-surface/[0.38] rounded-ui px-md py-sm font-label-sm text-label-sm w-fit cursor-not-allowed">Cancel</button>
+</div>
+<!-- Text Button -->
+<div class="grid grid-cols-6 gap-md items-center mb-lg">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Text</div>
+<button class="text-primary rounded-ui px-md py-sm font-label-sm text-label-sm transition-colors w-fit">Learn More</button>
+<button class="text-primary rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit after:absolute after:inset-0 after:bg-primary/[0.08] after:rounded-ui bg-primary/[0.08]">Learn More</button>
+<button class="text-primary rounded-ui px-md py-sm font-label-sm text-label-sm relative w-fit scale-[0.97] after:absolute after:inset-0 after:bg-primary/[0.12] after:rounded-ui bg-primary/[0.12]">Learn More</button>
+<button class="text-primary rounded-ui px-md py-sm font-label-sm text-label-sm outline outline-2 outline-offset-2 outline-primary w-fit">Learn More</button>
+<button class="text-on-surface/[0.38] rounded-ui px-md py-sm font-label-sm text-label-sm w-fit cursor-not-allowed">Learn More</button>
+</div>
+<!-- Icon Button -->
+<div class="grid grid-cols-6 gap-md items-center">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Icon</div>
+<button class="text-on-surface-variant rounded-full p-sm flex items-center justify-center transition-colors w-fit"><span class="material-symbols-outlined">settings</span></button>
+<button class="text-on-surface-variant rounded-full p-sm flex items-center justify-center relative w-fit bg-on-surface/[0.08]"><span class="material-symbols-outlined">settings</span></button>
+<button class="text-on-surface-variant rounded-full p-sm flex items-center justify-center relative w-fit scale-[0.97] bg-on-surface/[0.12]"><span class="material-symbols-outlined">settings</span></button>
+<button class="text-on-surface-variant rounded-full p-sm flex items-center justify-center outline outline-2 outline-offset-2 outline-primary w-fit"><span class="material-symbols-outlined">settings</span></button>
+<button class="text-on-surface/[0.38] rounded-full p-sm flex items-center justify-center w-fit cursor-not-allowed"><span class="material-symbols-outlined">settings</span></button>
+</div>
+<!-- Sizes -->
+<div class="mt-xl pt-md border-t border-outline-variant/50 flex items-center gap-xl">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Sizes:</div>
+<button class="bg-primary text-on-primary rounded-ui px-sm py-[2px] text-[10px] font-medium">Small</button>
+<button class="bg-primary text-on-primary rounded-ui px-md py-sm font-label-sm text-label-sm">Medium</button>
+<button class="bg-primary text-on-primary rounded-ui px-lg py-3 font-title-md text-title-md">Large</button>
+</div>
+</section>
+<!-- 2. Form Fields & 3. Selection Controls -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30">
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">2. Form Fields</h2>
+<div class="space-y-md">
+<!-- Text Field Default -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Project Name</label>
+<input class="bg-surface border border-outline rounded-ui px-md py-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" placeholder="e.g. hello-world" type="text"/>
+</div>
+<!-- Text Field Error -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-error">Project Name</label>
+<input class="bg-surface border-2 border-error rounded-ui px-md py-sm font-body-md text-body-md text-on-surface outline-none" type="text" value="invalid name!"/>
+<span class="font-label-sm text-label-sm text-error mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">error</span> No spaces or special characters allowed.</span>
+</div>
+<!-- Search Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Search Files</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-full pl-xl pr-md py-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:ring-2 focus:ring-primary outline-none transition-shadow" placeholder="Find in workspace..." type="text"/>
+</div>
+</div>
+<!-- Select Dropdown -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Language Environment</label>
+<select class="bg-surface border border-outline rounded-ui px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none appearance-none">
+<option>Java 17 (LTS)</option>
+<option>Python 3.10</option>
+<option>Node.js 18</option>
+</select>
+</div>
+</div>
+</section>
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30">
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">3. Selection Controls</h2>
+<div class="space-y-lg">
+<!-- Toggle Switch -->
+<div class="flex flex-col gap-sm border-b border-outline-variant/50 pb-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Toggle Switch</span>
+<div class="flex gap-lg">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-outline after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:after:bg-on-primary"></div>
+<span class="ml-3 font-body-md text-body-md text-on-surface">Auto-save (On)</span>
+</label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-outline after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:after:bg-on-primary"></div>
+<span class="ml-3 font-body-md text-body-md text-on-surface">Minimap (Off)</span>
+</label>
+</div>
+</div>
+<!-- Checkbox -->
+<div class="flex flex-col gap-sm border-b border-outline-variant/50 pb-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Checkbox</span>
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-5 h-5 text-primary bg-surface border-outline rounded focus:ring-primary focus:ring-2" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Format on Save</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-5 h-5 text-primary bg-surface border-outline rounded focus:ring-primary focus:ring-2" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Show Line Numbers</span>
+</label>
+</div>
+</div>
+<!-- Radio -->
+<div class="flex flex-col gap-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Radio Button</span>
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-5 h-5 text-primary bg-surface border-outline focus:ring-primary focus:ring-2" name="indent" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface">Spaces: 4</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-5 h-5 text-primary bg-surface border-outline focus:ring-primary focus:ring-2" name="indent" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface">Tabs: 4</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- 4. Tabs & 5. Cards & Badges -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-xl">
+<!-- Tabs -->
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30 flex flex-col gap-xl">
+<div>
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">4. Tabs</h2>
+<!-- Pill Style Tabs -->
+<div class="mb-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-sm">Pill Navigation</span>
+<div class="flex gap-2 bg-surface-container-low p-1 rounded-full w-fit border border-outline-variant/50">
+<button class="px-lg py-1.5 rounded-full font-label-sm text-label-sm bg-primary-container text-on-primary-container">Workspace</button>
+<button class="px-lg py-1.5 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-on-surface/[0.04]">Submissions</button>
+<button class="px-lg py-1.5 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-on-surface/[0.04]">Grades</button>
+</div>
+</div>
+<!-- Editor Style Tabs -->
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-sm">Editor Tabs (Multi-pane logic)</span>
+<div class="flex bg-surface border-b border-outline-variant/50 pt-2 px-2 overflow-x-auto">
+<!-- Active Tab (Unsaved) -->
+<div class="group flex items-center gap-2 px-md py-2 bg-surface-container-highest border-b-2 border-primary cursor-pointer min-w-max">
+<span class="material-symbols-outlined text-[16px] text-primary">data_object</span>
+<span class="font-code-table text-code-table text-primary">Main.java</span>
+<div class="w-2 h-2 rounded-full bg-primary ml-1 group-hover:hidden"></div>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant hover:text-primary hidden group-hover:block ml-1">close</span>
+</div>
+<!-- Inactive Tab -->
+<div class="group flex items-center gap-2 px-md py-2 bg-surface hover:bg-surface-container cursor-pointer min-w-max">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">data_object</span>
+<span class="font-code-table text-code-table text-on-surface-variant">Student.java</span>
+<span class="material-symbols-outlined text-[14px] text-transparent group-hover:text-on-surface-variant ml-1">close</span>
+</div>
+<!-- Inactive Tab -->
+<div class="group flex items-center gap-2 px-md py-2 bg-surface hover:bg-surface-container cursor-pointer min-w-max">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">terminal</span>
+<span class="font-code-table text-code-table text-on-surface-variant">Output</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 8. Loading States (Moved here for layout balance) -->
+<div>
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">8. Loading States</h2>
+<div class="flex flex-col gap-lg">
+<!-- Skeleton -->
+<div class="bg-surface rounded-card p-md border border-outline-variant/50">
+<div class="flex gap-md items-center mb-md">
+<div class="w-10 h-10 rounded-full animate-shimmer"></div>
+<div class="space-y-2 flex-1">
+<div class="h-4 w-1/3 rounded animate-shimmer"></div>
+<div class="h-3 w-1/4 rounded animate-shimmer"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="h-3 w-full rounded animate-shimmer"></div>
+<div class="h-3 w-5/6 rounded animate-shimmer"></div>
+<div class="h-3 w-4/6 rounded animate-shimmer"></div>
+</div>
+</div>
+<!-- Spinner -->
+<div class="flex items-center gap-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Processing:</span>
+<div class="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin-custom"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Cards & Badges -->
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30">
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">5. Cards &amp; Badges</h2>
+<!-- Project Card -->
+<div class="bg-surface rounded-card p-lg border border-outline-variant shadow-sm hover:shadow-md transition-shadow cursor-pointer mb-lg group">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="bg-secondary-container p-sm rounded-ui">
+<span class="material-symbols-outlined text-on-secondary-container">folder_special</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">Student Management System</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Last edited 2 hrs ago</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<div class="bg-surface-container-high rounded-ui p-sm mb-md font-code-body text-code-body text-on-surface-variant text-[12px] border border-outline-variant/30">
+<pre><code>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello...");
+    }
+}</code></pre>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-xs">
+<!-- Badges inside card -->
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-highest text-on-surface font-label-sm text-[10px] border border-outline-variant/50">
+<span class="w-1.5 h-1.5 rounded-full bg-[#b07219]"></span> Java
+                            </span>
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-secondary-container/50 text-secondary font-label-sm text-[10px]">
+<span class="material-symbols-outlined text-[12px]">check_circle</span> Passed
+                            </span>
+</div>
+<!-- Avatar group snippet -->
+<div class="flex -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-surface object-cover" data-alt="A detailed portrait of a student developer in a modern tech lab, focused on coding, light mode lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSlWz_qfIoRUzVCZkUFkZ9o9GNhWLyU9PeyBelRXetwPa9OIvW6D98HNdtzFSEkEBHlfOyCU1VvurM3k_R-VxZp1g4hN1-rJs-y6xs-9Nk3rEBOXWEHOnp6IXaDV-gb0VnA2LYzf-mvb6y6N1PI_-_WUrycV5XaOYZpPxaNEJ4i8O5ypXG3qMTVxyAzT5J6xm6dTzkGj0ATW2X18TMATAIOcvmCa-vkvAKeyhAawwApa_xbJlJixoR"/>
+</div>
+</div>
+</div>
+<!-- standalone Badges -->
+<div class="flex flex-col gap-sm border-t border-outline-variant/50 pt-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Language Badges</span>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high text-on-surface font-code-table text-[11px] border border-outline-variant/50">
+<span class="w-2 h-2 rounded-full bg-[#b07219]"></span> Java
+                        </span>
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high text-on-surface font-code-table text-[11px] border border-outline-variant/50">
+<span class="w-2 h-2 rounded-full bg-[#3572A5]"></span> Python
+                        </span>
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high text-on-surface font-code-table text-[11px] border border-outline-variant/50">
+<span class="w-2 h-2 rounded-full bg-[#f34b7d]"></span> C++
+                        </span>
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high text-on-surface font-code-table text-[11px] border border-outline-variant/50">
+<span class="w-2 h-2 rounded-full bg-[#3178c6]"></span> TypeScript
+                        </span>
+</div>
+</div>
+</section>
+</div>
+<!-- 6. Navigation -->
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30 overflow-hidden relative">
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">6. Navigation &amp; Layout Shell</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg">Simulated Desktop Environment</p>
+<!-- Fake Browser/App Window -->
+<div class="border border-outline-variant rounded-card bg-background overflow-hidden flex flex-col shadow-sm h-[400px]">
+<!-- TopAppBar (from JSON definition structure) -->
+<nav class="bg-surface border-b border-outline-variant flex justify-between items-center px-md w-full h-[48px] z-50 shrink-0">
+<div class="flex items-center gap-lg">
+<!-- Brand -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<span class="font-headline-sm text-[18px] font-bold text-primary">CodePad</span>
+</div>
+<!-- Links -->
+<div class="hidden md:flex gap-1 h-[48px]">
+<!-- Active -->
+<button class="px-md font-label-sm text-label-sm flex items-center h-full text-primary border-b-2 border-primary pt-[2px]">Editor</button>
+<!-- Inactive -->
+<button class="px-md font-label-sm text-label-sm flex items-center h-full text-on-surface-variant hover:bg-on-surface/[0.08] transition-colors">Projects</button>
+<button class="px-md font-label-sm text-label-sm flex items-center h-full text-on-surface-variant hover:bg-on-surface/[0.08] transition-colors">Education</button>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<!-- Project Name Centered/Right aligned context -->
+<span class="hidden lg:block font-body-md text-[13px] text-on-surface-variant border-r border-outline-variant/50 pr-md mr-sm">hw_1_calculator</span>
+<button class="text-on-surface-variant p-1 rounded hover:bg-on-surface/[0.08]"><span class="material-symbols-outlined text-[20px]">light_mode</span></button>
+<button class="text-on-surface-variant p-1 rounded hover:bg-on-surface/[0.08]"><span class="material-symbols-outlined text-[20px]">notifications</span></button>
+<img alt="User profile" class="w-7 h-7 rounded-full border border-outline-variant ml-sm cursor-pointer object-cover" data-alt="User profile avatar, professional headshot in a well lit modern office environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7tyjBuQSTJvfLVejBytAmJWeGqpmNFw6wZpymLDMveROCEX_NZR6DsMSJ2TMN4M_F37LC93_zBBcIY8YeXfKYV_UO5_xgwVv7qzhVdRA916Gi5DvoYuR8P1ZW4ND1ubrgtKxpn9zcRd4t0nfyjD9nq6cJfcrapsxBgpuLBFKBya0FR39In_I5AoZ8Mpdi6aOF81rcz2P1y2lI8vhnVOvccVyRjplecxCCL9VUMzW4st-mwo3BOLsG"/>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex flex-1 overflow-hidden relative">
+<!-- SideNavBar (from JSON definition structure) -->
+<aside class="bg-surface-container flex flex-col w-[260px] h-full border-r border-outline-variant shrink-0 z-40">
+<!-- Sidebar Header -->
+<div class="p-md pb-sm flex justify-between items-center">
+<span class="font-title-md text-[12px] font-bold text-on-surface uppercase tracking-wider">Project Explorer</span>
+<div class="flex gap-1">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-on-surface/[0.08]"><span class="material-symbols-outlined text-[16px]">note_add</span></button>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-on-surface/[0.08]"><span class="material-symbols-outlined text-[16px]">create_new_folder</span></button>
+</div>
+</div>
+<!-- File Tree List -->
+<div class="flex-1 overflow-y-auto px-2 py-1 flex flex-col gap-[2px]">
+<!-- Folder open -->
+<button class="flex items-center gap-1 w-full px-2 py-1 rounded text-left hover:bg-on-surface/[0.04]">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">keyboard_arrow_down</span>
+<span class="material-symbols-outlined text-[16px] text-primary">folder_open</span>
+<span class="font-code-table text-code-table text-on-surface">src</span>
+</button>
+<!-- File (Active) -->
+<button class="flex items-center gap-2 w-full pl-6 pr-2 py-1 rounded text-left bg-primary-container text-on-primary-container">
+<span class="material-symbols-outlined text-[16px]">data_object</span>
+<span class="font-code-table text-code-table">Main.java</span>
+</button>
+<!-- File -->
+<button class="flex items-center gap-2 w-full pl-6 pr-2 py-1 rounded text-left text-on-surface-variant hover:bg-on-surface/[0.04]">
+<span class="material-symbols-outlined text-[16px]">data_object</span>
+<span class="font-code-table text-code-table">Calculator.java</span>
+</button>
+<!-- Context Menu Overlay (Positioned absolutely relative to the aside for demo) -->
+<div class="absolute top-32 left-12 w-48 bg-surface rounded-card border border-outline-variant shadow-lg py-1 z-50">
+<button class="w-full text-left px-md py-2 font-label-sm text-label-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">edit</span> Rename
+                                 </button>
+<button class="w-full text-left px-md py-2 font-label-sm text-label-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">play_arrow</span> Set as Entry Point
+                                 </button>
+<div class="h-px bg-outline-variant/50 my-1"></div>
+<button class="w-full text-left px-md py-2 font-label-sm text-label-sm text-error hover:bg-error-container hover:text-on-error-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">delete</span> Delete
+                                 </button>
+</div>
+</div>
+</aside>
+<!-- Editor Canvas (Empty for nav context) -->
+<main class="flex-1 bg-surface-container-lowest p-lg flex items-center justify-center relative">
+<!-- Animated Shader Background Demo -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+
+</div>
+<div class="text-center z-10">
+<span class="material-symbols-outlined text-[48px] text-surface-variant mb-2">code</span>
+<p class="font-body-md text-on-surface-variant">Select a file to start coding</p>
+</div>
+</main>
+</div>
+</div>
+</section>
+<!-- 7. Feedback & Overlays -->
+<section class="bg-surface-container rounded-card p-lg border border-outline-variant/30">
+<h2 class="font-title-md text-title-md font-semibold mb-md text-on-surface">7. Feedback &amp; Overlays</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-start">
+<!-- Toasts & Tooltips -->
+<div class="space-y-xl">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-sm">Toast Notifications</span>
+<div class="flex flex-col gap-sm">
+<!-- Success Toast -->
+<div class="bg-surface rounded-ui shadow-md border-l-4 border-[#3b7e41] p-md flex items-start gap-3 max-w-sm">
+<span class="material-symbols-outlined text-[#3b7e41] filled">check_circle</span>
+<div>
+<h4 class="font-label-sm text-label-sm font-semibold text-on-surface">Build Successful</h4>
+<p class="font-body-md text-[12px] text-on-surface-variant mt-1">Compiled in 1.2s</p>
+</div>
+<button class="ml-auto text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<!-- Error Toast -->
+<div class="bg-error-container rounded-ui shadow-md border-l-4 border-error p-md flex items-start gap-3 max-w-sm">
+<span class="material-symbols-outlined text-error filled">error</span>
+<div>
+<h4 class="font-label-sm text-label-sm font-semibold text-on-error-container">Compilation Error</h4>
+<p class="font-body-md text-[12px] text-on-error-container/80 mt-1">Main.java: 12 errors found.</p>
+</div>
+<button class="ml-auto text-on-error-container hover:text-error"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+</div>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-sm">Tooltip (Hover state)</span>
+<div class="relative inline-block mt-4 ml-4">
+<!-- Target -->
+<span class="font-code-body text-code-body text-error underline decoration-wavy decoration-error cursor-help">Studnt</span>
+<!-- Tooltip Box -->
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-inverse-surface text-inverse-on-surface px-3 py-1.5 rounded-ui font-code-table text-code-table text-[11px] shadow-sm z-10 after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-inverse-surface">
+                                cannot find symbol: class Studnt
+                            </div>
+</div>
+</div>
+</div>
+<!-- Modal Shell -->
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-sm">Centered Modal</span>
+<!-- Simulating overlay background within this block -->
+<div class="relative bg-on-surface/20 rounded-card p-xl flex items-center justify-center min-h-[300px] border border-outline-variant/30">
+<!-- Actual Modal -->
+<div class="bg-surface rounded-card w-full max-w-sm shadow-lg overflow-hidden flex flex-col">
+<div class="px-lg py-md border-b border-outline-variant/50 flex justify-between items-center bg-surface-container-low">
+<h3 class="font-title-md text-title-md text-on-surface">Delete Project?</h3>
+<button class="text-on-surface-variant hover:text-on-surface rounded-full p-1 hover:bg-on-surface/[0.08] transition-colors"><span class="material-symbols-outlined text-[20px]">close</span></button>
+</div>
+<div class="p-lg">
+<p class="font-body-md text-body-md text-on-surface-variant">Are you sure you want to delete <span class="font-code-table font-semibold text-on-surface">hw_1_calculator</span>? This action cannot be undone and will remove all files permanently.</p>
+</div>
+<div class="px-lg py-md bg-surface-container-low flex justify-end gap-sm border-t border-outline-variant/50">
+<button class="text-primary rounded-ui px-md py-sm font-label-sm text-label-sm hover:bg-primary/[0.08] transition-colors">Cancel</button>
+<button class="bg-error text-on-error rounded-ui px-md py-sm font-label-sm text-label-sm hover:bg-error/90 transition-colors">Delete Permanently</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</body></html>

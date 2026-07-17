@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad Component Reference - Desktop Dark</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#151312",
+                      "error-container": "#93000a",
+                      "background": "#151312",
+                      "surface-dim": "#151312",
+                      "on-surface-variant": "#ddc1b4",
+                      "on-surface": "#ece0dc",
+                      "error": "#ffb4ab",
+                      "surface-container-high": "#2f2826",
+                      "on-tertiary-fixed-variant": "#633b48",
+                      "on-secondary": "#3e2e00",
+                      "on-primary": "#401500",
+                      "on-error": "#690005",
+                      "tertiary-fixed": "#ffd9e3",
+                      "secondary-fixed-dim": "#e8c266",
+                      "on-tertiary-container": "#ffd9e3",
+                      "on-primary-fixed-variant": "#783200",
+                      "on-secondary-fixed-variant": "#5a4400",
+                      "on-secondary-container": "#ffdf96",
+                      "surface-container-highest": "#3a3330",
+                      "outline-variant": "#564339",
+                      "inverse-primary": "#9d4300",
+                      "on-secondary-fixed": "#251a00",
+                      "surface-tint": "#ffb690",
+                      "secondary-fixed": "#ffdf96",
+                      "primary-container": "#5b2300",
+                      "tertiary-container": "#4a2532",
+                      "primary-fixed-dim": "#ffb690",
+                      "on-background": "#ece0dc",
+                      "inverse-surface": "#ece0dc",
+                      "on-primary-fixed": "#341100",
+                      "tertiary-fixed-dim": "#eeb8c8",
+                      "surface-container-low": "#201a18",
+                      "surface-container-lowest": "#100e0d",
+                      "surface-variant": "#564339",
+                      "secondary": "#e8c266",
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#3b312e",
+                      "inverse-on-surface": "#362f2d",
+                      "on-tertiary": "#34111d",
+                      "primary": "#ffb690",
+                      "on-tertiary-fixed": "#31111d",
+                      "tertiary": "#eeb8c8",
+                      "secondary-container": "#5a4400",
+                      "surface-container": "#241e1c",
+                      "outline": "#a48c80",
+                      "on-primary-container": "#ffdbca",
+                      "primary-fixed": "#ffdbca"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "base": "4px",
+                      "gutter": "1px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "sidebar_width": "260px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "code-table": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "code-body": [
+                              "JetBrains Mono"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "code-table": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-body": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        body {
+            background-color: #151312; /* Fallback */
+            color: #ece0dc;
+        }
+        .component-section {
+            border: 1px dashed rgba(221, 193, 180, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen p-8">
+<div class="max-w-7xl mx-auto space-y-12">
+<header class="mb-12 border-b border-outline-variant pb-6">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">CodePad Component Reference</h1>
+<p class="text-on-surface-variant font-body-md text-body-md">Desktop - Dark Theme (#151312 surface, #FFB690 primary)</p>
+</header>
+<!-- 1. Buttons -->
+<section class="component-section p-8 rounded-xl bg-surface-container-low">
+<h2 class="font-headline-sm text-headline-sm mb-6 text-primary">1. Buttons</h2>
+<div class="grid gap-8">
+<!-- Filled -->
+<div>
+<h3 class="font-title-md text-title-md mb-4 text-on-surface">Filled Buttons</h3>
+<div class="flex flex-wrap gap-4 items-center">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-sm text-label-sm">Default</button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-sm text-label-sm relative overflow-hidden after:absolute after:inset-0 after:bg-on-primary/[0.08]">Hover</button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-sm text-label-sm scale-[0.97] relative overflow-hidden after:absolute after:inset-0 after:bg-on-primary/[0.12]">Active</button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-sm text-label-sm ring-2 ring-primary ring-offset-2 ring-offset-background">Focus</button>
+<button class="bg-on-surface/[0.12] text-on-surface/[0.38] px-4 py-2 rounded-xl font-label-sm text-label-sm cursor-not-allowed">Disabled</button>
+</div>
+</div>
+<!-- Tonal -->
+<div>
+<h3 class="font-title-md text-title-md mb-4 text-on-surface">Tonal Buttons</h3>
+<div class="flex flex-wrap gap-4 items-center">
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl font-label-sm text-label-sm">Default</button>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl font-label-sm text-label-sm relative overflow-hidden after:absolute after:inset-0 after:bg-on-secondary-container/[0.08]">Hover</button>
+</div>
+</div>
+<!-- Outlined -->
+<div>
+<h3 class="font-title-md text-title-md mb-4 text-on-surface">Outlined Buttons</h3>
+<div class="flex flex-wrap gap-4 items-center">
+<button class="border border-outline text-primary px-4 py-2 rounded-xl font-label-sm text-label-sm">Default</button>
+<button class="border border-outline text-primary px-4 py-2 rounded-xl font-label-sm text-label-sm bg-primary/[0.08]">Hover</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Form Fields -->
+<section class="component-section p-8 rounded-xl bg-surface-container-low">
+<h2 class="font-headline-sm text-headline-sm mb-6 text-primary">2. Form Fields</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<!-- Text Field -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Username</label>
+<input class="w-full bg-surface-container border border-outline rounded-xl px-4 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors font-body-md text-body-md placeholder-on-surface-variant/[0.5]" placeholder="Enter username" type="text"/>
+</div>
+<!-- Text Field Error -->
+<div>
+<label class="block font-label-sm text-label-sm text-error mb-1">Email Address</label>
+<input class="w-full bg-surface-container border-2 border-error rounded-xl px-4 py-2 text-on-surface focus:outline-none font-body-md text-body-md" type="email" value="invalid-email"/>
+<p class="font-label-sm text-label-sm text-error mt-1">Please enter a valid email.</p>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Textarea -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Description</label>
+<textarea class="w-full bg-surface-container border border-outline rounded-xl px-4 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors font-body-md text-body-md placeholder-on-surface-variant/[0.5]" rows="3"></textarea>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Tabs -->
+<section class="component-section p-8 rounded-xl bg-surface-container-low">
+<h2 class="font-headline-sm text-headline-sm mb-6 text-primary">4. Tabs</h2>
+<div class="space-y-8">
+<!-- Pill Tabs -->
+<div>
+<h3 class="font-title-md text-title-md mb-4 text-on-surface">Pill-style</h3>
+<div class="inline-flex bg-surface-container rounded-full p-1">
+<button class="px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm transition-colors">Overview</button>
+<button class="px-6 py-2 rounded-full text-on-surface-variant hover:bg-on-surface/[0.08] font-label-sm text-label-sm transition-colors">Settings</button>
+<button class="px-6 py-2 rounded-full text-on-surface-variant hover:bg-on-surface/[0.08] font-label-sm text-label-sm transition-colors">Members</button>
+</div>
+</div>
+<!-- Editor Tabs -->
+<div>
+<h3 class="font-title-md text-title-md mb-4 text-on-surface">Editor-style</h3>
+<div class="flex border-b border-outline-variant">
+<button class="px-4 py-2 flex items-center gap-2 bg-surface-container-highest border-b-2 border-primary text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px] text-secondary">data_object</span>
+<span class="font-code-table text-code-table">Main.java</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant hover:text-on-surface ml-2 rounded-full hover:bg-on-surface/[0.08] p-[2px]">close</span>
+</button>
+<button class="px-4 py-2 flex items-center gap-2 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors border-b-2 border-transparent">
+<span class="material-symbols-outlined text-[16px] text-secondary">data_object</span>
+<span class="font-code-table text-code-table">Student.java</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant hover:text-on-surface ml-2 rounded-full hover:bg-on-surface/[0.08] p-[2px] opacity-0 group-hover:opacity-100">close</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Cards & Badges -->
+<section class="component-section p-8 rounded-xl bg-surface-container-low">
+<h2 class="font-headline-sm text-headline-sm mb-6 text-primary">5. Cards &amp; Badges</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Project Card -->
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant hover:bg-surface-container-high transition-colors cursor-pointer group relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface mb-1">Prime Number Checker</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-sm bg-secondary-container text-on-secondary-container font-code-table text-code-table text-[10px]">Python</span>
+<span>Updated 1 day ago</span>
+</p>
+</div>
+<span class="px-2 py-1 rounded-full bg-primary-container/[0.2] text-primary border border-primary/[0.3] font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Passed
+                        </span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant">
+<pre class="font-code-body text-code-body text-on-surface-variant text-sm overflow-hidden text-ellipsis whitespace-nowrap"><code>def is_prime(n):
+    if n &lt;= 1: return False</code></pre>
+</div>
+<div class="absolute inset-0 bg-on-surface opacity-0 group-hover:opacity-[0.04] transition-opacity pointer-events-none"></div>
+</div>
+<!-- Badges -->
+<div>
+<h3 class="font-title-md text-title-md mb-4 text-on-surface">Language Badges</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-high border border-outline-variant rounded-lg font-code-table text-code-table text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#b07219]"></span> Java
+                        </span>
+<span class="px-3 py-1 bg-surface-container-high border border-outline-variant rounded-lg font-code-table text-code-table text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#3572A5]"></span> Python
+                        </span>
+<span class="px-3 py-1 bg-surface-container-high border border-outline-variant rounded-lg font-code-table text-code-table text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#f34b7d]"></span> C++
+                        </span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</body></html>

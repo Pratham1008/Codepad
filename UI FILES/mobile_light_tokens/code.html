@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Mobile Design Tokens (Light)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-variant": "#ece0dc",
+                      "background": "#fff8f6",
+                      "primary-container": "#9d4300",
+                      "outline": "#897267",
+                      "surface-dim": "#e4d7d4",
+                      "on-primary-container": "#ffceb6",
+                      "on-tertiary-fixed-variant": "#633b48",
+                      "on-surface": "#201a18",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#fbeeea",
+                      "tertiary-fixed-dim": "#eeb8c8",
+                      "tertiary-fixed": "#ffd9e3",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#31111d",
+                      "on-surface-variant": "#564339",
+                      "surface-container-high": "#f2e5e2",
+                      "inverse-primary": "#ffb690",
+                      "surface-container-low": "#fef1ed",
+                      "on-primary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#251a00",
+                      "secondary-fixed": "#ffdf96",
+                      "tertiary-container": "#7d5260",
+                      "on-primary-fixed-variant": "#783200",
+                      "on-secondary-container": "#775b01",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#ddc1b4",
+                      "error-container": "#ffdad6",
+                      "tertiary": "#633b48",
+                      "inverse-surface": "#362f2d",
+                      "on-error": "#ffffff",
+                      "on-background": "#201a18",
+                      "primary-fixed-dim": "#ffb690",
+                      "secondary": "#765a00",
+                      "secondary-container": "#fdd677",
+                      "surface-container-highest": "#ece0dc",
+                      "secondary-fixed-dim": "#e8c266",
+                      "primary": "#783100",
+                      "on-primary-fixed": "#341100",
+                      "surface-container": "#f8ebe7",
+                      "on-tertiary-container": "#ffcbda",
+                      "surface-bright": "#fff8f6",
+                      "on-secondary-fixed-variant": "#5a4400",
+                      "surface": "#fff8f6",
+                      "surface-tint": "#9d4300",
+                      "error": "#ba1a1a",
+                      "primary-fixed": "#ffdbca"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "lg": "24px",
+                      "sidebar_width": "260px",
+                      "gutter": "1px",
+                      "xs": "4px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "code-table": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "code-body": [
+                              "JetBrains Mono"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-table": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-body": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen pb-24 md:pb-0">
+<!-- TopNavBar (Shared Component, Mobile Context) -->
+<nav class="bg-surface font-title-md text-title-md full-width top-0 border-b border-outline-variant sticky z-50">
+<div class="flex justify-between items-center w-full px-md h-16">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">code</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">CodePad</span>
+<span class="ml-sm font-label-sm text-label-sm text-on-surface-variant bg-surface-variant px-2 py-1 rounded-full uppercase tracking-widest">Mobile - Light</span>
+</div>
+<div class="flex items-center gap-sm md:hidden">
+<button class="text-on-surface-variant hover:bg-on-surface/8 transition-colors p-2 rounded-full active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md mx-auto p-md flex flex-col gap-xl mt-md">
+<!-- Header Section -->
+<header class="flex flex-col gap-sm">
+<h1 class="font-headline-sm text-headline-sm text-on-surface">Design Tokens Reference</h1>
+<p class="text-on-surface-variant">Core visual foundations for CodePad mobile experiences.</p>
+</header>
+<!-- Color Palette: Surfaces -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md border-b border-outline-variant pb-xs">Surfaces &amp; Containers</h2>
+<div class="flex flex-col gap-sm">
+<div class="flex items-center justify-between p-md bg-background border border-outline-variant rounded-xl">
+<span class="font-code-body text-code-body text-on-background">bg-background</span>
+<span class="w-8 h-8 rounded-full border border-outline-variant bg-background"></span>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container rounded-xl">
+<span class="font-code-body text-code-body text-on-surface">bg-surface-container</span>
+<span class="w-8 h-8 rounded-full border border-outline-variant bg-surface-container"></span>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container-high rounded-xl shadow-sm">
+<span class="font-code-body text-code-body text-on-surface">bg-surface-container-high</span>
+<span class="w-8 h-8 rounded-full border border-outline-variant bg-surface-container-high"></span>
+</div>
+</div>
+</section>
+<!-- Components: Buttons & Chips -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md border-b border-outline-variant pb-xs">Interactive Elements</h2>
+<div class="flex flex-col gap-lg bg-surface-container p-md rounded-xl">
+<!-- Primary Button -->
+<div class="flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">PRIMARY ACTION</span>
+<button class="bg-primary text-on-primary font-title-md text-title-md py-sm px-md rounded-xl w-full flex items-center justify-center gap-xs active:scale-97 transition-transform duration-150 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                        Run Code
+                    </button>
+<code class="font-code-table text-code-table text-on-surface-variant text-center mt-1">bg-primary text-on-primary rounded-xl</code>
+</div>
+<!-- Secondary Chips -->
+<div class="flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">SECONDARY CHIPS</span>
+<div class="flex flex-wrap gap-sm">
+<div class="border border-outline text-on-surface font-body-md text-body-md py-1 px-sm rounded-xl flex items-center gap-1 bg-surface">
+<span class="material-symbols-outlined text-[16px]">folder</span>
+                            src
+                        </div>
+<div class="border border-outline text-on-surface font-body-md text-body-md py-1 px-sm rounded-xl flex items-center gap-1 bg-surface">
+<span class="material-symbols-outlined text-[16px]">description</span>
+                            index.js
+                        </div>
+</div>
+</div>
+<!-- Tertiary / Badge -->
+<div class="flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">TERTIARY / BADGE</span>
+<div class="flex items-center gap-sm">
+<span class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-2 py-1 rounded-full">v1.4.2</span>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded-full">Beta</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Components: Alerts -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md border-b border-outline-variant pb-xs">States &amp; Alerts</h2>
+<div class="bg-error-container text-on-error-container p-md rounded-xl flex items-start gap-sm">
+<span class="material-symbols-outlined mt-1">error</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md">Build Failed</span>
+<span class="font-body-md text-body-md opacity-90">Syntax error at line 42. Check terminal for details.</span>
+</div>
+</div>
+<code class="font-code-table text-code-table text-on-surface-variant mt-[-8px]">bg-error-container text-on-error-container</code>
+</section>
+<!-- Typography Specimens -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md border-b border-outline-variant pb-xs">Typography Hierarchy</h2>
+<div class="flex flex-col gap-md bg-surface-container-low p-md rounded-xl border border-outline-variant">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline mb-1">font-headline-sm</span>
+<div class="font-headline-sm text-headline-sm text-on-surface">The quick brown fox</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline mb-1">font-title-md</span>
+<div class="font-title-md text-title-md text-on-surface">Jumps over the lazy dog</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline mb-1">font-body-md</span>
+<div class="font-body-md text-body-md text-on-surface-variant">A practically useful sans-serif for reading long documentation.</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline mb-1">font-code-body</span>
+<div class="font-code-body text-code-body text-primary-container bg-surface p-sm border border-outline-variant rounded-lg">
+const focus = "developer";<br/>
+console.log(focus);
+                    </div>
+</div>
+</div>
+</section>
+</main>
+<!-- SideNavBar (Adapted as Mobile Bottom Bar for context simulation if needed, though hidden by default per logic on true mobile destinations, adding here for token visibility if considered a primary tab) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface-container border-t border-outline-variant flex justify-around py-sm z-50 h-[80px]">
+<button class="flex flex-col items-center gap-1 active:scale-97 transition-transform duration-150 w-16">
+<div class="bg-primary-container text-on-primary-container rounded-full px-4 py-1 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Explorer</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:bg-on-surface/8 transition-all p-1 rounded-xl active:scale-97 w-16">
+<div class="px-4 py-1 flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</div>
+<span class="font-label-sm text-label-sm">Search</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:bg-on-surface/8 transition-all p-1 rounded-xl active:scale-97 w-16">
+<div class="px-4 py-1 flex items-center justify-center">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<span class="font-label-sm text-label-sm">Settings</span>
+</button>
+</nav>
+</body></html>

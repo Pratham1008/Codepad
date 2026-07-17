@@ -1,30 +1,22 @@
 package com.codepad.workerservice.worker;
 
 public class CppStrategy implements LanguageStrategy {
+    @Override public String getDockerImage() { return "judge-cpp:latest"; }
 
     @Override
-    public String getDockerImage() {
-        return "judge-cpp:latest";
+    public String[] getCompileCommand() {
+        return new String[]{"sh", "-c", "g++ -O2 -Wall -std=c++17 $(find /workspace -name '*.cpp') -o /workspace/a.out"};
     }
 
     @Override
-    public String getSourceFileName(String sourceCode) {
-        return "main.cpp";
+    public String[] getRunCommand() {
+        String script = "t=$(date +%s%3N); /usr/bin/time -f \"\\n__MEM__%M\" /workspace/a.out; " +
+                        "EXIT_CODE=$?; echo \"\" >&2; echo \"__TIME__$(($(date +%s%3N)-t))\" >&2; exit $EXIT_CODE";
+        return new String[]{"sh", "-c", script};
     }
 
     @Override
-    public String[] getPipelineCommand(String sourceCode) {
-        String fileName = getSourceFileName(sourceCode);
-        String compileCmd = "g++ -O2 -Wall -std=c++17 /sandbox/" + fileName + " -o /sandbox/a.out";
-        String runCmd = "/sandbox/a.out";
-        return new String[]{"sh", "-c", buildPipeline(sourceCode, fileName, compileCmd, runCmd)};
-    }
-
-    @Override
-    public String[] getInteractivePipelineCommand(String sourceCode) {
-        String fileName = getSourceFileName(sourceCode);
-        String compileCmd = "g++ -O2 -Wall -std=c++17 /sandbox/" + fileName + " -o /sandbox/a.out";
-        String runCmd = "/sandbox/a.out";
-        return new String[]{"sh", "-c", buildInteractivePipeline(sourceCode, fileName, compileCmd, runCmd)};
+    public String[] getDiagnosticsCommand() {
+        return new String[]{"sh", "-c", "g++ -fsyntax-only -fdiagnostics-format=json -std=c++17 $(find /workspace -name '*.cpp')"};
     }
 }

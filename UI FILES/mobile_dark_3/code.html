@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Mobile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Staggered fade-up animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up-item {
+            opacity: 0;
+            animation: fadeUp 0.3s ease-out forwards;
+        }
+        .delay-1 { animation-delay: 60ms; }
+        .delay-2 { animation-delay: 120ms; }
+        .delay-3 { animation-delay: 180ms; }
+        .delay-4 { animation-delay: 240ms; }
+        .delay-5 { animation-delay: 300ms; }
+        
+        /* Hide scrollbar for chips */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#7d5260",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#775b01",
+                        "on-tertiary-fixed": "#31111d",
+                        "on-primary-container": "#ffceb6",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#ece0dc",
+                        "surface-tint": "#9d4300",
+                        "tertiary-fixed-dim": "#eeb8c8",
+                        "on-primary-fixed-variant": "#783200",
+                        "on-surface": "#201a18",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#ffcbda",
+                        "on-surface-variant": "#564339",
+                        "surface-container-low": "#fef1ed",
+                        "on-primary-fixed": "#341100",
+                        "surface-container-highest": "#ece0dc",
+                        "surface-container-high": "#f2e5e2",
+                        "surface-bright": "#fff8f6",
+                        "primary-container": "#9d4300",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffd9e3",
+                        "primary-fixed-dim": "#ffb690",
+                        "background": "#fff8f6",
+                        "inverse-surface": "#362f2d",
+                        "surface-container": "#f8ebe7",
+                        "inverse-on-surface": "#fbeeea",
+                        "secondary-fixed-dim": "#e8c266",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#765a00",
+                        "on-background": "#201a18",
+                        "surface-dim": "#e4d7d4",
+                        "primary": "#783100",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#fff8f6",
+                        "inverse-primary": "#ffb690",
+                        "on-tertiary-fixed-variant": "#633b48",
+                        "primary-fixed": "#ffdbca",
+                        "on-secondary-fixed": "#251a00",
+                        "secondary-container": "#fdd677",
+                        "tertiary": "#633b48",
+                        "outline-variant": "#ddc1b4",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#5a4400",
+                        "secondary-fixed": "#ffdf96",
+                        "outline": "#897267"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "sidebar_width": "260px",
+                        "gutter": "1px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "base": "4px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter"],
+                        "code-body": ["JetBrains Mono"],
+                        "code-table": ["JetBrains Mono"],
+                        "title-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code-body": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "code-table": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#151312] text-on-background font-body-md min-h-screen pb-24 md:hidden">
+<!-- Top Navigation Bar (Mobile Variant) -->
+<header class="flex justify-between items-center px-md w-full h-[48px] z-50 bg-[#151312]/80 backdrop-blur-md border-b border-outline-variant/30 sticky top-0 fade-up-item">
+<div class="flex items-center gap-sm">
+<img alt="CodePad Logo" class="w-6 h-6 object-contain rounded-sm" src="https://lh3.googleusercontent.com/aida/AP1WRLuL-LWPWb__0YSygr_dMWTPoV44TikG95KTkOYLbK5SQKxpoDS600NSneXw10uU1QIv_cc1qnjFiOEsOHl60XIgAAPvCM7PKA4_WVOqe43qFAuTb_D0eSJhxshSCpiVqNh3hIDOXFqUbFNql8QdxkiKBEj2z2tWwE4nzZB6G5tznX20xM4XstYkWPoH9QEFrBzpbDIeSQKlDPJIJQNjaAUVw24BTdaomhEulscGkQ0wlDwwAvnHG6bduW8"/>
+<span class="font-headline-sm text-headline-sm font-bold text-primary-fixed-dim">CodePad</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 rounded-full text-outline hover:bg-on-surface/[0.08] active:scale-[0.97] duration-150 transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="p-2 rounded-full text-outline hover:bg-on-surface/[0.08] active:scale-[0.97] duration-150 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full text-outline hover:bg-on-surface/[0.08] active:scale-[0.97] duration-150 transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-md py-lg flex flex-col gap-lg">
+<!-- Header -->
+<div class="fade-up-item delay-1">
+<h1 class="font-headline-sm text-headline-sm text-on-background">Recent Projects</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Pick up where you left off</p>
+</div>
+<!-- Scrollable Filter Chips -->
+<div class="flex gap-sm overflow-x-auto no-scrollbar pb-2 fade-up-item delay-2">
+<button class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0 active:scale-[0.97] duration-150">All Projects</button>
+<button class="bg-surface-container/20 border border-outline/30 text-outline px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0 active:scale-[0.97] duration-150 hover:bg-surface-container/40">Java</button>
+<button class="bg-surface-container/20 border border-outline/30 text-outline px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0 active:scale-[0.97] duration-150 hover:bg-surface-container/40">Python</button>
+<button class="bg-surface-container/20 border border-outline/30 text-outline px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0 active:scale-[0.97] duration-150 hover:bg-surface-container/40">C++</button>
+<button class="bg-surface-container/20 border border-outline/30 text-outline px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0 active:scale-[0.97] duration-150 hover:bg-surface-container/40">Web</button>
+</div>
+<!-- Project Stack -->
+<div class="flex flex-col gap-sm fade-up-item delay-3">
+<!-- Project Card 1 -->
+<div class="bg-surface-container/10 border border-outline-variant/20 rounded-lg p-md flex flex-col gap-3 active:scale-[0.97] duration-150 transition-transform">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center text-primary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="folder">folder</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-background">Ecommerce-API</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Updated 2h ago</span>
+</div>
+</div>
+<button class="text-outline hover:text-primary-fixed-dim transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div class="flex gap-2">
+<span class="bg-surface-container/30 px-2 py-1 rounded font-code-table text-code-table text-on-surface-variant">Java</span>
+<span class="bg-surface-container/30 px-2 py-1 rounded font-code-table text-code-table text-on-surface-variant">Spring Boot</span>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="bg-surface-container/10 border border-outline-variant/20 rounded-lg p-md flex flex-col gap-3 active:scale-[0.97] duration-150 transition-transform fade-up-item delay-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-secondary-container/20 flex items-center justify-center text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="data_object">data_object</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-background">Neural-Net-Core</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Updated yesterday</span>
+</div>
+</div>
+<button class="text-outline hover:text-primary-fixed-dim transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div class="flex gap-2">
+<span class="bg-surface-container/30 px-2 py-1 rounded font-code-table text-code-table text-on-surface-variant">Python</span>
+<span class="bg-surface-container/30 px-2 py-1 rounded font-code-table text-code-table text-on-surface-variant">TensorFlow</span>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="bg-surface-container/10 border border-outline-variant/20 rounded-lg p-md flex flex-col gap-3 active:scale-[0.97] duration-150 transition-transform fade-up-item delay-5">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" data-icon="terminal">terminal</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-background">System-Monitor</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Updated 3d ago</span>
+</div>
+</div>
+<button class="text-outline hover:text-primary-fixed-dim transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div class="flex gap-2">
+<span class="bg-surface-container/30 px-2 py-1 rounded font-code-table text-code-table text-on-surface-variant">C++</span>
+<span class="bg-surface-container/30 px-2 py-1 rounded font-code-table text-code-table text-on-surface-variant">Linux</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-md bg-primary text-on-primary w-14 h-14 rounded-xl flex items-center justify-center shadow-lg active:scale-[0.97] duration-150 z-40 fade-up-item delay-5">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 bg-[#151312] border-t border-outline-variant/20 z-50 px-4 pb-safe">
+<button class="flex flex-col items-center justify-center bg-secondary-container/20 text-secondary-fixed-dim rounded-full px-4 py-1 active:scale-[0.97] duration-150">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-sm text-[10px] mt-0.5">Files</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline hover:bg-on-surface/[0.04] rounded-full px-4 py-1 active:scale-[0.97] duration-150">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+<span class="font-label-sm text-[10px] mt-0.5">Editor</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline hover:bg-on-surface/[0.04] rounded-full px-4 py-1 active:scale-[0.97] duration-150">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+<span class="font-label-sm text-[10px] mt-0.5">Terminal</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline hover:bg-on-surface/[0.04] rounded-full px-4 py-1 active:scale-[0.97] duration-150">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-[10px] mt-0.5">Settings</span>
+</button>
+</nav>
+<script>
+        // Simple script to handle bottom nav active state if needed
+        document.querySelectorAll('nav button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active styling from all
+                document.querySelectorAll('nav button').forEach(b => {
+                    b.className = 'flex flex-col items-center justify-center text-outline hover:bg-on-surface/[0.04] rounded-full px-4 py-1 active:scale-[0.97] duration-150';
+                });
+                // Add active styling to clicked
+                this.className = 'flex flex-col items-center justify-center bg-secondary-container/20 text-secondary-fixed-dim rounded-full px-4 py-1 active:scale-[0.97] duration-150';
+            });
+        });
+    </script>
+</body></html>

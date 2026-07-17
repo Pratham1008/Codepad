@@ -1,28 +1,26 @@
 package com.codepad.workerservice.worker;
 
 public class PythonStrategy implements LanguageStrategy {
+    @Override public String getDockerImage() { return "judge-python:latest"; }
 
     @Override
-    public String getDockerImage() {
-        return "judge-python:latest";
+    public String[] getCompileCommand() {
+        return null;
     }
 
     @Override
-    public String getSourceFileName(String sourceCode) {
-        return "main.py";
+    public String[] getRunCommand() {
+        String script = "MAIN_FILE=$(grep -rl 'if __name__ == \"__main__\"' /workspace | grep '\\.py$' | head -n 1); " +
+                        "[ -z \"$MAIN_FILE\" ] && MAIN_FILE=$(find /workspace -name \"main.py\" | head -n 1); " +
+                        "[ -z \"$MAIN_FILE\" ] && MAIN_FILE=$(find /workspace -name \"*.py\" | head -n 1); " +
+                        "if [ -z \"$MAIN_FILE\" ]; then echo 'No python file found' >&2; exit 1; fi; " +
+                        "t=$(date +%s%3N); /usr/bin/time -f \"\\n__MEM__%M\" python3 -u $MAIN_FILE; " +
+                        "EXIT_CODE=$?; echo \"\" >&2; echo \"__TIME__$(($(date +%s%3N)-t))\" >&2; exit $EXIT_CODE";
+        return new String[]{"sh", "-c", script};
     }
 
     @Override
-    public String[] getPipelineCommand(String sourceCode) {
-        String fileName = getSourceFileName(sourceCode);
-        String runCmd = "python3 -u /sandbox/" + fileName;
-        return new String[]{"sh", "-c", buildPipeline(sourceCode, fileName, null, runCmd)};
-    }
-
-    @Override
-    public String[] getInteractivePipelineCommand(String sourceCode) {
-        String fileName = getSourceFileName(sourceCode);
-        String runCmd = "python3 -u /sandbox/" + fileName;
-        return new String[]{"sh", "-c", buildInteractivePipeline(sourceCode, fileName, null, runCmd)};
+    public String[] getDiagnosticsCommand() {
+        return new String[]{"sh", "-c", "python3 -m py_compile $(find /workspace -name '*.py')"};
     }
 }

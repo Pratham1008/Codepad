@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Mobile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#7d5260",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-container": "#775b01",
+                    "on-tertiary-fixed": "#31111d",
+                    "on-primary-container": "#ffceb6",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#ece0dc",
+                    "surface-tint": "#9d4300",
+                    "tertiary-fixed-dim": "#eeb8c8",
+                    "on-primary-fixed-variant": "#783200",
+                    "on-surface": "#201a18",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#ffcbda",
+                    "on-surface-variant": "#564339",
+                    "surface-container-low": "#fef1ed",
+                    "on-primary-fixed": "#341100",
+                    "surface-container-highest": "#ece0dc",
+                    "surface-container-high": "#f2e5e2",
+                    "surface-bright": "#fff8f6",
+                    "primary-container": "#9d4300",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffd9e3",
+                    "primary-fixed-dim": "#ffb690",
+                    "background": "#fff8f6",
+                    "inverse-surface": "#362f2d",
+                    "surface-container": "#f8ebe7",
+                    "inverse-on-surface": "#fbeeea",
+                    "secondary-fixed-dim": "#e8c266",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#765a00",
+                    "on-background": "#201a18",
+                    "surface-dim": "#e4d7d4",
+                    "primary": "#783100",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#fff8f6",
+                    "inverse-primary": "#ffb690",
+                    "on-tertiary-fixed-variant": "#633b48",
+                    "primary-fixed": "#ffdbca",
+                    "on-secondary-fixed": "#251a00",
+                    "secondary-container": "#fdd677",
+                    "tertiary": "#633b48",
+                    "outline-variant": "#ddc1b4",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#5a4400",
+                    "secondary-fixed": "#ffdf96",
+                    "outline": "#897267"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sidebar_width": "260px",
+                    "gutter": "1px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "code-body": [
+                            "JetBrains Mono"
+                    ],
+                    "code-table": [
+                            "JetBrains Mono"
+                    ],
+                    "title-md": [
+                            "Inter"
+                    ],
+                    "headline-sm": [
+                            "Inter"
+                    ],
+                    "label-sm": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "code-body": [
+                            "14px",
+                            {
+                                    "lineHeight": "22px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "code-table": [
+                            "12px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "0.15px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-sm": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-sm": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-sm-mobile": [
+                            "10px",
+                            {
+                                    "lineHeight": "14px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "57px",
+                            {
+                                    "lineHeight": "64px",
+                                    "letterSpacing": "-0.25px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .slide-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpAnim 0.5s ease-out forwards;
+        }
+        @keyframes slideUpAnim {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md h-screen w-screen overflow-hidden flex flex-col antialiased">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center px-md w-full h-[48px] z-50 bg-surface/80 backdrop-blur-md sticky top-0 shrink-0 border-b-0" style="box-shadow: 0 1px 0 rgba(0,0,0,0.05);">
+<div class="flex items-center gap-2">
+<img alt="CodePad Logo" class="h-6 w-6 rounded-sm object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLv1_OvQ7qmc8DmZw4_Eux1x6k4Jt_7T4LvEKu4hGA7sr_0TxJk-vppVuErwAJYppKa6Uz80uNpqkrPHTQjR4yMPgdzRe-bV3a1SxIO3srEvcK4w4SnKOiMbxgIMn6aO7f5NJ0ZzfInqXxaWiWM9wja71snRDF8_7mQyF_H3kmUdOLa6ppgth_ZE4RxMBNHxYP7Cfgiv_gqAqiuSfcFXHJqLJzhuY9d5REtmnikx_1CibEwclMS7TGwDXA"/>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">CodePad</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:bg-on-surface/[0.08] transition-colors rounded-full p-1 active:scale-[0.97] duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</button>
+<button class="hover:bg-on-surface/[0.08] transition-colors rounded-full p-1 active:scale-[0.97] duration-150 flex items-center justify-center">
+<img class="w-7 h-7 rounded-full object-cover" data-alt="A close up, vibrant professional headshot of a young developer in a modern, well lit office space. They are wearing a simple black t-shirt and have a warm, welcoming smile. The background is slightly blurred with light-mode aesthetics, featuring soft whites and warm terracotta accents. High quality, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUm5Tbf9bU3wlHhZRvfZFhJXddY5GFN3EgaN-3sp6grHT_rr8XrMuFEr_kgutwiHnPSBf2go6T1auYvifEVO-w5qiHzRvOuTBttZLigatK5_Lb_neQQ5XwY8SFiuG1aUaAbRNN-uD0AKco2admxHACFP0QjmDyVxEQ_AGw9eUk3eyWyjueh31WdPzA4yFq-mpBhcD4DW--r09GhLL_KPFNYXaNTSGgx7iljK6bNzmn-tqPaIU8Nq8v"/>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto pb-24 relative px-4 pt-4 no-scrollbar">
+<!-- Filter Tabs (Scrollable Row) -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4 -mx-4 px-4 snap-x">
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm active:scale-[0.97] transition-transform duration-150 whitespace-nowrap">All Projects</button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:bg-on-surface/[0.08] active:scale-[0.97] transition-all duration-150 whitespace-nowrap border border-outline-variant">Recent</button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:bg-on-surface/[0.08] active:scale-[0.97] transition-all duration-150 whitespace-nowrap border border-outline-variant">Java</button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:bg-on-surface/[0.08] active:scale-[0.97] transition-all duration-150 whitespace-nowrap border border-outline-variant">Python</button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:bg-on-surface/[0.08] active:scale-[0.97] transition-all duration-150 whitespace-nowrap border border-outline-variant">C++</button>
+</div>
+<!-- Projects Stack -->
+<div class="flex flex-col gap-3">
+<!-- Project 1: Student Management -->
+<div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-2 slide-up active:scale-[0.97] transition-transform duration-150 cursor-pointer border border-outline-variant relative overflow-hidden group">
+<div class="absolute inset-0 bg-on-surface/[0.08] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">folder</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Student Management</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Last edited 2h ago</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-on-surface/[0.08] transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex gap-2 mt-1 z-10">
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-table text-code-table">Java</span>
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-table text-code-table">12 files</span>
+</div>
+</div>
+<!-- Project 2: Prime Number -->
+<div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-2 slide-up delay-100 active:scale-[0.97] transition-transform duration-150 cursor-pointer border border-outline-variant relative overflow-hidden group">
+<div class="absolute inset-0 bg-on-surface/[0.08] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Prime Number</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Last edited yesterday</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-on-surface/[0.08] transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex gap-2 mt-1 z-10">
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-table text-code-table">Python</span>
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-table text-code-table">3 files</span>
+</div>
+</div>
+<!-- Project 3: Matrix Multiplication -->
+<div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-2 slide-up delay-200 active:scale-[0.97] transition-transform duration-150 cursor-pointer border border-outline-variant relative overflow-hidden group">
+<div class="absolute inset-0 bg-on-surface/[0.08] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">functions</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Matrix Multiplication</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Last edited 3 days ago</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-on-surface/[0.08] transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex gap-2 mt-1 z-10">
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-table text-code-table">C++</span>
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-table text-code-table">5 files</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (+ New Project) -->
+<div class="fixed bottom-[88px] right-4 z-40 slide-up delay-300">
+<button class="bg-primary hover:bg-on-primary-fixed-variant text-on-primary rounded-2xl w-14 h-14 flex items-center justify-center shadow-lg active:scale-[0.97] transition-all duration-150 flex-col group relative overflow-hidden">
+<div class="absolute inset-0 bg-on-primary/[0.08] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-[28px] z-10">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 md:hidden px-4 z-50 bg-surface border-t-0 pb-safe" style="box-shadow: 0 -1px 0 rgba(0,0,0,0.05);">
+<!-- Files (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-full h-full rounded-lg relative group">
+<div class="absolute inset-0 bg-on-surface/[0.04] opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"></div>
+<div class="px-4 py-1 rounded-full flex flex-col items-center justify-center z-10">
+<span class="material-symbols-outlined mb-0.5">description</span>
+<span class="font-label-sm text-label-sm-mobile">Files</span>
+</div>
+</button>
+<!-- Editor (Active - Maps to Projects/Dashboard context in this view) -->
+<button class="flex flex-col items-center justify-center hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-full h-full rounded-lg relative group">
+<div class="absolute inset-0 bg-on-surface/[0.04] opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"></div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 z-10">
+<span class="material-symbols-outlined mb-0.5" style="font-variation-settings: 'FILL' 1;">code</span>
+<span class="font-label-sm text-label-sm-mobile font-bold">Editor</span>
+</div>
+</button>
+<!-- Terminal (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-full h-full rounded-lg relative group">
+<div class="absolute inset-0 bg-on-surface/[0.04] opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"></div>
+<div class="px-4 py-1 rounded-full flex flex-col items-center justify-center z-10">
+<span class="material-symbols-outlined mb-0.5">terminal</span>
+<span class="font-label-sm text-label-sm-mobile">Terminal</span>
+</div>
+</button>
+<!-- Settings (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 w-full h-full rounded-lg relative group">
+<div class="absolute inset-0 bg-on-surface/[0.04] opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"></div>
+<div class="px-4 py-1 rounded-full flex flex-col items-center justify-center z-10">
+<span class="material-symbols-outlined mb-0.5">settings</span>
+<span class="font-label-sm text-label-sm-mobile">Settings</span>
+</div>
+</button>
+</nav>
+<!-- Safe area padding for newer mobile devices -->
+<style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</body></html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed-dim": "#ffb690",
+                      "surface-bright": "#fff8f6",
+                      "on-primary-fixed": "#341100",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#251a00",
+                      "surface-container-highest": "#ece0dc",
+                      "surface-variant": "#ece0dc",
+                      "inverse-surface": "#362f2d",
+                      "on-error": "#ffffff",
+                      "secondary-container": "#fdd677",
+                      "primary": "#783100",
+                      "outline-variant": "#ddc1b4",
+                      "on-surface-variant": "#564339",
+                      "secondary-fixed-dim": "#e8c266",
+                      "primary-fixed": "#ffdbca",
+                      "on-background": "#201a18",
+                      "tertiary-fixed": "#ffd9e3",
+                      "on-secondary-fixed-variant": "#5a4400",
+                      "on-primary-container": "#ffceb6",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#633b48",
+                      "surface-container-high": "#f2e5e2",
+                      "secondary-fixed": "#ffdf96",
+                      "primary-container": "#9d4300",
+                      "error": "#ba1a1a",
+                      "outline": "#897267",
+                      "surface-tint": "#9d4300",
+                      "on-surface": "#201a18",
+                      "on-tertiary-container": "#ffcbda",
+                      "on-secondary-container": "#775b01",
+                      "tertiary-fixed-dim": "#eeb8c8",
+                      "surface-dim": "#e4d7d4",
+                      "on-primary-fixed-variant": "#783200",
+                      "inverse-on-surface": "#fbeeea",
+                      "surface": "#fff8f6",
+                      "surface-container-low": "#fef1ed",
+                      "error-container": "#ffdad6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#31111d",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#765a00",
+                      "tertiary": "#633b48",
+                      "on-primary": "#ffffff",
+                      "background": "#fff8f6",
+                      "tertiary-container": "#7d5260",
+                      "surface-container": "#f8ebe7",
+                      "inverse-primary": "#ffb690"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sidebar_width": "260px",
+                      "lg": "24px",
+                      "xl": "32px",
+                      "gutter": "1px",
+                      "base": "4px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "code-table": [
+                              "JetBrains Mono"
+                      ],
+                      "code-body": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-table": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-body": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .particle-strip {
+            background-image: radial-gradient(circle at 50% 50%, rgba(157, 67, 0, 0.1) 0%, transparent 100%), 
+                              url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239d4300' fill-opacity='0.1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1.5'/%3E%3Ccircle cx='13' cy='13' r='1.5'/%3E%3Ccircle cx='23' cy='23' r='1.5'/%3E%3Ccircle cx='33' cy='33' r='1.5'/%3E%3Ccircle cx='43' cy='43' r='1.5'/%3E%3Ccircle cx='53' cy='53' r='1.5'/%3E%3Ccircle cx='63' cy='63' r='1.5'/%3E%3Ccircle cx='73' cy='73' r='1.5'/%3E%3Ccircle cx='83' cy='83' r='1.5'/%3E%3Ccircle cx='93' cy='93' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover, 20px 20px;
+        }
+        
+        .slide-up-fade-in {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+
+        .pulse-subtle {
+            animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(120, 49, 0, 0.4); }
+            50% { box-shadow: 0 0 0 4px rgba(120, 49, 0, 0); }
+        }
+    </style>
+</head>
+<body class="bg-surface-container-highest min-h-screen w-full flex flex-col relative overflow-hidden">
+<!-- Top Accent Strip -->
+<div class="h-[80px] w-full absolute top-0 left-0 particle-strip z-0 border-b border-outline-variant/30"></div>
+<!-- Theme Toggle (Top Right) -->
+<button class="absolute top-md right-md z-10 p-sm text-on-surface-variant hover:bg-on-surface/[0.08] rounded-full transition-colors active:scale-[0.97] duration-150">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col justify-center items-center px-lg w-full max-w-[390px] mx-auto z-10">
+<!-- Logo Container -->
+<div class="flex flex-col items-center mb-xl w-full slide-up-fade-in stagger-1">
+<div class="w-16 h-16 rounded-lg bg-surface flex items-center justify-center mb-md shadow-sm border border-outline-variant/50 overflow-hidden">
+<img alt="CodePad Logo" class="w-full h-full object-contain p-2" src="https://lh3.googleusercontent.com/aida/AP1WRLv1_OvQ7qmc8DmZw4_Eux1x6k4Jt_7T4LvEKu4hGA7sr_0TxJk-vppVuErwAJYppKa6Uz80uNpqkrPHTQjR4yMPgdzRe-bV3a1SxIO3srEvcK4w4SnKOiMbxgIMn6aO7f5NJ0ZzfInqXxaWiWM9wja71snRDF8_7mQyF_H3kmUdOLa6ppgth_ZE4RxMBNHxYP7Cfgiv_gqAqiuSfcFXHJqLJzhuY9d5REtmnikx_1CibEwclMS7TGwDXA"/>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface text-center">Welcome back</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs text-center">Sign in to continue your workspace.</p>
+</div>
+<!-- Auth Actions Container -->
+<div class="w-full flex flex-col gap-md slide-up-fade-in stagger-2">
+<!-- Primary Action: Passkey -->
+<button class="w-full h-12 bg-primary text-on-primary rounded-lg font-title-md text-title-md flex items-center justify-center gap-sm hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.97] duration-150 pulse-subtle relative overflow-hidden group">
+<div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+                Continue with Passkey
+            </button>
+<!-- Divider -->
+<div class="flex items-center w-full my-sm slide-up-fade-in stagger-3">
+<div class="flex-1 h-gutter bg-outline-variant/50"></div>
+<span class="px-sm font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">or</span>
+<div class="flex-1 h-gutter bg-outline-variant/50"></div>
+</div>
+<!-- Secondary Action: Email -->
+<button class="w-full h-12 bg-transparent border border-outline text-on-surface rounded-lg font-title-md text-title-md flex items-center justify-center hover:bg-on-surface/[0.04] transition-colors active:scale-[0.97] duration-150 slide-up-fade-in stagger-4">
+                Continue with Email
+            </button>
+</div>
+<!-- Footer Link -->
+<div class="mt-xl slide-up-fade-in stagger-5 w-full text-center">
+<a class="font-body-md text-body-md text-primary hover:text-primary-container transition-colors inline-block active:scale-[0.97] duration-150" href="#">
+                New here? Create an account
+            </a>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodePad - Main.java (Mobile)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#7d5260",
+                        "secondary": "#765a00",
+                        "on-secondary-fixed-variant": "#5a4400",
+                        "background": "#fff8f6",
+                        "outline": "#897267",
+                        "surface-dim": "#e4d7d4",
+                        "secondary-fixed": "#ffdf96",
+                        "surface-tint": "#9d4300",
+                        "outline-variant": "#ddc1b4",
+                        "on-secondary-fixed": "#251a00",
+                        "on-primary-fixed-variant": "#783200",
+                        "tertiary-fixed-dim": "#eeb8c8",
+                        "secondary-container": "#fdd677",
+                        "inverse-primary": "#ffb690",
+                        "primary-fixed": "#ffdbca",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#31111d",
+                        "tertiary": "#633b48",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fff8f6",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#ece0dc",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffd9e3",
+                        "on-surface": "#201a18",
+                        "surface": "#fff8f6",
+                        "surface-container-low": "#fef1ed",
+                        "primary": "#783100",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f8ebe7",
+                        "primary-container": "#9d4300",
+                        "on-primary-fixed": "#341100",
+                        "on-background": "#201a18",
+                        "surface-container-high": "#f2e5e2",
+                        "primary-fixed-dim": "#ffb690",
+                        "secondary-fixed-dim": "#e8c266",
+                        "on-tertiary-fixed-variant": "#633b48",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffcbda",
+                        "on-secondary-container": "#775b01",
+                        "on-primary-container": "#ffceb6",
+                        "inverse-on-surface": "#fbeeea",
+                        "on-surface-variant": "#564339",
+                        "inverse-surface": "#362f2d",
+                        "surface-variant": "#ece0dc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "gutter": "1px",
+                        "sm": "8px",
+                        "sidebar_width": "260px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "code-body": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "title-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "code-table": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "code-body": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code-table": ["12px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .error-squiggly {
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: #ba1a1a;
+            text-underline-offset: 4px;
+        }
+        
+        .code-line {
+            display: flex;
+            width: 100%;
+        }
+        .line-number {
+            width: 40px;
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 12px;
+            color: #897267;
+            user-select: none;
+        }
+        .line-content {
+            flex-grow: 1;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        /* Slide transitions */
+        .slide-pane {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slide-up {
+            transform: translateY(0);
+        }
+        .slide-down {
+            transform: translateY(100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-md text-body-md selection:bg-primary/20">
+<!-- Top App Bar (Editor Header) -->
+<header class="flex justify-between items-center px-md w-full h-[48px] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant shrink-0">
+<button aria-label="Back to project" class="text-on-surface-variant hover:bg-on-surface/[0.08] p-2 rounded-full active:scale-[0.97] transition-all">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col items-center justify-center">
+<h1 class="font-title-md text-title-md text-primary font-bold">Main.java</h1>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Student Management System</span>
+</div>
+<button aria-label="Run code" class="text-primary hover:bg-on-surface/[0.08] p-2 rounded-full active:scale-[0.97] transition-all flex items-center gap-1" id="runBtn">
+<span class="material-symbols-outlined" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</header>
+<!-- Main Editor Canvas -->
+<main class="flex-grow overflow-y-auto bg-surface-container relative z-10 w-full h-full pb-16">
+<div class="font-code-body text-code-body p-4 pt-6">
+<div class="code-line mb-1">
+<span class="line-number">1</span>
+<span class="line-content"><span class="text-primary">public</span> <span class="text-primary">class</span> Main {</span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">2</span>
+<span class="line-content"> <span class="text-primary">public</span> <span class="text-primary">static</span> <span class="text-primary">void</span> main(String[] args) {</span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">3</span>
+<span class="line-content">        System.out.println(<span class="text-secondary">"Initializing Student Management System..."</span>);</span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">4</span>
+<span class="line-content"> </span>
+</div>
+<div class="code-line mb-1 relative">
+<span class="line-number">5</span>
+<span class="line-content"> <span class="error-squiggly cursor-pointer" id="errorTarget">Studnt</span> s1 = <span class="text-primary">new</span> Student(<span class="text-secondary">"Alice"</span>, <span class="text-tertiary-container">101</span>);</span>
+<!-- Error Tooltip (Initially visible for prompt requirement) -->
+<div class="absolute left-16 top-6 bg-error-container text-on-error-container p-3 rounded-lg shadow-md z-20 w-64 border border-error/20 font-body-md text-body-md" id="errorTooltip">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-[16px] mt-0.5" data-icon="error">error</span>
+<div>
+<p class="font-bold mb-1">Cannot resolve symbol 'Studnt'</p>
+<p class="text-sm opacity-90">Did you mean 'Student'?</p>
+</div>
+</div>
+</div>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">6</span>
+<span class="line-content">        Student s2 = <span class="text-primary">new</span> Student(<span class="text-secondary">"Bob"</span>, <span class="text-tertiary-container">102</span>);</span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">7</span>
+<span class="line-content"> </span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">8</span>
+<span class="line-content">        s1.displayInfo();</span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">9</span>
+<span class="line-content">    }</span>
+</div>
+<div class="code-line mb-1">
+<span class="line-number">10</span>
+<span class="line-content">}</span>
+</div>
+</div>
+</main>
+<!-- Output Pane Overlay (Hidden initially, slides up on Run) -->
+<div class="fixed inset-0 top-[48px] bg-surface-container-highest z-40 slide-pane slide-down flex flex-col pb-16" id="outputPane">
+<div class="flex justify-between items-center px-4 py-2 bg-surface-container border-b border-outline-variant shrink-0">
+<h2 class="font-title-md text-title-md text-on-surface">Terminal Output</h2>
+<button class="text-on-surface-variant p-2 rounded-full hover:bg-on-surface/[0.08] active:scale-[0.97]" id="closeOutputBtn">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex-grow p-4 font-code-body text-code-body overflow-y-auto">
+<div class="text-on-surface-variant mb-2">$ javac Main.java</div>
+<div class="text-error mb-4">
+                Main.java:5: error: cannot find symbol<br/>
+                        Studnt s1 = new Student("Alice", 101);<br/>
+                        ^<br/>
+                  symbol:   class Studnt<br/>
+                  location: class Main<br/>
+                1 error
+            </div>
+<div class="text-on-surface-variant">$ _</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Nav Shell) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 md:hidden px-4 z-50 bg-surface border-t border-outline-variant">
+<!-- Files (Inactive) -->
+<button aria-label="Files" class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 p-2 rounded-lg">
+<span class="material-symbols-outlined mb-1" data-icon="description">description</span>
+<span class="font-label-sm text-label-sm">Files</span>
+</button>
+<!-- Editor (Active) -->
+<button aria-label="Editor" class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-1 active:scale-[0.97] duration-150 relative overflow-hidden group">
+<!-- Active underline sweep indicator -->
+<div class="absolute bottom-0 left-0 h-[3px] w-full bg-primary transform scale-x-100 transition-transform origin-center"></div>
+<span class="material-symbols-outlined mb-1" data-icon="code" data-weight="fill" style="font-variation-settings: 'FILL' 1;">code</span>
+<span class="font-label-sm text-label-sm font-bold">Editor</span>
+</button>
+<!-- Terminal/Output (Inactive) -->
+<button aria-label="Terminal" class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-on-surface/[0.04] active:scale-[0.97] duration-150 p-2 rounded-lg">
+<span class="material-symbols-outlined mb-1" data-icon="terminal">terminal</span>
+<span class="font-label-sm text-label-sm">Output</span>
+</button>
+</nav>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const runBtn = document.getElementById('runBtn');
+            const closeOutputBtn = document.getElementById('closeOutputBtn');
+            const outputPane = document.getElementById('outputPane');
+            const errorTooltip = document.getElementById('errorTooltip');
+            const errorTarget = document.getElementById('errorTarget');
+            
+            // Toggle Output Pane
+            runBtn.addEventListener('click', () => {
+                outputPane.classList.remove('slide-down');
+                outputPane.classList.add('slide-up');
+                // Hide tooltip when opening terminal
+                errorTooltip.style.opacity = '0';
+                errorTooltip.style.pointerEvents = 'none';
+            });
+            
+            closeOutputBtn.addEventListener('click', () => {
+                outputPane.classList.remove('slide-up');
+                outputPane.classList.add('slide-down');
+            });
+            
+            // Interactive Tooltip (basic toggle for demo)
+            errorTarget.addEventListener('click', () => {
+                const currentOpacity = errorTooltip.style.opacity;
+                if(currentOpacity === '0' || currentOpacity === '') {
+                     errorTooltip.style.opacity = '1';
+                     errorTooltip.style.pointerEvents = 'auto';
+                } else {
+                     errorTooltip.style.opacity = '0';
+                     errorTooltip.style.pointerEvents = 'none';
+                }
+            });
+        });
+    </script>
+</body></html>
