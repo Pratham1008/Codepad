@@ -6,14 +6,22 @@ import { useEffect, useState } from "react";
 import { useThemeTransition } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { HeroScene } from "@/components/hero/HeroScene";
+import { Sun, Moon, Folder, FileCode, X, CheckCircle2, Zap, Bug, FolderTree } from "lucide-react";
+import dynamic from "next/dynamic";
 
+const HeroScene = dynamic(() => import("@/components/hero/HeroScene").then(mod => mod.HeroScene), { 
+  ssr: false, 
+});
 export default function Home() {
   const { theme, toggleTheme } = useThemeTransition();
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    if (document.cookie.includes("username=")) {
+      setIsLoggedIn(true);
+    }
   }, []);
 
   return (
@@ -60,14 +68,32 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-md">
-          <Link href="/auth">
-            <button className="hidden md:block font-title-md text-title-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-on-surface/[0.08] transition-colors duration-150 active:scale-[0.97] px-md py-sm rounded-lg">Sign In</button>
-          </Link>
-          <Link href="/auth">
-            <button className="bg-primary text-on-primary font-title-md text-title-md px-md py-sm rounded-lg hover:bg-primary/90 transition-colors duration-150 active:scale-[0.97]">Get Started</button>
-          </Link>
-          <button onClick={toggleTheme} className="text-on-surface-variant hover:bg-on-surface/[0.08] p-sm rounded-full transition-colors duration-150 active:scale-[0.97]">
-            <span className="material-symbols-outlined">{mounted && theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
+          {isLoggedIn ? (
+            <>
+              <Link href="/editor">
+                <button className="hidden md:block font-title-md text-title-md text-on-surface-variant hover:text-primary transition-colors px-md py-sm">Go to Editor</button>
+              </Link>
+              <button onClick={async () => {
+                await fetch('/api/logout', { method: 'POST' }).catch(() => {});
+                document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                setIsLoggedIn(false);
+                window.location.reload();
+              }} className="bg-primary text-on-primary font-title-md text-title-md px-md py-sm rounded-lg hover:bg-primary/90 transition-colors duration-150 active:scale-[0.97]">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/auth">
+                <button className="hidden md:block font-title-md text-title-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-on-surface/[0.08] transition-colors duration-150 active:scale-[0.97] px-md py-sm rounded-lg">Sign In</button>
+              </Link>
+              <Link href="/auth">
+                <button className="bg-primary text-on-primary font-title-md text-title-md px-md py-sm rounded-lg hover:bg-primary/90 transition-colors duration-150 active:scale-[0.97]">Get Started</button>
+              </Link>
+            </>
+          )}
+          <button onClick={toggleTheme} aria-label="Toggle theme" className="text-on-surface-variant hover:bg-on-surface/[0.08] p-sm rounded-full transition-colors duration-150 active:scale-[0.97] flex items-center justify-center">
+            {mounted && theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
           </button>
         </div>
       </nav>
@@ -94,7 +120,6 @@ export default function Home() {
             <span className="font-label-sm text-label-sm uppercase tracking-wider bg-surface-container px-sm py-xs rounded">Java</span>
             <span className="font-label-sm text-label-sm uppercase tracking-wider bg-surface-container px-sm py-xs rounded">Python</span>
             <span className="font-label-sm text-label-sm uppercase tracking-wider bg-surface-container px-sm py-xs rounded">C++</span>
-            <span className="font-label-sm text-label-sm uppercase tracking-wider bg-surface-container px-sm py-xs rounded">Go</span>
           </div>
         </section>
 
@@ -113,19 +138,24 @@ export default function Home() {
             <div className="flex flex-grow overflow-hidden">
               {/* Sidebar (File Tree) */}
               <div className="w-sidebar_width flex-shrink-0 bg-surface-container border-r border-outline-variant/50 flex-col hidden md:flex">
+                <div className="flex justify-center gap-md text-sm font-semibold text-on-surface-variant uppercase tracking-widest mt-lg mb-xl">
+                  <span className="hover:text-primary transition-colors cursor-pointer">JAVA</span>
+                  <span className="hover:text-primary transition-colors cursor-pointer">PYTHON</span>
+                  <span className="hover:text-primary transition-colors cursor-pointer">C++</span>
+                </div>
                 <div className="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider pl-md">Explorer</div>
                 <div className="flex flex-col font-code-body text-code-body text-on-surface">
                   <div className="flex items-center gap-sm px-md py-sm hover:bg-on-surface/[0.04] cursor-pointer">
-                    <span className="material-symbols-outlined text-[16px] text-outline">folder</span> src
+                    <Folder size={16} className="text-outline" /> src
                   </div>
                   <div className="flex items-center gap-sm px-md py-sm bg-primary-container/20 text-primary cursor-pointer border-l-2 border-primary">
-                    <span className="material-symbols-outlined text-[16px]">description</span> Main.java
+                    <FileCode size={16} /> Main.java
                   </div>
                   <div className="flex items-center gap-sm px-md py-sm hover:bg-on-surface/[0.04] cursor-pointer ml-lg">
-                    <span className="material-symbols-outlined text-[16px] text-outline">description</span> Utils.java
+                    <FileCode size={16} className="text-outline" /> Utils.java
                   </div>
                   <div className="flex items-center gap-sm px-md py-sm hover:bg-on-surface/[0.04] cursor-pointer">
-                    <span className="material-symbols-outlined text-[16px] text-outline">folder</span> test
+                    <Folder size={16} className="text-outline" /> test
                   </div>
                 </div>
               </div>
@@ -135,10 +165,10 @@ export default function Home() {
                 {/* Tabs */}
                 <div className="flex border-b border-outline-variant/50 bg-surface-container">
                   <div className="px-md py-sm font-code-table text-code-table border-b-2 border-primary bg-surface-container-highest text-on-surface flex items-center gap-sm">
-                    Main.java <span className="material-symbols-outlined text-[14px] opacity-50 hover:opacity-100 cursor-pointer">close</span>
+                    Main.java <X size={14} className="opacity-50 hover:opacity-100 cursor-pointer" />
                   </div>
                   <div className="px-md py-sm font-code-table text-code-table text-on-surface-variant hover:bg-on-surface/[0.04] cursor-pointer flex items-center gap-sm">
-                    Utils.java <span className="material-symbols-outlined text-[14px] opacity-50 hover:opacity-100 cursor-pointer">close</span>
+                    Utils.java <X size={14} className="opacity-50 hover:opacity-100 cursor-pointer" />
                   </div>
                 </div>
                 
@@ -167,7 +197,7 @@ export default function Home() {
                     <div className="text-outline">Running: java Main.java</div>
                     <div className="text-secondary-fixed-dim">Hello, CodePad!</div>
                     <div className="text-[#4caf50] mt-sm flex items-center gap-xs">
-                      <span className="material-symbols-outlined text-[14px]">check_circle</span> ✓ Passed — exited with code 0 (142ms)
+                      <CheckCircle2 size={14} /> ✓ Passed — exited with code 0 (142ms)
                     </div>
                   </div>
                 </div>
@@ -186,7 +216,7 @@ export default function Home() {
             {/* Feature 1 */}
             <div className="bg-surface-container rounded-xl p-lg border border-outline-variant/30 hover:bg-surface-container-high transition-colors duration-300">
               <div className="w-12 h-12 bg-primary-container text-on-primary-container rounded-lg flex items-center justify-center mb-md">
-                <span className="material-symbols-outlined text-[24px]">bolt</span>
+                <Zap size={24} />
               </div>
               <h3 className="font-title-md text-title-md text-on-surface mb-sm">Lightning Fast Execution</h3>
               <p className="font-body-md text-body-md text-on-surface-variant">Run code instantly in secure, isolated containers. See terminal output in milliseconds, not seconds.</p>
@@ -194,7 +224,7 @@ export default function Home() {
             {/* Feature 2 */}
             <div className="bg-surface-container rounded-xl p-lg border border-outline-variant/30 hover:bg-surface-container-high transition-colors duration-300">
               <div className="w-12 h-12 bg-primary-container text-on-primary-container rounded-lg flex items-center justify-center mb-md">
-                <span className="material-symbols-outlined text-[24px]">bug_report</span>
+                <Bug size={24} />
               </div>
               <h3 className="font-title-md text-title-md text-on-surface mb-sm">Inline Diagnostics</h3>
               <p className="font-body-md text-body-md text-on-surface-variant">Catch errors before you compile. Squiggly lines and hover hints guide you to the perfect syntax.</p>
@@ -202,7 +232,7 @@ export default function Home() {
             {/* Feature 3 */}
             <div className="bg-surface-container rounded-xl p-lg border border-outline-variant/30 hover:bg-surface-container-high transition-colors duration-300">
               <div className="w-12 h-12 bg-primary-container text-on-primary-container rounded-lg flex items-center justify-center mb-md">
-                <span className="material-symbols-outlined text-[24px]">account_tree</span>
+                <FolderTree size={24} />
               </div>
               <h3 className="font-title-md text-title-md text-on-surface mb-sm">Multi-File Orchestration</h3>
               <p className="font-body-md text-body-md text-on-surface-variant">Manage complex projects with a robust file tree, tabbed editing, and seamless cross-file referencing.</p>

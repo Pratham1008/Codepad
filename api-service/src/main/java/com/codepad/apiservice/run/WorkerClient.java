@@ -87,4 +87,8 @@ public class WorkerClient {
         var body = java.util.Map.of("language", language, "activeFile", req.activeFile(), "content", req.content());
         return restTemplate.postForObject(workerUrl + "/internal/projects/" + projectId + "/diagnostics", new HttpEntity<>(body, jsonHeaders()), DiagnosticsResponse.class);
     }
+
+    public byte[] downloadProjectZip(UUID projectId) {
+        return restTemplate.exchange(workerUrl + "/internal/projects/" + projectId + "/zip", HttpMethod.GET, new HttpEntity<>(headers()), byte[].class).getBody();
+    }
 }

@@ -63,4 +63,13 @@ public class ProjectFileController {
         workerClient.deleteFile(projectId, path);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/download", produces = "application/zip")
+    public ResponseEntity<byte[]> download(@PathVariable UUID projectId) {
+        requireAccess(projectId);
+        byte[] zip = workerClient.downloadProjectZip(projectId);
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"project_" + projectId + ".zip\"")
+            .body(zip);
+    }
 }

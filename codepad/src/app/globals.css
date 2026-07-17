@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import "tailwindcss";
 
 
@@ -176,6 +177,25 @@
   --spacing-sidebar-width: var(--spacing-sidebar-width);
   --spacing-margin-sm: var(--spacing-margin-sm);
 
+  --spacing-xs: var(--spacing-unit);
+  --spacing-sm: var(--spacing-margin-sm);
+  --spacing-md: var(--spacing-margin-md);
+  --spacing-lg: var(--spacing-margin-lg);
+  --spacing-xl: 64px;
+
+  /* Restore container/size scale overridden by spacing */
+  --size-xs: 20rem;
+  --size-sm: 24rem;
+  --size-md: 28rem;
+  --size-lg: 32rem;
+  --size-xl: 36rem;
+  --size-2xl: 42rem;
+  --size-3xl: 48rem;
+  --size-4xl: 56rem;
+  --size-5xl: 64rem;
+  --size-6xl: 72rem;
+  --size-7xl: 80rem;
+
   --font-code-md: var(--font-code-md);
   --font-headline-lg: var(--font-headline-lg);
   --font-body-lg: var(--font-body-lg);
@@ -240,6 +260,16 @@ body {
 ::view-transition-new(root) {
   z-index: 2;
   animation: clip 0.5s ease-in-out;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.monaco-editor-hover {
+  z-index: 9999 !important;
 }
 
 @keyframes clip {

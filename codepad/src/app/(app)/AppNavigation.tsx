@@ -23,10 +23,14 @@ export function AppNavigation() {
   };
 
   const navItems = [
-    { name: "Snippets", href: "/dashboard", icon: <Code size={18} /> },
+    { name: "Projects", href: "/dashboard", icon: <Code size={18} /> },
     { name: "Playground", href: "/editor", icon: <Terminal size={18} /> },
     { name: "Settings", href: "/settings", icon: <Settings size={18} /> },
   ];
+
+  if (pathname?.startsWith("/editor")) {
+    return null;
+  }
 
   return (
     <>

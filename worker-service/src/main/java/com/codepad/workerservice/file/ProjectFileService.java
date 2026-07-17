@@ -10,6 +10,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import java.io.ByteArrayOutputStream;
 
 @Slf4j
 @Service
@@ -144,5 +147,29 @@ public class ProjectFileService {
         try (var stream = Files.walk(root)) {
             return (int) stream.count();
         }
+    }
+    public byte[] zipProject(UUID projectId) throws IOException {
+        Path root = projectRoot(projectId);
+        if (!Files.exists(root)) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+            Files.walkFileTree(root, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (file.getFileName().toString().startsWith(".")) {
+                        return FileVisitResult.CONTINUE; // Skip hidden files/directories like .class or internal logs if any
+                    }
+                    String zipEntryName = root.relativize(file).toString().replace("\\", "/");
+                    zos.putNextEntry(new ZipEntry(zipEntryName));
+                    Files.copy(file, zos);
+                    zos.closeEntry();
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        return baos.toByteArray();
     }
 }

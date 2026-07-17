@@ -1,12 +1,18 @@
 "use server";
 
-import { getSession } from "@/lib/session";
+import { getSession, clearSession } from "@/lib/session";
 import type { Project } from "@/lib/types";
+
+export async function logoutAction() {
+  await clearSession();
+}
 
 const API_BASE = process.env.BACKEND_API_URL || "http://localhost:8080";
 
 export async function getProjects(): Promise<{ error: string } | Project[]> {
   const { token } = await getSession();
+
+  console.log("getProjects called, token exists:", !!token);
 
   if (!token) {
     return { error: "Unauthorized" };
@@ -17,14 +23,18 @@ export async function getProjects(): Promise<{ error: string } | Project[]> {
       headers: {
         "Authorization": `Bearer ${token}`
       },
-      next: { revalidate: 0 }
+      cache: 'no-store'
     });
 
     if (!res.ok) {
+      const errorText = await res.text();
+      console.log("getProjects error response:", res.status, errorText);
       return { error: "Failed to load projects" };
     }
 
-    return await res.json();
+    const data = await res.json();
+    console.log("getProjects fetch result:", data);
+    return data.content || data;
   } catch (error) {
     console.error("Fetch projects error", error);
     return { error: "Failed to connect to server" };
@@ -39,20 +49,23 @@ export async function createProject(data: { name: string, language: string }): P
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/projects`, {
+    const response = await fetch(`${API_BASE}/api/projects`, {
       method: 'POST',
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
+      cache: 'no-store',
       body: JSON.stringify(data)
     });
 
-    if (!res.ok) {
+    if (!response.ok) {
       return { error: "Failed to create project" };
     }
 
-    return await res.json();
+    const responseData = await response.json();
+    console.log("createProject result:", responseData);
+    return responseData;
   } catch (error) {
     console.error("Create project error", error);
     return { error: "Failed to connect to server" };

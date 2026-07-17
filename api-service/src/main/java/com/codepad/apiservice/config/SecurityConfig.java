@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/api/run/internal/**").permitAll()
                 .requestMatchers("/api/projects/**").authenticated()
                 .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().authenticated()

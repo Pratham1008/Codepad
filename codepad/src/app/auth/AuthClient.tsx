@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Code, KeyRound, Loader2 } from "lucide-react";
+import { Code, KeyRound, Loader2, ArrowLeft } from "lucide-react";
 import { login, register, savePasskeySession } from "./actions";
 import { useRouter } from "next/navigation";
 import { get } from "@github/webauthn-json";
@@ -34,7 +34,7 @@ export function AuthClient() {
       setError(res.error);
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/editor");
     }
   }
 
@@ -64,7 +64,7 @@ export function AuthClient() {
       
       const authData = await loginRes.json();
       await savePasskeySession(authData);
-      router.push("/dashboard");
+      router.push("/editor");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Passkey login failed");
@@ -75,10 +75,16 @@ export function AuthClient() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <button 
+        onClick={() => router.push('/')}
+        className="absolute top-8 left-8 p-3 bg-surface-container-high hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors flex items-center gap-2 font-semibold shadow-sm border border-outline-variant"
+      >
+        <ArrowLeft size={20} /> Back to Home
+      </button>
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-surface-container border border-outline-variant rounded-xl p-8"
+        className="w-full max-w-[448px] bg-surface-container border border-outline-variant rounded-xl p-8"
       >
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 bg-surface-variant rounded-xl flex items-center justify-center mb-4">

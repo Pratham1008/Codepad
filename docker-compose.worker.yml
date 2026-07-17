@@ -12,7 +12,7 @@ services:
       - INTERNAL_SECRET=${INTERNAL_SECRET}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /data/projects:/data/projects
+      - ./projects_data:/data/projects
     restart: unless-stopped
 
   judge-cpp:
@@ -27,11 +27,6 @@ services:
       context: ./worker-service/docker/envs/java
     profiles: ["env-setup"]
 
-  judge-javascript:
-    image: judge-javascript:latest
-    build:
-      context: ./worker-service/docker/envs/javascript
-    profiles: ["env-setup"]
 
   judge-python:
     image: judge-python:latest

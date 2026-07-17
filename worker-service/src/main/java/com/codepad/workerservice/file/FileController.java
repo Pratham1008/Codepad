@@ -67,4 +67,10 @@ public class FileController {
         checkSecret(secret);
         projectFileService.deleteFile(projectId, path);
     }
+
+    @GetMapping("/zip")
+    public byte[] zipProject(@PathVariable UUID projectId, @RequestHeader("X-Internal-Secret") String secret) throws Exception {
+        checkSecret(secret);
+        return projectFileService.zipProject(projectId);
+    }
 }

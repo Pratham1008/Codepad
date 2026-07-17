@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/projects/{projectId}")
 @RequiredArgsConstructor
 @Tag(name = "Run Code", description = "Project execution")
 public class RunCodeController {
@@ -31,7 +30,7 @@ public class RunCodeController {
         return UUID.fromString(auth.getName());
     }
 
-    @PostMapping("/run")
+    @PostMapping("/api/projects/{projectId}/run")
     @Operation(summary = "Run a project", description = "Compiles/runs all project files in a sandboxed container")
     public ResponseEntity<RunCodeResponseDto> run(@PathVariable UUID projectId, @RequestBody(required = false) java.util.Map<String, String> body) {
         Project project = manageProjectUseCase.requireOwnedProject(currentUserId(), projectId);
@@ -40,7 +39,7 @@ public class RunCodeController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/run/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/api/projects/{projectId}/run/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
     public org.springframework.web.servlet.mvc.method.annotation.SseEmitter runStream(@PathVariable UUID projectId, jakarta.servlet.http.HttpServletResponse response) {
         Project project = manageProjectUseCase.requireOwnedProject(currentUserId(), projectId);
         response.setHeader("Cache-Control", "no-cache");
@@ -58,20 +57,20 @@ public class RunCodeController {
         return emitter;
     }
 
-    @PostMapping("/run/stdin/{sessionId}")
+    @PostMapping("/api/projects/{projectId}/run/stdin/{sessionId}")
     public ResponseEntity<Void> sendStdin(@PathVariable UUID projectId, @PathVariable String sessionId, @RequestBody java.util.Map<String, String> body) {
         playgroundRegistry.sendStdin(sessionId, body.getOrDefault("line", ""));
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/run/internal/{sessionId}/output")
+    @PostMapping("/api/run/internal/{sessionId}/output")
     public ResponseEntity<Void> receiveOutput(@PathVariable String sessionId, @RequestHeader("X-Internal-Secret") String secret, @RequestBody java.util.Map<String, String> body) {
         if (!internalSecret.equals(secret)) return ResponseEntity.status(401).build();
         playgroundRegistry.sendOutput(sessionId, body.get("chunk"), body.get("type"));
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/run/internal/{sessionId}/stdin")
+    @GetMapping("/api/run/internal/{sessionId}/stdin")
     public ResponseEntity<java.util.Map<String, String>> pollStdin(@PathVariable String sessionId, @RequestHeader("X-Internal-Secret") String secret) throws InterruptedException {
         if (!internalSecret.equals(secret)) return ResponseEntity.status(401).build();
         String line = playgroundRegistry.awaitStdin(sessionId, 20_000L);

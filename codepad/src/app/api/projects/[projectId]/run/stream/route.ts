@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/session";
 
 const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8080";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
+  const { token } = await getSession();
+  
+  if (!token) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
   
   const headers = new Headers(req.headers);
   headers.delete("host");
   headers.delete("content-length");
+  headers.set("Authorization", `Bearer ${token}`);
   
   // The client doesn't send a body anymore, so we don't need to forward it. 
   // Wait, does stream run take stdin? No, stdin goes to a separate endpoint.

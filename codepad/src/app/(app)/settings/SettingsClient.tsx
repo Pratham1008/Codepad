@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { deletePasskey, deleteAccount, getUserProfile, getPasskeys } from "./actions";
-import { KeyRound, Trash2, Plus, Loader2, AlertTriangle, Fingerprint, User, Usb, X } from "lucide-react";
+import { KeyRound, Trash2, Plus, Loader2, AlertTriangle, Fingerprint, User, Usb, X, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { create } from "@github/webauthn-json";
 import { Modal } from "@/components/modal";
@@ -108,7 +108,16 @@ export function SettingsClient({ initialPasskeys, userProfile: initialUserProfil
   return (
     <div className="w-full h-full overflow-y-auto">
       <div className="p-8 max-w-3xl mx-auto w-full">
-        <h1 className="font-headline-md text-2xl font-bold text-on-surface mb-8">Settings</h1>
+        <div className="flex items-center gap-4 mb-8">
+          <button 
+            onClick={() => router.push('/')}
+            className="p-2 hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors"
+            title="Back to Editor"
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <h1 className="font-headline-md text-2xl font-bold text-on-surface">Settings</h1>
+        </div>
 
       {initialError && (
         <div className="bg-error-container text-on-error-container p-4 rounded-xl mb-8 text-sm font-semibold">
@@ -202,7 +211,7 @@ export function SettingsClient({ initialPasskeys, userProfile: initialUserProfil
 
       {showRegisterPasskey && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
-          <div className="relative z-10 w-full max-w-sm bg-surface-container-highest border border-outline-variant/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          <div className="relative z-10 w-full max-w-[384px] bg-surface-container-highest border border-outline-variant/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
             <button 
               onClick={() => !actionLoading && setShowRegisterPasskey(false)}
               className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"

@@ -98,3 +98,79 @@ export async function runProject(projectId: string, stdin?: string) {
     return { error: "Connection error" };
   }
 }
+
+export async function runDiagnostics(projectId: string, activeFile: string, content: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${projectId}/diagnostics`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ activeFile, content })
+    });
+    if (!res.ok) return { error: "Failed to get diagnostics" };
+    return await res.json();
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function createFile(projectId: string, path: string, type: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${projectId}/files`, {
+      method: "POST",
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ path, type })
+    });
+    if (!res.ok) return { error: "Failed to create file" };
+    return { success: true };
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function renameFile(projectId: string, oldPath: string, newPath: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${projectId}/files`, {
+      method: "PATCH",
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ oldPath, newPath })
+    });
+    if (!res.ok) return { error: "Failed to rename file" };
+    return { success: true };
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function deleteFile(projectId: string, path: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${projectId}/files?path=${encodeURIComponent(path)}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    if (!res.ok) return { error: "Failed to delete file" };
+    return { success: true };
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}

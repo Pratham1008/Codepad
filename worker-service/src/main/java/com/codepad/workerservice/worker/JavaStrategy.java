@@ -20,6 +20,6 @@ public class JavaStrategy implements LanguageStrategy {
 
     @Override
     public String[] getDiagnosticsCommand() {
-        return new String[]{"sh", "-c", "find /workspace -name '*.java' > /workspace/sources.txt && javac -Xlint -d /tmp/out @/workspace/sources.txt"};
+        return new String[]{"sh", "-c", "mkdir -p /workspace/out && find /workspace -name '*.java' > /workspace/sources.txt && javac -Xlint -d /workspace/out @/workspace/sources.txt"};
     }
 }
