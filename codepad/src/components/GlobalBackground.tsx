@@ -11,23 +11,13 @@ const ThreeBackground = dynamic(
 
 export function GlobalBackground() {
   const pathname = usePathname();
-  const showBackground = pathname === "/" || pathname === "/auth";
-  const [hasShown, setHasShown] = useState(showBackground);
+    const showBackground = pathname === "/" || pathname === "/auth";
 
-  useEffect(() => {
-    if (showBackground) setHasShown(true);
-  }, [showBackground]);
-
-  // Don't even mount or download Three.js until a page needs it!
-  if (!hasShown) return null;
+    if (!showBackground) return null;
 
   return (
     <div 
-      className="fixed inset-0 -z-20 pointer-events-none transition-opacity duration-700"
-      style={{ 
-        opacity: showBackground ? 1 : 0,
-        visibility: showBackground ? 'visible' : 'hidden' 
-      }}
+      className="fixed inset-0 -z-20 pointer-events-none"
     >
        <ThreeBackground />
     </div>

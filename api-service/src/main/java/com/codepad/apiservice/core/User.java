@@ -27,8 +27,11 @@ public class User {
     @Column(nullable = false,unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(nullable = false, unique = true)
+    private String firebaseUid;
+
+    @Column(nullable = false, length = 20)
+    private String role = "ROLE_USER";
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

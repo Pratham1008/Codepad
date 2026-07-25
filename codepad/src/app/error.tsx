@@ -18,8 +18,12 @@ export default function GlobalError({
       <h2 className="text-2xl font-bold mb-4 text-error">Something went wrong!</h2>
       <p className="mb-4 text-on-surface-variant max-w-2xl font-mono text-sm break-words whitespace-pre-wrap text-left p-4 bg-surface-container rounded border border-error/50">
         {error.message || error.toString()}
-        {"\n\n"}
-        {error.stack}
+        {process.env.NODE_ENV === 'development' && (
+          <>
+            {"\n\n"}
+            {error.stack}
+          </>
+        )}
       </p>
       <button
         className="bg-primary text-on-primary px-4 py-2 rounded hover:bg-orange-600 transition-colors"

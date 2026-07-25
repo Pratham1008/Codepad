@@ -30,6 +30,11 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findByFirebaseUid(String firebaseUid) {
+        return repository.findByFirebaseUid(firebaseUid);
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }

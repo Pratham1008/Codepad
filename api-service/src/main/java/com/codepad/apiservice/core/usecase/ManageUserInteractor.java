@@ -7,7 +7,6 @@ import com.codepad.apiservice.core.UserResponse;
 import com.codepad.apiservice.core.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import java.util.UUID;
 public class ManageUserInteractor implements ManageUserUseCase {
 
     private final UserRepositoryPort UserRepositoryPort;
-    private final JdbcOperations jdbcOperations;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,6 +34,7 @@ public class ManageUserInteractor implements ManageUserUseCase {
                 user.getUserId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getRole(),
                 user.getCreatedAt()
         );
     }
@@ -44,15 +43,8 @@ public class ManageUserInteractor implements ManageUserUseCase {
     @Transactional
     public void deleteUser(UUID userId) {
         log.info("Deleting user id={}", userId);
-        
         User user = UserRepositoryPort.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-
-        
-        jdbcOperations.update("DELETE FROM user_credentials WHERE user_entity_user_id IN (SELECT id FROM user_entities WHERE name = ?)", user.getUsername());
-        jdbcOperations.update("DELETE FROM user_entities WHERE name = ?", user.getUsername());
-
-        
         UserRepositoryPort.delete(user);
     }
 }

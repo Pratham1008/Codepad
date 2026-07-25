@@ -26,8 +26,7 @@ public class RunCodeController {
 
     private UUID currentUserId() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        assert auth != null;
-        return UUID.fromString(auth.getName());
+        return ((com.codepad.apiservice.core.User) auth.getPrincipal()).getUserId();
     }
 
     @PostMapping("/api/projects/{projectId}/run")
@@ -47,7 +46,7 @@ public class RunCodeController {
 
         var emitter = new org.springframework.web.servlet.mvc.method.annotation.SseEmitter(300_000L);
         String sessionId = UUID.randomUUID().toString();
-        playgroundRegistry.register(sessionId, emitter);
+        playgroundRegistry.register(sessionId, projectId, currentUserId(), emitter);
 
         Thread.ofVirtual().start(() -> workerClient.triggerStreamRunCode(projectId, project.getLanguage(), sessionId));
 
@@ -59,7 +58,8 @@ public class RunCodeController {
 
     @PostMapping("/api/projects/{projectId}/run/stdin/{sessionId}")
     public ResponseEntity<Void> sendStdin(@PathVariable UUID projectId, @PathVariable String sessionId, @RequestBody java.util.Map<String, String> body) {
-        playgroundRegistry.sendStdin(sessionId, body.getOrDefault("line", ""));
+        manageProjectUseCase.requireOwnedProject(currentUserId(), projectId);
+        playgroundRegistry.sendStdin(sessionId, projectId, currentUserId(), body.getOrDefault("line", ""));
         return ResponseEntity.ok().build();
     }
 
@@ -71,10 +71,19 @@ public class RunCodeController {
     }
 
     @GetMapping("/api/run/internal/{sessionId}/stdin")
-    public ResponseEntity<java.util.Map<String, String>> pollStdin(@PathVariable String sessionId, @RequestHeader("X-Internal-Secret") String secret) throws InterruptedException {
-        if (!internalSecret.equals(secret)) return ResponseEntity.status(401).build();
-        String line = playgroundRegistry.awaitStdin(sessionId, 20_000L);
-        if (line == null) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(java.util.Map.of("line", line));
+    public org.springframework.web.context.request.async.DeferredResult<ResponseEntity<java.util.Map<String, String>>> pollStdin(
+            @PathVariable String sessionId, @RequestHeader("X-Internal-Secret") String secret) {
+        var deferred = new org.springframework.web.context.request.async.DeferredResult<ResponseEntity<java.util.Map<String, String>>>(20_000L,
+                ResponseEntity.noContent().build());
+        if (!internalSecret.equals(secret)) {
+            deferred.setResult(ResponseEntity.status(401).build());
+            return deferred;
+        }
+        playgroundRegistry.awaitStdinAsync(sessionId, line ->
+            deferred.setResult(line == null
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(java.util.Map.of("line", line)))
+        );
+        return deferred;
     }
 }

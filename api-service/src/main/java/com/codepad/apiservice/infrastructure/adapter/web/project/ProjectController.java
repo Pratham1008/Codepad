@@ -24,8 +24,7 @@ public class ProjectController {
 
     private UUID currentUserId() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        assert auth != null;
-        return UUID.fromString(auth.getName());
+        return ((com.codepad.apiservice.core.User) auth.getPrincipal()).getUserId();
     }
 
     @PostMapping
@@ -34,8 +33,9 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> list() {
-        return ResponseEntity.ok(manageProjectUseCase.listProjects(currentUserId()));
+    public ResponseEntity<org.springframework.data.domain.Page<ProjectResponse>> list(
+            @org.springframework.data.web.PageableDefault(size = 20, sort = "updatedAt", direction = org.springframework.data.domain.Sort.Direction.DESC) org.springframework.data.domain.Pageable pageable) {
+        return ResponseEntity.ok(manageProjectUseCase.listProjects(currentUserId(), pageable));
     }
 
     @GetMapping("/{projectId}")

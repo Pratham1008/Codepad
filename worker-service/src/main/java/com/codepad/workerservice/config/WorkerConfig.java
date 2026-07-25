@@ -14,8 +14,11 @@ public class WorkerConfig {
     @Value("${app.projects.root:/data/projects}")
     private String projectsRoot;
 
+    @Value("${app.judge.pool-size:9}")
+    private int poolSize;
+
     @Bean
     public ExecutorService judgeExecutor() {
-        return Executors.newVirtualThreadPerTaskExecutor();
+        return Executors.newFixedThreadPool(poolSize);
     }
 }

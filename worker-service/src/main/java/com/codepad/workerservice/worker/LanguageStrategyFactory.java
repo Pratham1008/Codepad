@@ -14,6 +14,11 @@ public class LanguageStrategyFactory {
         strategies.put(Language.JAVA, new JavaStrategy());
         strategies.put(Language.PYTHON, new PythonStrategy());
         strategies.put(Language.CPP, new CppStrategy());
+        strategies.put(Language.C, new CStrategy());
+        strategies.put(Language.JAVASCRIPT, new JavascriptStrategy());
+        strategies.put(Language.TYPESCRIPT, new TypescriptStrategy());
+        strategies.put(Language.RUST, new RustStrategy());
+        strategies.put(Language.KOTLIN, new KotlinStrategy());
     }
 
     public LanguageStrategy getStrategy(Language language) {

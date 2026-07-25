@@ -1,73 +1,60 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
-import { Code, KeyRound, Loader2, ArrowLeft } from "lucide-react";
-import { login, register, savePasskeySession } from "./actions";
+import { Code, Loader2, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { get } from "@github/webauthn-json";
+import { auth } from "@/lib/firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { setFirebaseSession } from "./actions";
 
 export function AuthClient() {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [csrfToken, setCsrfToken] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    fetch("/api/auth/csrf")
-      .then(res => res.json())
-      .then(data => setCsrfToken(data.token))
-      .catch(console.error);
-  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
     const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const username = formData.get("username") as string;
 
-    const action = isLogin ? login : register;
-    const res = await action(formData);
-
-    if (res.error) {
-      setError(res.error);
-      setLoading(false);
-    } else {
-      router.push("/editor");
-    }
-  }
-
-  async function handlePasskeyLogin() {
-    setLoading(true);
-    setError(null);
     try {
-      const optionsRes = await fetch("/webauthn/authenticate/options", {
-        method: "POST",
-        headers: { "X-CSRF-TOKEN": csrfToken }
-      });
-      if (!optionsRes.ok) throw new Error("Failed to get passkey options");
-      const optionsJson = await optionsRes.json();
-
-      const credential = await get({ publicKey: optionsJson });
-
-      const loginRes = await fetch("/login/webauthn", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": csrfToken,
-        },
-        body: JSON.stringify(credential),
-      });
-
-      if (!loginRes.ok) throw new Error("Passkey login failed");
+      let userCredential;
+      if (isLogin) {
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: username });
+      }
       
-      const authData = await loginRes.json();
-      await savePasskeySession(authData);
+      const token = await userCredential.user.getIdToken();
+      await setFirebaseSession(token);
       router.push("/editor");
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Passkey login failed");
+      setError(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogleLogin() {
+    setLoading(true);
+    setError(null);
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const token = await userCredential.user.getIdToken();
+      await setFirebaseSession(token);
+      router.push("/editor");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Google Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -77,7 +64,8 @@ export function AuthClient() {
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <button 
         onClick={() => router.push('/')}
-        className="absolute top-8 left-8 p-3 bg-surface-container-high hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors flex items-center gap-2 font-semibold shadow-sm border border-outline-variant"
+        className="absolute top-8 left-8 p-3 bg-surface-container-high hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors flex items-center gap-2 font-semibold shadow-sm border border-outline-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-offset-2"
+        aria-label="Back to Home"
       >
         <ArrowLeft size={20} /> Back to Home
       </button>
@@ -103,30 +91,30 @@ export function AuthClient() {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">
-              Username
-            </label>
-            <input 
-              name="username"
-              type="text" 
-              required
-              className="w-full bg-background border border-outline-variant rounded px-3 py-2 text-on-surface focus:border-primary focus:outline-none transition-colors"
-            />
-          </div>
           {!isLogin && (
             <div>
               <label className="block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">
-                Email
+                Username
               </label>
               <input 
-                name="email"
-                type="email" 
+                name="username"
+                type="text" 
                 required={!isLogin}
-                className="w-full bg-background border border-outline-variant rounded px-3 py-2 text-on-surface focus:border-primary focus:outline-none transition-colors"
+                className="w-full bg-background border border-outline-variant rounded px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
             </div>
           )}
+          <div>
+            <label className="block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">
+              Email
+            </label>
+            <input 
+              name="email"
+              type="email" 
+              required
+              className="w-full bg-background border border-outline-variant rounded px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+            />
+          </div>
           <div>
             <label className="block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">
               Password
@@ -135,41 +123,45 @@ export function AuthClient() {
               name="password"
               type="password" 
               required
-              className="w-full bg-background border border-outline-variant rounded px-3 py-2 text-on-surface focus:border-primary focus:outline-none transition-colors"
+              className="w-full bg-background border border-outline-variant rounded px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
             />
           </div>
           
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-primary-container text-on-primary-container font-semibold py-2.5 rounded hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 mt-2"
+            className="w-full bg-primary-container text-on-primary-container font-semibold py-2.5 rounded hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-offset-2"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (isLogin ? "Sign In" : "Create Account")}
           </button>
         </form>
 
-        <div className="my-6 flex items-center gap-4">
-          <div className="h-px bg-outline-variant flex-1"></div>
-          <span className="text-xs text-on-surface-variant uppercase font-semibold tracking-wider">OR</span>
-          <div className="h-px bg-outline-variant flex-1"></div>
+        <div className="my-6 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-outline-variant after:mt-0.5 after:flex-1 after:border-t after:border-outline-variant">
+          <p className="mx-4 mb-0 text-center text-sm font-semibold text-on-surface-variant">
+            OR
+          </p>
         </div>
 
-        {isLogin && (
-          <button 
-            onClick={handlePasskeyLogin}
-            disabled={loading}
-            className="w-full bg-surface-container-high border border-outline-variant text-on-surface font-semibold py-2.5 rounded hover:bg-surface-variant transition-colors flex items-center justify-center gap-2"
-          >
-            <KeyRound size={18} />
-            Sign in with Passkey
-          </button>
-        )}
+        <button 
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="w-full bg-white text-zinc-900 border border-zinc-300 font-semibold py-2.5 rounded hover:bg-zinc-50 transition-colors flex items-center justify-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-offset-2"
+        >
+          <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
 
         <div className="mt-8 text-center text-sm text-on-surface-variant">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <button 
+            type="button"
             onClick={() => { setIsLogin(!isLogin); setError(null); }}
-            className="text-primary hover:underline font-semibold"
+            className="text-primary hover:underline font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1"
           >
             {isLogin ? "Sign up" : "Sign in"}
           </button>

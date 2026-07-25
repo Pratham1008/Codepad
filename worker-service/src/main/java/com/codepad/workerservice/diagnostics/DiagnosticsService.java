@@ -29,9 +29,9 @@ public class DiagnosticsService {
         
         String containerId = null;
         try {
-            containerId = containerPool.borrowContainer(language, 1500);
+            containerId = containerPool.borrowContainer(1500);
             if (containerId == null) {
-                containerId = dockerExecutor.coldStartContainer(strategy.getDockerImage());
+                containerId = dockerExecutor.coldStartContainer("codepad-runtime:latest");
                 if (containerId == null) return Map.of();
             }
 
@@ -48,7 +48,7 @@ public class DiagnosticsService {
             log.error("Diagnostics error", e);
             return Map.of();
         } finally {
-            if (containerId != null) dockerExecutor.returnContainerSafely(language, containerId, false);
+            if (containerId != null) containerPool.returnContainer(containerId);
         }
     }
 
@@ -57,7 +57,7 @@ public class DiagnosticsService {
         if (stderr == null || stderr.isEmpty()) return map;
 
         if (language == Language.JAVA) {
-            Pattern p = Pattern.compile("^\\/workspace\\/(.*?):(\\d+): (error|warning): (.*)$", Pattern.MULTILINE);
+            Pattern p = Pattern.compile("^(?:\\/?workspace\\/)?(.*?):(\\d+): (error|warning): (.*)$", Pattern.MULTILINE);
             Matcher m = p.matcher(stderr);
             while (m.find()) {
                 String file = m.group(1);
@@ -67,14 +67,106 @@ public class DiagnosticsService {
                 map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, 0, msg, severity));
             }
         } else if (language == Language.PYTHON) {
-            Pattern p = Pattern.compile("File \"\\/workspace\\/(.*?)\", line (\\d+)");
+            Pattern p = Pattern.compile("File \"(?:\\/?workspace\\/)?(.*?)\", line (\\d+)");
             Matcher m = p.matcher(stderr);
             if (m.find()) {
                 String file = m.group(1);
                 int line = Integer.parseInt(m.group(2));
                 map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, 0, "Syntax Error", "error"));
             }
+        } else if (language == Language.CPP || language == Language.C) {
+            Pattern p = Pattern.compile("^(?:\\/?workspace\\/)?(.*?):(\\d+):(\\d+): (error|warning|fatal error): (.*)$", Pattern.MULTILINE);
+            Matcher m = p.matcher(stderr);
+            while (m.find()) {
+                String file = m.group(1);
+                int line = Integer.parseInt(m.group(2));
+                int col = Integer.parseInt(m.group(3));
+                String severity = m.group(4).contains("error") ? "error" : "warning";
+                String msg = m.group(5);
+                map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, col, msg, severity));
+            }
+        } else if (language == Language.RUST) {
+            // rustc: error[E0308]: mismatched types --> /workspace/main.rs:3:26
+            Pattern p = Pattern.compile("^(error|warning)(?:\\[E\\d+\\])?: (.*)$", Pattern.MULTILINE);
+            Pattern loc = Pattern.compile("^\\s*--> (?:\\/?workspace\\/)?(.*?):(\\d+):(\\d+)$", Pattern.MULTILINE);
+            Matcher mErr = p.matcher(stderr);
+            Matcher mLoc = loc.matcher(stderr);
+            while (mErr.find()) {
+                String severity = mErr.group(1);
+                String msg = mErr.group(2);
+                if (mLoc.find(mErr.end())) {
+                    String file = mLoc.group(1);
+                    int line = Integer.parseInt(mLoc.group(2));
+                    int col = Integer.parseInt(mLoc.group(3));
+                    map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, col, msg, severity));
+                }
+            }
+        } else if (language == Language.TYPESCRIPT) {
+            // tsc: main.ts(3,5): error TS1005: ';' expected.
+            Pattern p = Pattern.compile("^(?:\\/?workspace\\/)?(.*?)\\((\\d+),(\\d+)\\): (error|warning) TS\\d+: (.*)$", Pattern.MULTILINE);
+            Matcher m = p.matcher(stderr);
+            while (m.find()) {
+                String file = m.group(1);
+                int line = Integer.parseInt(m.group(2));
+                int col = Integer.parseInt(m.group(3));
+                String severity = m.group(4);
+                String msg = m.group(5);
+                map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, col, msg, severity));
+            }
+        } else if (language == Language.JAVASCRIPT) {
+            // node --check: /workspace/main.js:3 ... SyntaxError: ...
+            Pattern p = Pattern.compile("^(?:\\/?workspace\\/)?(.*?):(\\d+)$", Pattern.MULTILINE);
+            Matcher m = p.matcher(stderr);
+            if (m.find()) {
+                String file = m.group(1);
+                int line = Integer.parseInt(m.group(2));
+                // Grab the SyntaxError message
+                Pattern errP = Pattern.compile("SyntaxError: (.*)$", Pattern.MULTILINE);
+                Matcher errM = errP.matcher(stderr);
+                String msg = errM.find() ? errM.group(1) : "Syntax Error";
+                map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, 0, msg, "error"));
+            }
+        } else if (language == Language.KOTLIN) {
+            // kotlinc: /workspace/Solution.kt:3:5: error: expecting ';'
+            Pattern p = Pattern.compile("^(?:\\/?workspace\\/)?(.*?):(\\d+):(\\d+): (error|warning): (.*)$", Pattern.MULTILINE);
+            Matcher m = p.matcher(stderr);
+            while (m.find()) {
+                String file = m.group(1);
+                int line = Integer.parseInt(m.group(2));
+                int col = Integer.parseInt(m.group(3));
+                String severity = m.group(4);
+                String msg = m.group(5);
+                map.computeIfAbsent(file, k -> new ArrayList<>()).add(new DiagnosticEntry(line, col, msg, severity));
+            }
         }
         return map;
+    }
+
+
+
+    public static List<DiagnosticEntry> parseFastDiagnosticsStatic(Language language, String stderr) {
+        List<DiagnosticEntry> entries = new ArrayList<>();
+        if (stderr == null || stderr.isEmpty()) return entries;
+
+        if (language == Language.JAVA) {
+            Pattern p = Pattern.compile("^\\/workspace\\/([^:]+):(\\d+): (error|warning): (.*)$", Pattern.MULTILINE);
+            Matcher m = p.matcher(stderr);
+            while (m.find()) {
+                entries.add(new DiagnosticEntry(Integer.parseInt(m.group(2)), 0, m.group(4), m.group(3)));
+            }
+        } else if (language == Language.PYTHON) {
+            Pattern p = Pattern.compile("line (\\d+)");
+            Matcher m = p.matcher(stderr);
+            if (m.find()) {
+                entries.add(new DiagnosticEntry(Integer.parseInt(m.group(1)), 0, "Syntax Error", "error"));
+            }
+        } else if (language == Language.CPP) {
+            Pattern p = Pattern.compile("^<stdin>:(\\d+):(\\d+): (error|warning|fatal error): (.*)$", Pattern.MULTILINE);
+            Matcher m = p.matcher(stderr);
+            while (m.find()) {
+                entries.add(new DiagnosticEntry(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), m.group(4), m.group(3).contains("error") ? "error" : "warning"));
+            }
+        }
+        return entries;
     }
 }

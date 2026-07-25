@@ -7,6 +7,7 @@ public interface UserRepositoryPort {
     Optional<User> findById(UUID userId);
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
+    Optional<User> findByFirebaseUid(String firebaseUid);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     User save(User user);

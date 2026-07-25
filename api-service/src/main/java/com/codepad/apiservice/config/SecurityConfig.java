@@ -1,23 +1,19 @@
 package com.codepad.apiservice.config;
 
-import com.codepad.apiservice.auth.JwtAuthenticationFilter;
-import com.codepad.apiservice.auth.JwtService;
-import com.codepad.apiservice.auth.PasskeyAuthSuccessHandler;
+import com.codepad.apiservice.auth.FirebaseAuthFilter;
 import com.codepad.apiservice.core.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.ObjectPostProcessor;
-import org.springframework.security.web.webauthn.authentication.WebAuthnAuthenticationFilter;
+
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,71 +21,48 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtService jwtService;
-    private final UserRepositoryPort UserRepositoryPort;
-    private final UserDetailsService userDetailsService;
-    private final PasskeyAuthSuccessHandler passkeyAuthSuccessHandler;
+    private final UserRepositoryPort userRepositoryPort;
 
-    @org.springframework.beans.factory.annotation.Value("${app.webauthn.rp-id:localhost}")
-    private String rpId;
     @org.springframework.beans.factory.annotation.Value("${app.webauthn.allowed-origins:http://localhost:3000}")
     private String[] allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthFilter = new JwtAuthenticationFilter(jwtService, UserRepositoryPort);
+        FirebaseAuthFilter firebaseAuthFilter = new FirebaseAuthFilter(userRepositoryPort);
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/webauthn/register/options").authenticated()
-                .requestMatchers("/webauthn/register").authenticated()
-                .requestMatchers("/webauthn/authenticate/options").permitAll()
-                .requestMatchers("/login/webauthn").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/run/internal/**").permitAll()
+                .requestMatchers("/api/projects/diagnostics/stream").permitAll() // auth is enforced by WsAuthInterceptor instead
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/problems").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/problems/{slug}").permitAll()
                 .requestMatchers("/api/projects/**").authenticated()
                 .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().authenticated()
             )
-            .webAuthn(webAuthn -> webAuthn
-                .rpName("CodePad Online Judge")
-                .rpId(rpId)
-                .allowedOrigins(allowedOrigins)
-                .withObjectPostProcessor(new ObjectPostProcessor<WebAuthnAuthenticationFilter>() {
-                    @Override
-                    public <O extends WebAuthnAuthenticationFilter> O postProcess(O filter) {
-                        filter.setAuthenticationSuccessHandler(passkeyAuthSuccessHandler);
-                        return filter;
-                    }
-                })
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(firebaseAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedOriginPatterns(java.util.Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
     }
 }

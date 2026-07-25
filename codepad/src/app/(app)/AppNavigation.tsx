@@ -23,8 +23,8 @@ export function AppNavigation() {
   };
 
   const navItems = [
-    { name: "Projects", href: "/dashboard", icon: <Code size={18} /> },
     { name: "Playground", href: "/editor", icon: <Terminal size={18} /> },
+    { name: "Problems", href: "/problems", icon: <Code size={18} /> },
     { name: "Settings", href: "/settings", icon: <Settings size={18} /> },
   ];
 
@@ -38,7 +38,7 @@ export function AppNavigation() {
         initial={false}
         animate={{ width: sidebarOpen ? 260 : 64 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="hidden md:flex h-full bg-surface-container border-r border-outline-variant flex-col overflow-hidden whitespace-nowrap z-20 shrink-0"
+        className="hidden md:flex h-full bg-surface-container border-r border-outline-variant flex-col overflow-hidden whitespace-nowrap z-20 shrink-0 order-1"
       >
         <div className="h-12 border-b border-outline-variant flex items-center justify-between px-4">
           {sidebarOpen && (
@@ -110,7 +110,7 @@ export function AppNavigation() {
         </div>
       </motion.aside>
 
-      <nav className="md:hidden border-t border-outline-variant bg-surface-container flex items-center justify-around px-2 py-3 z-20 shrink-0">
+      <nav className="md:hidden border-t border-outline-variant bg-surface-container flex items-center justify-around px-2 py-3 z-20 shrink-0 order-3">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           const LinkComponent = item.href === "/editor" ? "a" : Link;

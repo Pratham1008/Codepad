@@ -14,24 +14,40 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
-  title: "CodePad - The Editor with an Ember Heart",
-  description: "A high-fidelity developer environment blending terminal aesthetics with modern warmth. Write, run, and save code snippets seamlessly in the cloud.",
-  keywords: ["Code Editor", "Online IDE", "Developer Environment", "Next.js", "Code Snippets", "Playground", "Cloud Execution"],
+  metadataBase: new URL("https://code.prathameshcorporations.site"),
+  alternates: {
+    canonical: "/",
+  },
+  title: {
+    default: "CodePad - Online Code Editor & Judge Platform",
+    template: "%s | CodePad",
+  },
+  description: "A high-performance online code editor with real-time diagnostics, multi-file projects, and algorithmic problem solving. Run code in 8 languages with secure sandboxed execution.",
+  keywords: ["Online Code Editor", "Online IDE", "Code Judge", "Competitive Programming", "Algorithm Practice", "Java", "Python", "C++", "Rust", "Kotlin", "TypeScript", "Cloud IDE", "Code Playground", "Sandboxed Execution"],
+  applicationName: "CodePad",
   authors: [{ name: "CodePad Team" }],
   openGraph: {
-    title: "CodePad - High Performance Code Editor",
-    description: "Enterprise Grade Code Editor in the Cloud. Blending terminal aesthetics with modern warmth.",
+    title: "CodePad - Online Code Editor & Judge Platform",
+    description: "Write, run, and judge code in 8 languages. Real-time diagnostics, multi-file projects, and algorithmic challenges.",
     type: "website",
     siteName: "CodePad",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CodePad - The Editor with an Ember Heart",
-    description: "A high-fidelity developer environment blending terminal aesthetics with modern warmth.",
+    title: "CodePad - Online Code Editor & Judge Platform",
+    description: "Write, run, and judge code in 8 languages with real-time diagnostics.",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -40,6 +56,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
 };
+
+import { TokenRefresher } from "@/components/TokenRefresher";
 
 export default function RootLayout({
                                      children,
@@ -60,10 +78,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
       >
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className="fixed inset-0 -z-20" style={{ background: 'var(--background)' }} />}>
           <GlobalBackground />
         </Suspense>
         <NetworkChecker />
+        <TokenRefresher />
         {children}
       </ThemeProvider>
       </body>

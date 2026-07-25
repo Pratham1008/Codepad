@@ -16,58 +16,81 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class ContainerPool {
-    private final Map<Language, BlockingQueue<String>> pools = new EnumMap<>(Language.class);
-    private final int poolSizePerLanguage;
+    private final BlockingQueue<String> pool;
+    private final int poolSize;
+    private final int maxContainers;
+    private final java.util.concurrent.atomic.AtomicInteger activeContainers = new java.util.concurrent.atomic.AtomicInteger(0);
 
-    public ContainerPool(@org.springframework.beans.factory.annotation.Value("${app.judge.pool-size-per-language:3}") int poolSizePerLanguage) {
-        this.poolSizePerLanguage = poolSizePerLanguage;
+    public ContainerPool(@org.springframework.beans.factory.annotation.Value("${app.judge.pool-size:9}") int poolSize) {
+        this.poolSize = poolSize;
+        this.maxContainers = poolSize * 2;
+        this.pool = new ArrayBlockingQueue<>(poolSize);
     }
 
     @PostConstruct
     public void initialize() {
-        for (Language lang : Language.values()) {
-            BlockingQueue<String> queue = new ArrayBlockingQueue<>(poolSizePerLanguage);
-            for (int i = 0; i < poolSizePerLanguage; i++) {
-                String containerId = spawnWarmContainer(lang);
-                if (containerId != null) queue.offer(containerId);
-            }
-            pools.put(lang, queue);
-            log.info("Initialized container pool for {}: {}/{} containers ready", lang, queue.size(), poolSizePerLanguage);
+        var tasks = new java.util.ArrayList<Thread>();
+        for (int i = 0; i < poolSize; i++) {
+            tasks.add(Thread.ofVirtual().start(() -> {
+                String containerId = spawnWarmContainer();
+                if (containerId != null) pool.offer(containerId);
+            }));
         }
+        for (Thread t : tasks) {
+            try { t.join(); } catch (InterruptedException ignored) {}
+        }
+        log.info("Initialized container pool: {}/{} containers ready", pool.size(), poolSize);
     }
 
-    public String borrowContainer(Language lang, long timeoutMs) throws InterruptedException {
-        String containerId = pools.get(lang).poll(timeoutMs, TimeUnit.MILLISECONDS);
-        if (containerId == null) log.warn("Container pool exhausted for {} — falling back to cold start", lang);
+    public String borrowContainer(long timeoutMs) throws InterruptedException {
+        String containerId = pool.poll(timeoutMs, TimeUnit.MILLISECONDS);
+        if (containerId == null) {
+            if (activeContainers.get() >= maxContainers) {
+                throw new RuntimeException("Container pool and cold-start limits exhausted");
+            }
+            log.warn("Container pool exhausted — falling back to cold start");
+            containerId = spawnWarmContainer();
+        }
         return containerId;
     }
 
-    public void returnContainer(Language lang, String containerId) {
-        pools.get(lang).offer(containerId);
+    public boolean returnContainer(String containerId) {
+        if (containerId != null) {
+            boolean offered = pool.offer(containerId);
+            if (!offered) {
+                activeContainers.decrementAndGet();
+                try { new ProcessBuilder("docker", "rm", "-f", containerId).start().waitFor(); } catch (Exception ignored) {}
+            }
+            return offered;
+        }
+        return false;
     }
 
-    private String spawnWarmContainer(Language lang) {
-        String langName = lang.name().toLowerCase();
-        String imageName = "judge-" + langName + ":latest";
+    private String spawnWarmContainer() {
+        if (activeContainers.incrementAndGet() > maxContainers) {
+            activeContainers.decrementAndGet();
+            return null;
+        }
         try {
             ProcessBuilder pb = new ProcessBuilder(
-                    "docker", "run", "-d", "--network", "none", "--memory=256m", "--cpus=0.5", "--pids-limit=64",
-                    "--read-only", "--tmpfs", "/workspace:rw,size=128m,exec", "--security-opt", "no-new-privileges",
-                    imageName, "sleep", "infinity"
+                    "docker", "run", "-d", "--network", "none", "--memory=256m", "--cpus=1.0", "--pids-limit=128",
+                    "--read-only", "--tmpfs", "/workspace:rw,size=256m,exec", "--security-opt", "no-new-privileges",
+                    "codepad-runtime:latest", "sleep", "infinity"
             );
             Process p = pb.start();
             String output = new String(p.getInputStream().readAllBytes()).trim();
             if (p.waitFor() == 0 && !output.isEmpty()) return output;
         } catch (Exception e) {
-            log.error("Exception spawning container for {}: {}", lang, e.getMessage());
+            log.error("Exception spawning container: {}", e.getMessage());
         }
+        activeContainers.decrementAndGet();
         return null;
     }
 
     @PreDestroy
     public void shutdown() {
-        log.info("Shutting down container pools...");
-        pools.values().stream().flatMap(Collection::stream).forEach(id -> {
+        log.info("Shutting down container pool...");
+        pool.forEach(id -> {
             try { new ProcessBuilder("docker", "rm", "-f", id).start().waitFor(); } catch (Exception ignored) {}
         });
     }

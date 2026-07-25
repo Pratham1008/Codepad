@@ -71,12 +71,32 @@ function WireframeCube() {
 }
 
 export function ThreeBackground() {
+  const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      setWebGLSupported(!!gl);
+    } catch (e) {
+      setWebGLSupported(false);
+    }
+  }, []);
+
+  if (webGLSupported === null) {
+    return null;
+  }
+
+  if (!webGLSupported) {
+    return <div className="w-full h-full pointer-events-none" style={{ background: 'transparent' }} />;
+  }
+
   return (
     <div className="w-full h-full pointer-events-none" style={{ background: 'transparent' }}>
       <Canvas 
         camera={{ position: [0, 0, 8] }}
         dpr={[1, 1.5]}
-        gl={{ antialias: false, powerPreference: "high-performance" }}
+        gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
         performance={{ min: 0.5 }}
       >
         <ParticleField />

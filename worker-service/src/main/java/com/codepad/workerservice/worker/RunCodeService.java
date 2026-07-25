@@ -26,13 +26,15 @@ public class RunCodeService {
     private static final long RUN_TIMEOUT_MS = 10_000;
 
     public RunCodeResponse runCode(RunCodeRequest request) {
-        Language language = Language.valueOf(request.language().toUpperCase());
-        LanguageStrategy strategy = languageStrategyFactory.getStrategy(language);
+        Language language = null;
+        LanguageStrategy strategy = null;
         
         String containerId = null;
         boolean coldStarted = false;
         try {
-            containerId = containerPool.borrowContainer(language, CONTAINER_BORROW_TIMEOUT_MS);
+            language = Language.valueOf(request.language().toUpperCase());
+            strategy = languageStrategyFactory.getStrategy(language);
+            containerId = containerPool.borrowContainer(CONTAINER_BORROW_TIMEOUT_MS);
             if (containerId == null) {
                 containerId = dockerExecutor.coldStartContainer(strategy.getDockerImage());
                 coldStarted = true;
@@ -59,18 +61,26 @@ public class RunCodeService {
             log.error("Exception during run code", e);
             return new RunCodeResponse("", "Internal error: " + e.getMessage(), 1, 0, 0);
         } finally {
-            if (containerId != null) dockerExecutor.returnContainerSafely(language, containerId, coldStarted);
+            if (containerId != null) {
+                final String cid = containerId;
+                final boolean cold = coldStarted;
+                final Language lang = language;
+                Thread.ofVirtual().start(() ->
+                    dockerExecutor.returnContainerSafely(lang, cid, cold));
+            }
         }
     }
 
     public void runCodeStreaming(RunCodeRequest request, String sessionId) {
-        Language language = Language.valueOf(request.language().toUpperCase());
-        LanguageStrategy strategy = languageStrategyFactory.getStrategy(language);
+        Language language = null;
+        LanguageStrategy strategy = null;
 
         String containerId = null;
         boolean coldStarted = false;
         try {
-            containerId = containerPool.borrowContainer(language, CONTAINER_BORROW_TIMEOUT_MS);
+            language = Language.valueOf(request.language().toUpperCase());
+            strategy = languageStrategyFactory.getStrategy(language);
+            containerId = containerPool.borrowContainer(CONTAINER_BORROW_TIMEOUT_MS);
             if (containerId == null) {
                 containerId = dockerExecutor.coldStartContainer(strategy.getDockerImage());
                 coldStarted = true;

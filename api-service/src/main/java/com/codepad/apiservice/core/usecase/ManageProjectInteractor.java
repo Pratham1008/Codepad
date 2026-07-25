@@ -43,6 +43,12 @@ public class ManageProjectInteractor implements ManageProjectUseCase {
     }
 
     @Override
+    public org.springframework.data.domain.Page<ProjectResponse> listProjects(UUID ownerId, org.springframework.data.domain.Pageable pageable) {
+        return projectRepository.findByOwnerId(ownerId, pageable)
+                .map(ProjectResponse::from);
+    }
+
+    @Override
     public ProjectResponse getProject(UUID ownerId, UUID projectId) {
         return ProjectResponse.from(requireOwnedProject(ownerId, projectId));
     }

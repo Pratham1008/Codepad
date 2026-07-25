@@ -1,6 +1,7 @@
 "use server";
 
 import { getSession } from "@/lib/session";
+import type { Project } from "@/lib/types";
 
 const API_BASE = process.env.BACKEND_API_URL || "http://localhost:8080";
 
@@ -99,7 +100,7 @@ export async function runProject(projectId: string, stdin?: string) {
   }
 }
 
-export async function runDiagnostics(projectId: string, activeFile: string, content: string) {
+export async function runDiagnostics(projectId: string, activeFile: string, content: string, mode: "full" = "full") {
   const { token } = await getSession();
   if (!token) return { error: "Unauthorized" };
 
@@ -110,7 +111,7 @@ export async function runDiagnostics(projectId: string, activeFile: string, cont
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ activeFile, content })
+      body: JSON.stringify({ activeFile, content, mode })
     });
     if (!res.ok) return { error: "Failed to get diagnostics" };
     return await res.json();
@@ -174,3 +175,52 @@ export async function deleteFile(projectId: string, path: string) {
     return { error: "Connection error" };
   }
 }
+
+export async function getProjects(page = 0, size = 20): Promise<{ error?: string, projects?: Project[], totalPages?: number }> {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+  try {
+    const res = await fetch(`${API_BASE}/api/projects?page=${page}&size=${size}`, {
+      headers: { "Authorization": `Bearer ${token}` },
+      cache: 'no-store'
+    });
+    if (!res.ok) return { error: "Failed to load projects" };
+    const data = await res.json();
+    return { projects: data.content, totalPages: data.totalPages };
+  } catch (e) {
+    console.error("Error loading projects:", e);
+    return { error: "Failed to connect to server" };
+  }
+}
+
+export async function createProject(data: { name: string, language: string }): Promise<{ error: string } | Project> {
+  const { token } = await getSession();
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/projects`, {
+      method: 'POST',
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      cache: 'no-store',
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      return { error: "Failed to create project" };
+    }
+
+    const responseData = await response.json();
+    console.log("createProject result:", responseData);
+    return responseData;
+  } catch (error) {
+    console.error("Create project error", error);
+    return { error: "Failed to connect to server" };
+  }
+}
+

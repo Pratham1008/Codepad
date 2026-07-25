@@ -3,6 +3,8 @@ import { EditorClient } from "./EditorClient";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
+import { getSession } from "@/lib/session";
+
 async function EditorFetcher({ params }: { params: Promise<{ id?: string[] }> }) {
   const resolvedParams = await params;
   const projectId = resolvedParams.id?.[0] || null;
@@ -16,7 +18,10 @@ async function EditorFetcher({ params }: { params: Promise<{ id?: string[] }> })
     }
   }
 
-  return <EditorClient projectId={projectId} initialProject={initialProject} />;
+  const session = await getSession();
+  const token = session.token || "";
+
+  return <EditorClient projectId={projectId} initialProject={initialProject} token={token} />;
 }
 
 export default function EditorPage({ params }: { params: Promise<{ id?: string[] }> }) {

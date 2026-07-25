@@ -8,11 +8,12 @@ export async function setSession(data: AuthResponse) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 24, 
+    maxAge: 60 * 60, 
   });
   cookieStore.set("username", data.username, {
+    httpOnly: true,
     path: "/",
-    maxAge: 60 * 60 * 24, 
+    maxAge: 60 * 60, 
   });
 }
 

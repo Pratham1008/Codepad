@@ -1,7 +1,9 @@
 server:
   port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,text/plain,text/event-stream
 
-debug: true
 
 spring:
   application:
@@ -9,6 +11,8 @@ spring:
   threads:
     virtual:
       enabled: true
+  cache:
+    type: redis
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -16,28 +20,33 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 3000
+      leak-detection-threshold: 10000
+      pool-name: api-hikari
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    placeholder-replacement: false
+  sql:
+    init:
+      mode: never
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
-    defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
-      platform: postgresql
+        format_sql: false
 
 
 app:
   worker:
     url: ${WORKER_URL:http://localhost:8081}
+    ws-url: ${WORKER_WS_URL:ws://localhost:8081}
   internal:
-    secret: ${INTERNAL_SECRET:change-me-in-production}
-  jwt:
-    secret: ${JWT_SECRET}
-    refresh-token-expiry-ms: 604800000
+    secret: ${INTERNAL_SECRET}
+
 
 springdoc:
   api-docs:
@@ -49,8 +58,7 @@ springdoc:
 
 logging:
   level:
+    root: WARN
     org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-    com.codepad.apiservice: DEBUG
-    org.springframework.security: TRACE
-    org.springframework.security.web.webauthn: DEBUG
+    com.codepad.apiservice: INFO
+    org.flywaydb: DEBUG

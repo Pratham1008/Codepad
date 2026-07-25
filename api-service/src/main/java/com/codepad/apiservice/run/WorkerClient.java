@@ -17,7 +17,11 @@ public class WorkerClient {
     private String workerUrl;
     @Value("${app.internal.secret}")
     private String internalSecret;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public WorkerClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     private HttpHeaders headers() {
         HttpHeaders h = new HttpHeaders();
@@ -84,11 +88,20 @@ public class WorkerClient {
     }
 
     public DiagnosticsResponse getDiagnostics(UUID projectId, String language, DiagnosticsRequest req) {
-        var body = java.util.Map.of("language", language, "activeFile", req.activeFile(), "content", req.content());
+        var body = java.util.Map.of("language", language, "activeFile", req.activeFile(), "content", req.content(), "mode", req.mode() == null ? "full" : req.mode());
         return restTemplate.postForObject(workerUrl + "/internal/projects/" + projectId + "/diagnostics", new HttpEntity<>(body, jsonHeaders()), DiagnosticsResponse.class);
     }
 
     public byte[] downloadProjectZip(UUID projectId) {
         return restTemplate.exchange(workerUrl + "/internal/projects/" + projectId + "/zip", HttpMethod.GET, new HttpEntity<>(headers()), byte[].class).getBody();
+    }
+
+    public com.codepad.apiservice.core.problem.dto.SubmissionResultDto judge(JudgeRequestDto req) {
+        return restTemplate.postForObject(workerUrl + "/internal/judge", new HttpEntity<>(req, jsonHeaders()), com.codepad.apiservice.core.problem.dto.SubmissionResultDto.class);
+    }
+
+    public void pushToUserSession(UUID userId, UUID problemId, String type, java.util.Map<String, Object> data) {
+        var body = java.util.Map.of("userId", userId.toString(), "problemId", problemId.toString(), "type", type, "data", data);
+        restTemplate.postForEntity(workerUrl + "/internal/push", new HttpEntity<>(body, jsonHeaders()), Void.class);
     }
 }

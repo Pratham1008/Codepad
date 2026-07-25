@@ -116,7 +116,7 @@ public class DockerExecutor {
                 new ProcessBuilder("docker", "rm", "-f", containerId).start().waitFor();
                 log.debug("Destroyed cold-started container {}", containerId.substring(0, 12));
             } else {
-                containerPool.returnContainer(language, containerId);
+                containerPool.returnContainer(containerId);
             }
         } catch (Exception e) {
             log.error("Failed to return container {}: {}", containerId.substring(0, 12), e.getMessage());

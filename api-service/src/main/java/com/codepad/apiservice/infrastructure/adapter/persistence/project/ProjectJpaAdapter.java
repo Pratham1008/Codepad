@@ -21,5 +21,7 @@ public class ProjectJpaAdapter implements ProjectRepositoryPort {
     @Override
     public List<Project> findByOwnerId(UUID ownerId) { return jpaRepository.findByOwner_UserId(ownerId); }
     @Override
+    public org.springframework.data.domain.Page<Project> findByOwnerId(UUID ownerId, org.springframework.data.domain.Pageable pageable) { return jpaRepository.findByOwner_UserId(ownerId, pageable); }
+    @Override
     public void deleteById(UUID projectId) { jpaRepository.deleteById(projectId); }
 }

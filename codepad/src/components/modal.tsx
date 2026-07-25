@@ -8,9 +8,10 @@ interface ModalProps {
   title: React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  maxWidth?: string;
 }
 
-export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "max-w-md" }: ModalProps) {
   
   useEffect(() => {
     if (isOpen) {
@@ -51,9 +52,9 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-              className="w-full max-w-md bg-surface-container-high border border-outline-variant rounded-xl shadow-2xl pointer-events-auto flex flex-col overflow-hidden"
+              className={`w-full ${maxWidth} bg-surface-container-high border border-outline-variant rounded-xl shadow-2xl pointer-events-auto flex flex-col overflow-hidden max-h-[90vh]`}
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/50">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/50 shrink-0">
                 <h2 className="font-headline-sm text-lg font-bold text-on-surface">
                   {title}
                 </h2>
@@ -64,11 +65,11 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
                   <X size={20} />
                 </button>
               </div>
-              <div className="p-6 text-on-surface-variant text-sm font-body-md">
+              <div className="p-6 text-on-surface-variant text-sm font-body-md overflow-y-auto">
                 {children}
               </div>
               {footer && (
-                <div className="px-6 py-4 bg-surface-container border-t border-outline-variant/50 flex items-center justify-end gap-3">
+                <div className="px-6 py-4 bg-surface-container border-t border-outline-variant/50 flex items-center justify-end gap-3 shrink-0">
                   {footer}
                 </div>
               )}

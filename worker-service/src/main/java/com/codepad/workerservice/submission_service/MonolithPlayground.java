@@ -19,9 +19,10 @@ public class MonolithPlayground {
     private final String internalSecret;
 
     public MonolithPlayground(
+            RestTemplate restTemplate,
             @Value("${app.monolith.url:http://localhost:8080}") String monolithUrl,
             @Value("${app.internal.secret}") String internalSecret) {
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplate;
         this.monolithUrl = monolithUrl;
         this.internalSecret = internalSecret;
     }

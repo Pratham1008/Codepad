@@ -1,37 +1,27 @@
 services:
-  judge-worker:
+  worker-service:
     build:
       context: ./worker-service
       dockerfile: Dockerfile
     container_name: worker-service
     ports:
-      - "8081:8081"
+      - "0.0.0.0:8081:8081"
+    mem_limit: 536m
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - API_SERVICE_URL=http://${API_EC2_PRIVATE_IP}:8080
+      - API_SERVICE_URL=http://${API_EC2_PRIVATE_IP:-api-service}:8080
       - INTERNAL_SECRET=${INTERNAL_SECRET}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./projects_data:/data/projects
+      - codepad-projects:/data/projects
     restart: unless-stopped
 
-  judge-cpp:
-    image: judge-cpp:latest
+  runtime-image:
+    image: codepad-runtime:latest
     build:
-      context: ./worker-service/docker/envs/cpp
-    profiles: ["env-setup"]
+      context: ./worker-service/docker/codepad-runtime
+    profiles:
+      - env-setup
 
-  judge-java:
-    image: judge-java:latest
-    build:
-      context: ./worker-service/docker/envs/java
-    profiles: ["env-setup"]
-
-
-  judge-python:
-    image: judge-python:latest
-    build:
-      context: ./worker-service/docker/envs/python
-    profiles: ["env-setup"]
-
-
+volumes:
+  codepad-projects:

@@ -9,12 +9,14 @@ spring:
       enabled: true
 
 app:
+  worker:
+    ws-url: ${WORKER_WS_URL:ws://localhost:8081}
   monolith:
     url: ${API_SERVICE_URL:http://localhost:8080}
   internal:
     secret: ${INTERNAL_SECRET:change-me-in-production}
   judge:
-    pool-size-per-language: ${POOL_SIZE_PER_LANGUAGE:3}
+    pool-size: ${POOL_SIZE:3}
   projects:
     root: ${PROJECTS_ROOT:/data/projects}
 

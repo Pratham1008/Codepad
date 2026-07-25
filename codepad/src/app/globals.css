@@ -5,8 +5,8 @@
 :root {
   --primary-fixed: #ffdbca;
   --on-secondary-container: #775b01;
-  --on-surface-variant: #564339;
-  --on-background: #201a18;
+  --on-surface-variant: #382921;
+  --on-background: #0f0b09;
   --inverse-on-surface: #fbeeea;
   --primary: #783100;
   --inverse-surface: #362f2d;
@@ -29,7 +29,7 @@
   --on-primary-fixed: #341100;
   --primary-container: #9d4300;
   --surface: #fff8f6;
-  --on-surface: #201a18;
+  --on-surface: #0f0b09;
   --secondary: #765a00;
   --tertiary-fixed: #ffd9e3;
   --surface-tint: #9d4300;
@@ -45,7 +45,7 @@
   --tertiary: #633b48;
   --error-container: #ffdad6;
   --on-tertiary-container: #ffcbda;
-  --outline: #897267;
+  --outline: #635046;
   --tertiary-fixed-dim: #eeb8c8;
   --surface-container-lowest: #ffffff;
   --on-error: #ffffff;
