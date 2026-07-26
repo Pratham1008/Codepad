@@ -43,8 +43,8 @@ public class SubmissionService {
                 .map(tc -> new TestCaseDto(tc.getTestCaseId(), tc.getInput(), tc.getExpectedOutput(), true, tc.getExplanation()))
                 .collect(Collectors.toList());
 
-        if (samples.size() != 3) {
-            throw new IllegalStateException("Problem misconfigured: expected 3 sample cases");
+        if (samples.isEmpty()) {
+            throw new IllegalStateException("Problem misconfigured: expected at least 1 sample case");
         }
 
         String finalSourceCode = sourceCode;

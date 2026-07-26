@@ -35,6 +35,13 @@ export function EditorClient({
   const { theme, toggleTheme } = useThemeTransition();
 
   const handleLogout = async () => {
+    const { signOut } = await import("firebase/auth");
+    const { auth } = await import("@/lib/firebase");
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Firebase signout error:", e);
+    }
     const { logout } = await import("@/app/auth/actions");
     await logout();
     router.push("/");

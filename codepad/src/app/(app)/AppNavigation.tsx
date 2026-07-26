@@ -7,6 +7,8 @@ import { Code, Terminal, Settings, LogOut, PanelLeftClose, PanelLeftOpen, Sun, M
 import { useState, useEffect } from "react";
 import { logout } from "@/app/auth/actions";
 import { useThemeTransition } from "@/components/theme-provider";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export function AppNavigation() {
   const pathname = usePathname();
@@ -18,6 +20,11 @@ export function AppNavigation() {
   useEffect(() => setMounted(true), []);
 
   const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Firebase signout error:", e);
+    }
     await logout();
     router.push("/");
   };

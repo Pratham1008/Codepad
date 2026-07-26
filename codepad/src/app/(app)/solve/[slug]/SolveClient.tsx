@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { ProblemsModal } from "@/components/ProblemsModal";
+import { runSamples, submitSolution } from "../actions";
+import { getAuth } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export function SolveClient({ problem, token }: { problem: any; token: string }) {
   const router = useRouter();
@@ -73,42 +76,73 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
   };
 
   useEffect(() => {
-    // Setup WS to listen for submissionResult
-    const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8080/api/projects/diagnostics/stream";
-    const wsUrl = `${WS_BASE}?sessionKey=solve:${problem.problemId}&language=${language}&token=${token}`;
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
+    let ws: WebSocket | null = null;
+    let isActive = true;
 
-    ws.onmessage = (event) => {
-      try {
-        const payload = JSON.parse(event.data);
-        if (payload.type === "submissionResult") {
-          setIsJudging(false);
-          setVerdict(payload.data.result);
-          setBottomTab('result');
-          
-          if (payload.data.result.verdict !== 'AC') {
-            const firstFailIdx = payload.data.result.results?.findIndex((r: any) => r.verdict !== 'AC');
-            if (firstFailIdx !== undefined && firstFailIdx !== -1) setActiveTestCase(firstFailIdx);
+    const setupWs = async () => {
+      let wsBase = process.env.NEXT_PUBLIC_WS_URL;
+      if (!wsBase && process.env.NEXT_PUBLIC_API_URL) {
+          wsBase = process.env.NEXT_PUBLIC_API_URL.replace("http", "ws") + "/api/projects/diagnostics/stream";
+      }
+      if (!wsBase) {
+          const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+          if (window.location.port === '3000') {
+              wsBase = `${protocol}//${window.location.hostname}:8080/api/projects/diagnostics/stream`;
           } else {
-            setActiveTestCase(0);
+              wsBase = `${protocol}//${window.location.host}/api/projects/diagnostics/stream`;
           }
-        } else if (payload.type === "testCaseResult") {
-          setTestResults(prev => {
-            const exists = prev.find(p => p.testCaseId === payload.data.testCaseId);
-            if (exists) return prev.map(p => p.testCaseId === payload.data.testCaseId ? payload.data : p);
-            return [...prev, payload.data];
-          });
+      }
+      
+      let currentToken = token;
+      try {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          currentToken = await currentUser.getIdToken(true) || token;
         }
       } catch (e) {
-        console.error("WS parsing error", e);
+        console.error("Failed to get fresh token for WS", e);
       }
+      
+      if (!isActive) return;
+
+      const wsUrl = `${wsBase}?sessionKey=solve:${problem.problemId}&language=${language}&token=${currentToken}`;
+      ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
+
+      ws.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          if (payload.type === "submissionResult") {
+            setIsJudging(false);
+            setVerdict(payload.data.result);
+            setBottomTab('result');
+            
+            if (payload.data.result.verdict !== 'AC') {
+              const firstFailIdx = payload.data.result.results?.findIndex((r: any) => r.verdict !== 'AC');
+              if (firstFailIdx !== undefined && firstFailIdx !== -1) setActiveTestCase(firstFailIdx);
+            } else {
+              setActiveTestCase(0);
+            }
+          } else if (payload.type === "testCaseResult") {
+            setTestResults(prev => {
+              const exists = prev.find(p => p.testCaseId === payload.data.testCaseId);
+              if (exists) return prev.map(p => p.testCaseId === payload.data.testCaseId ? payload.data : p);
+              return [...prev, payload.data];
+            });
+          }
+        } catch (e) {
+          console.error("WS parsing error", e);
+        }
+      };
     };
 
+    setupWs();
+
     return () => {
-      ws.close();
+      isActive = false;
+      if (ws) ws.close();
     };
-  }, [problem.problemId, language]);
+  }, [problem.problemId, language, token]);
 
   const handleRun = async () => {
     setVerdict(null);
@@ -118,20 +152,18 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
     setRunType('run');
     setBottomTab('result');
     try {
-      const res = await fetch(`/api/problems/${problem.problemId}/submissions/run`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ language, sourceCode: code }),
-      });
-      if (!res.ok) {
-        showAlert("Run Failed", "Failed to run code. Please try again.");
+      const data = await runSamples(problem.problemId, language, code);
+      if (data.error) {
+        showAlert("Run Failed", data.error);
         setIsJudging(false);
         return;
       }
-      
-      const data = await res.json();
       setVerdict(data);
       if (data.results) setTestResults(data.results);
+    } catch (e) {
+      console.error("Run error", e);
+      showAlert("Run Failed", "Failed to run code.");
+      setIsJudging(false);
     } finally {
       setIsJudging(false);
     }
@@ -145,17 +177,10 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
     setRunType('submit');
     setBottomTab('result');
     try {
-      const res = await fetch(`/api/problems/${problem.problemId}/submissions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ language, sourceCode: code }),
-      });
-      if (!res.ok) {
-        if (res.status === 429) {
-          showAlert("Rate Limit", "Rate limit exceeded. Please wait.");
-        } else {
-          showAlert("Submission Failed", "Failed to submit code. Please try again.");
-        }
+      const data = await submitSolution(problem.problemId, language, code);
+      
+      if (data.error) {
+        showAlert("Submission Failed", data.error);
         setIsJudging(false);
         return;
       }
