@@ -21,7 +21,8 @@ export function ProblemsModal({ onClose, token }: { onClose: () => void, token?:
       const res = await getProblemsAuthenticated(pageNum, 10); // 10 problems per page
       if (res.error) throw new Error(res.error);
       
-      setProblems(prev => isLoadMore ? [...prev, ...(res.problems || [])] : (res.problems || []));
+      const newProblems = res.content || res.problems || [];
+      setProblems(prev => isLoadMore ? [...prev, ...newProblems] : newProblems);
       setTotalProblems(res.totalElements || 0);
       setHasMore(pageNum + 1 < (res.totalPages || 0));
     } catch (err: any) {

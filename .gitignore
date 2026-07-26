@@ -60,6 +60,7 @@ codepad-source-code/
 
 # Flutter desktop app (local only, not deployed)
 codepad_desktop/
+verdict_desktop/
 serviceKey.json
 
 # Credential/encoded files

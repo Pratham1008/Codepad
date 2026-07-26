@@ -58,6 +58,7 @@ export const viewport: Viewport = {
 };
 
 import { TokenRefresher } from "@/components/TokenRefresher";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export default function RootLayout({
                                      children,
@@ -83,6 +84,7 @@ export default function RootLayout({
         </Suspense>
         <NetworkChecker />
         <TokenRefresher />
+        <ServiceWorkerRegister />
         {children}
       </ThemeProvider>
       </body>

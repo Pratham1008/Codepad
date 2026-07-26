@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>You're offline — CodePad</title>
+<style>
+  :root {
+    --background: #151312;
+    --on-surface: #f2dfd9;
+    --on-surface-variant: #ddc1b4;
+    --primary: #ffb690;
+    --primary-container: #783100;
+    --secondary: #e8c266;
+    --outline: #a78b7d;
+    --outline-variant: #584237;
+    --surface-container: #211d1b;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --background: #fff8f6;
+      --on-surface: #0f0b09;
+      --on-surface-variant: #382921;
+      --primary: #783100;
+      --primary-container: #ffdbca;
+      --secondary: #765a00;
+      --outline: #635046;
+      --outline-variant: #ddc1b4;
+      --surface-container: #f6ece7;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: var(--background);
+    color: var(--on-surface);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card {
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    padding: 40px 32px;
+  }
+  .icon-wrap {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: var(--primary-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-wrap svg { width: 32px; height: 32px; color: var(--primary); }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+  p { color: var(--on-surface-variant); font-size: 14px; line-height: 1.6; margin-bottom: 28px; }
+  button {
+    background: var(--primary);
+    color: var(--primary-container);
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  button:active { transform: scale(0.97); }
+  .status {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--outline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #e05252; }
+  .dot.online { background: #4caf50; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <line x1="12" y1="20" x2="12" y2="20"></line>
+      </svg>
+    </div>
+    <h1>You're offline</h1>
+    <p>
+      CodePad can't reach the server right now. Check your connection —
+      we'll get you back to your project as soon as you're back online.
+    </p>
+    <button onclick="location.reload()">Try again</button>
+    <div class="status">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">No connection detected</span>
+    </div>
+  </div>
+  <script>
+    function updateStatus() {
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      if (navigator.onLine) {
+        dot.classList.add('online');
+        text.textContent = 'Connection detected — click Try again';
+      } else {
+        dot.classList.remove('online');
+        text.textContent = 'No connection detected';
+      }
+    }
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    updateStatus();
+  </script>
+</body>
+</html>

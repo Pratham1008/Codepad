@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import { getProblemBySlug } from "@/app/problems/actions";
 import { fetchAuthenticated } from "@/lib/api";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   try {

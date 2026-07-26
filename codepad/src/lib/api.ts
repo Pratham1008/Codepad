@@ -1,6 +1,6 @@
 import { getSession } from "./session";
 
-const getApiBase = () => process.env.BACKEND_API_URL || "http://localhost:8080";
+const getApiBase = () => process.env.BACKEND_API_URL || "http://127.0.0.1:8080";
 
 export async function fetchAuthenticated(path: string, options: RequestInit = {}) {
   const { token } = await getSession();

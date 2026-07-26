@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import Editor from "@monaco-editor/react";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { ExampleBlock } from "@/components/ExampleBlock";
@@ -32,7 +33,44 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
   
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const [showProblemsModal, setShowProblemsModal] = useState(false);
-  const [bottomTab, setBottomTab] = useState<'testcases' | 'result'>('testcases');
+  const [bottomTab, setBottomTab] = useState<'testcases' | 'result' | 'submissions'>('testcases');
+  const [submissionHistory, setSubmissionHistory] = useState<any[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'alert' | 'confirm';
+    onConfirm?: () => void;
+  }>({ isOpen: false, title: '', message: '', type: 'alert' });
+
+  const showAlert = (title: string, message: string) => {
+    setModalConfig({ isOpen: true, title, message, type: 'alert' });
+  };
+
+  const showConfirm = (title: string, message: string, onConfirm: () => void) => {
+    setModalConfig({ isOpen: true, title, message, type: 'confirm', onConfirm });
+  };
+
+  const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
+  const loadHistory = async () => {
+    setBottomTab('submissions');
+    setLoadingHistory(true);
+    try {
+      const res = await fetch(`/api/problems/${problem.problemId}/submissions?size=50`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSubmissionHistory(data.content || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
 
   useEffect(() => {
     // Setup WS to listen for submissionResult
@@ -86,7 +124,7 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
         body: JSON.stringify({ language, sourceCode: code }),
       });
       if (!res.ok) {
-        alert("Failed to run code. Please try again.");
+        showAlert("Run Failed", "Failed to run code. Please try again.");
         setIsJudging(false);
         return;
       }
@@ -114,9 +152,9 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
       });
       if (!res.ok) {
         if (res.status === 429) {
-          alert("Rate limit exceeded. Please wait.");
+          showAlert("Rate Limit", "Rate limit exceeded. Please wait.");
         } else {
-          alert("Failed to submit code. Please try again.");
+          showAlert("Submission Failed", "Failed to submit code. Please try again.");
         }
         setIsJudging(false);
         return;
@@ -136,7 +174,7 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
     } catch (e) {
       console.error("Error during submission:", e);
       setIsJudging(false);
-      alert("Network error. Please check your connection.");
+      showAlert("Network Error", "Network error. Please check your connection.");
     }
   };
 
@@ -383,6 +421,13 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
                 }`}>
                 Test Result {isJudging && <Loader2 className="w-3 h-3 ml-2 animate-spin" />}
               </button>
+              <button 
+                onClick={loadHistory}
+                className={`px-4 text-[12px] uppercase tracking-wider font-semibold border-t-2 flex items-center transition-colors ${
+                  bottomTab === 'submissions' ? 'text-[#cccccc] border-primary bg-[#1e1e1e]' : 'text-[#858585] border-transparent hover:text-[#cccccc]'
+                }`}>
+                Submissions
+              </button>
             </div>
             
             <div className="flex-1 overflow-auto p-4">
@@ -398,7 +443,7 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
                     </div>
                   ))}
                 </div>
-              ) : (
+              ) : bottomTab === 'result' ? (
                 <div className="flex flex-col h-full text-sm text-[#cccccc]">
                   {!runType && !isJudging && testResults.length === 0 ? (
                     <div className="text-zinc-500 text-sm">Run or submit to see results</div>
@@ -517,7 +562,69 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
                     </div>
                   )}
                 </div>
-              )}
+              ) : bottomTab === 'submissions' ? (
+                <div className="flex flex-col h-full text-sm text-[#cccccc]">
+                  {loadingHistory ? (
+                    <div className="flex items-center gap-2 text-zinc-500">
+                      <Loader2 className="w-4 h-4 animate-spin" /> Loading history...
+                    </div>
+                  ) : submissionHistory.length === 0 ? (
+                    <div className="text-zinc-500">No submissions found.</div>
+                  ) : (
+                    <div className="overflow-auto rounded-lg border border-[#3c3c3c]">
+                      <table className="w-full text-left text-xs">
+                        <thead className="bg-[#2d2d2d] sticky top-0">
+                          <tr>
+                            <th className="p-3 font-semibold text-zinc-300">Time Submitted</th>
+                            <th className="p-3 font-semibold text-zinc-300">Status</th>
+                            <th className="p-3 font-semibold text-zinc-300">Runtime</th>
+                            <th className="p-3 font-semibold text-zinc-300">Memory</th>
+                            <th className="p-3 font-semibold text-zinc-300">Language</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#3c3c3c]">
+                          {submissionHistory.map((sub: any) => (
+                            <tr 
+                              key={sub.submissionId} 
+                              className="hover:bg-[#2a2d2e] transition-colors bg-[#1e1e1e] cursor-pointer"
+                              onClick={() => {
+                                if (sub.sourceCode) {
+                                  showConfirm(
+                                    "Load Submission",
+                                    "Load this submission into the editor? Your current code will be overwritten.",
+                                    () => {
+                                      setCode(sub.sourceCode);
+                                      setLanguage(sub.language);
+                                    }
+                                  );
+                                }
+                              }}
+                            >
+                              <td className="p-3 text-zinc-400 whitespace-nowrap">
+                                {new Date(sub.submittedAt + (sub.submittedAt.endsWith('Z') ? '' : 'Z')).toLocaleString(undefined, { 
+                                  month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                                })}
+                              </td>
+                              <td className="p-3 font-semibold">
+                                <span className={sub.verdict === 'AC' ? 'text-emerald-500' : sub.verdict === 'PENDING' ? 'text-zinc-400' : 'text-red-500'}>
+                                  {sub.verdict === 'AC' ? 'Accepted' : sub.verdict === 'WA' ? 'Wrong Answer' : sub.verdict}
+                                </span>
+                              </td>
+                              <td className="p-3 text-zinc-400 font-mono">{sub.maxTimeMs} ms</td>
+                              <td className="p-3 text-zinc-400 font-mono">{sub.maxMemoryKb} KB</td>
+                              <td className="p-3 text-zinc-400">
+                                <span className="px-2 py-0.5 bg-[#2d2d2d] rounded-full text-[10px] uppercase">
+                                  {sub.language}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -525,6 +632,37 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
       
       {showProblemsModal && (
         <ProblemsModal onClose={() => setShowProblemsModal(false)} token={token} />
+      )}
+
+      {modalConfig.isOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', padding: '16px' }}>
+          <div style={{ backgroundColor: '#1e1e1e', border: '1px solid #3c3c3c', borderRadius: '12px', width: '100%', maxWidth: '400px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-zinc-100 mb-2">{modalConfig.title}</h3>
+              <p className="text-zinc-400 leading-relaxed">{modalConfig.message}</p>
+            </div>
+            <div className="bg-[#2d2d2d] px-6 py-4 flex justify-end gap-3 border-t border-[#3c3c3c]">
+              {modalConfig.type === 'confirm' && (
+                <button 
+                  onClick={(e) => { e.stopPropagation(); closeModal(); }}
+                  className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+              )}
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (modalConfig.onConfirm) modalConfig.onConfirm();
+                  closeModal();
+                }}
+                className="px-4 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors shadow-sm"
+              >
+                {modalConfig.type === 'confirm' ? 'Confirm' : 'OK'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

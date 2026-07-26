@@ -191,20 +191,6 @@ export function ClientPageContent() {
         </div>
       </section>
 
-      {/* Explore Problems CTA Section */}
-      <section 
-        className="w-full max-w-5xl mx-auto mb-xl bg-gradient-to-br from-primary-container/30 to-surface-container p-xl rounded-2xl border border-outline-variant/30 text-center"
-      >
-        <h2 className="font-headline-md text-headline-md font-bold text-on-background mb-md">Challenge Yourself</h2>
-        <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-lg">
-          Solve algorithmic problems and sharpen your skills. No login required to browse.
-        </p>
-        <Link href="/problems">
-          <button className="bg-primary text-on-primary font-title-lg text-title-lg px-2xl py-md rounded-xl hover:bg-primary/90 transition-all duration-200 active:scale-[0.97] shadow-lg hover:shadow-primary/20">
-            Explore Problems &rarr;
-          </button>
-        </Link>
-      </section>
     </main>
     </>
   );

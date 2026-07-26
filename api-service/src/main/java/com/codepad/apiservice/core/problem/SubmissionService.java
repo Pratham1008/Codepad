@@ -139,7 +139,8 @@ public class SubmissionService {
                     .memoryKb(res.memoryKb())
                     .actualOutput(res.actualOutput())
                     .build()).collect(Collectors.toList());
-            submission.setTestResults(results);
+            submission.getTestResults().clear();
+            submission.getTestResults().addAll(results);
         }
 
         submissionRepository.save(submission);
@@ -157,6 +158,7 @@ public class SubmissionService {
                         s.getMaxMemoryKb() != null ? s.getMaxMemoryKb() : 0,
                         s.getPassedCount() != null ? s.getPassedCount() : 0,
                         s.getTotalCount() != null ? s.getTotalCount() : 0,
+                        s.getSourceCode(),
                         s.getSubmittedAt()
                 ));
     }

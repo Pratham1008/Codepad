@@ -4,8 +4,10 @@ import com.codepad.workerservice.worker.Language;
 import com.codepad.workerservice.diagnostics.session.PersistentExecPipe;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class WorkspaceSession {
+    public final ReentrantLock sessionLock = new ReentrantLock();
     public final WorkspaceSessionKey sessionKey;
     public final Language language;
     public final String containerId;      // null for Java — in-process checker, no container needed

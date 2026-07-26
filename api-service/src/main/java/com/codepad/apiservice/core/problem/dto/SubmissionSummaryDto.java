@@ -11,5 +11,6 @@ public record SubmissionSummaryDto(
         int maxMemoryKb,
         int passedCount,
         int totalCount,
+        String sourceCode,
         LocalDateTime submittedAt
 ) {}

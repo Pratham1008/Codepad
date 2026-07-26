@@ -56,6 +56,16 @@ export function EditorClient({
   const [saved, setSaved] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<"explorer" | "editor" | "console">("editor");
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -217,9 +227,14 @@ export function EditorClient({
     loading, setLoading,
     consoleRef,
     consoleInputRef,
-    handleRun,
+    handleRun: originalHandleRun,
     handleConsoleKeyDown,
   } = useRunExecution(projectId, activeFilePath, handleSave, setBottomTab);
+
+  const handleRun = () => {
+    if (isMobile) setMobilePanel("console");
+    originalHandleRun();
+  };
 
   const {
     sidebarWidth,
@@ -329,117 +344,200 @@ export function EditorClient({
           handleLogout={handleLogout}
         />
 
-        {showExplorer && (
-          <>
-            <div style={{ width: sidebarWidth }} className="h-full overflow-hidden shrink-0 bg-[#252526]">
-              {projectId ? (
-                <FileExplorer 
+        {isMobile ? (
+          <div className="flex-1 flex flex-col overflow-hidden w-full">
+            <div className="flex border-b border-[#3c3c3c] bg-[#252526] shrink-0">
+              {(["explorer", "editor", "console"] as const).map(p => (
+                <button
+                  key={p}
+                  onClick={() => setMobilePanel(p)}
+                  className={`flex-1 py-2 text-xs uppercase tracking-wide ${
+                    mobilePanel === p ? "text-[#007acc] border-b-2 border-[#007acc]" : "text-[#858585]"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex-1 overflow-hidden flex flex-col relative w-full">
+              {mobilePanel === "explorer" && (
+                <FileExplorer
                   tree={tree}
                   activeFilePath={activeFilePath}
-                  onSelectFile={handleSelectFile}
+                  onSelectFile={(path) => { handleSelectFile(path); setMobilePanel("editor"); }}
                   onCreateFile={handleCreateFile}
                   onDeleteFile={handleDeleteFile}
                   onRenameFile={handleRenameFile}
                   projectName={initialProject?.name}
                 />
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full p-4 text-center text-[#858585]">
-                  <Files size={28} className="mb-2" />
-                  <p className="text-xs mb-2">No folder open</p>
-                  <button onClick={openProjectsModal} className="text-[#007acc] text-xs font-semibold hover:underline">
-                    Open a project
-                  </button>
+              )}
+              {mobilePanel === "editor" && activeFilePath && (
+                <Editor
+                  height="100%"
+                  language={getLangFromPath(activeFilePath)}
+                  theme={theme === "dark" ? "vs-dark" : "light"}
+                  value={code}
+                  onChange={onCodeChange}
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 15,
+                    lineNumbersMinChars: 2,
+                    wordWrap: "on",
+                    scrollBeyondLastLine: false,
+                    fixedOverflowWidgets: true,
+                    quickSuggestions: false,
+                    hover: { enabled: false }
+                  }}
+                  onMount={handleEditorMount}
+                />
+              )}
+              {mobilePanel === "editor" && !activeFilePath && (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-[#858585] select-none gap-4">
+                  <div className="opacity-20 text-6xl font-bold">{"</>"}</div>
+                  <p className="text-sm">Select a file</p>
                 </div>
               )}
+              {mobilePanel === "console" && (
+                <EditorBottomPanel
+                  consoleHeight={window.innerHeight - 160}
+                  bottomTab={bottomTab}
+                  setBottomTab={setBottomTab}
+                  problems={problems}
+                  interactiveMode={interactiveMode}
+                  staticStdin={staticStdin}
+                  setStaticStdin={setStaticStdin}
+                  loading={loading}
+                  consoleText={consoleText}
+                  streamRunning={streamRunning}
+                  sessionId={sessionId}
+                  consoleInputRef={consoleInputRef}
+                  currentLine={currentLine}
+                  setCurrentLine={setCurrentLine}
+                  handleConsoleKeyDown={handleConsoleKeyDown}
+                  consoleRef={consoleRef}
+                  output={output}
+                />
+              )}
             </div>
-            <div onMouseDown={onSidebarDragStart}
-              className="w-[3px] hover:bg-[#007acc] cursor-col-resize transition-colors shrink-0 z-10" />
+          </div>
+        ) : (
+          <>
+            {showExplorer && (
+              <>
+                <div style={{ width: sidebarWidth }} className="h-full overflow-hidden shrink-0 bg-[#252526]">
+                  {projectId ? (
+                    <FileExplorer 
+                      tree={tree}
+                      activeFilePath={activeFilePath}
+                      onSelectFile={handleSelectFile}
+                      onCreateFile={handleCreateFile}
+                      onDeleteFile={handleDeleteFile}
+                      onRenameFile={handleRenameFile}
+                      projectName={initialProject?.name}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full p-4 text-center text-[#858585]">
+                      <Files size={28} className="mb-2" />
+                      <p className="text-xs mb-2">No folder open</p>
+                      <button onClick={openProjectsModal} className="text-[#007acc] text-xs font-semibold hover:underline">
+                        Open a project
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div onMouseDown={onSidebarDragStart}
+                  onTouchStart={onSidebarDragStart}
+                  className="w-[3px] hover:bg-[#007acc] cursor-col-resize transition-colors shrink-0 z-10" />
+              </>
+            )}
+
+            <div className="flex-1 flex flex-col overflow-hidden" style={{ minWidth: 0 }}>
+              <EditorTabBar 
+                openTabs={openTabs}
+                activeFilePath={activeFilePath}
+                dirtyFiles={dirtyFiles}
+                handleSelectFile={handleSelectFile}
+                closeTab={closeTab}
+              />
+
+              <div className="flex-1 overflow-hidden" style={{ minHeight: 100 }}>
+                {!projectId ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-center p-4">
+                    <FileCode size={56} className="text-[#3c3c3c] mb-4" />
+                    <h2 className="text-[#cccccc] font-semibold text-lg mb-1">No project open</h2>
+                    <p className="text-[#858585] text-sm mb-6 max-w-[320px]">Open an existing project or create a new one to start coding.</p>
+                    <div className="flex gap-3">
+                      <button onClick={openProjectsModal}
+                        className="px-4 py-2 rounded bg-[#2d2d2d] border border-[#3c3c3c] text-[#cccccc] font-semibold hover:border-[#007acc] transition-colors">
+                        Open Project
+                      </button>
+                      <button onClick={() => setShowCreateModal(true)}
+                        className="px-4 py-2 rounded bg-primary text-on-primary font-semibold hover:bg-orange-600 transition-colors">
+                        New Project
+                      </button>
+                    </div>
+                  </div>
+                ) : !editorReady ? (
+                  <div className="w-full h-full flex items-center justify-center bg-[#1e1e1e] text-[#858585]">
+                    <Loader2 className="animate-spin" />
+                  </div>
+                ) : activeFilePath ? (
+                  <Editor
+                    height="100%"
+                    language={getLangFromPath(activeFilePath)}
+                    theme={theme === 'dark' ? "vs-dark" : "light"}
+                    value={code}
+                    onChange={onCodeChange}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      fontFamily: "var(--font-jetbrains-mono), 'Cascadia Code', 'Fira Code', Consolas, monospace",
+                      padding: { top: 12 },
+                      scrollBeyondLastLine: false,
+                      smoothScrolling: true,
+                      cursorBlinking: "smooth",
+                      wordWrap: "on",
+                      renderLineHighlight: "all",
+                      bracketPairColorization: { enabled: true },
+                      fixedOverflowWidgets: true,
+                    }}
+                    onMount={handleEditorMount}
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-[#858585] select-none gap-4">
+                    <div className="opacity-20 text-8xl font-bold">{"</>"}</div>
+                    <p className="text-sm">Select a file to start editing</p>
+                  </div>
+                )}
+              </div>
+
+              <div onMouseDown={onConsoleDragStart}
+                onTouchStart={onConsoleDragStart}
+                className="h-[3px] hover:bg-[#007acc] cursor-row-resize transition-colors shrink-0 z-10 bg-[#252526]" />
+
+              <EditorBottomPanel 
+                consoleHeight={consoleHeight}
+                bottomTab={bottomTab}
+                setBottomTab={setBottomTab}
+                problems={problems}
+                interactiveMode={interactiveMode}
+                staticStdin={staticStdin}
+                setStaticStdin={setStaticStdin}
+                loading={loading}
+                consoleText={consoleText}
+                streamRunning={streamRunning}
+                sessionId={sessionId}
+                consoleInputRef={consoleInputRef}
+                currentLine={currentLine}
+                setCurrentLine={setCurrentLine}
+                handleConsoleKeyDown={handleConsoleKeyDown}
+                consoleRef={consoleRef}
+                output={output}
+              />
+            </div>
           </>
         )}
-
-        <div className="flex-1 flex flex-col overflow-hidden" style={{ minWidth: 0 }}>
-          <EditorTabBar 
-            openTabs={openTabs}
-            activeFilePath={activeFilePath}
-            dirtyFiles={dirtyFiles}
-            handleSelectFile={handleSelectFile}
-            closeTab={closeTab}
-          />
-
-          <div className="flex-1 overflow-hidden" style={{ minHeight: 100 }}>
-            {!projectId ? (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-center p-4">
-                <FileCode size={56} className="text-[#3c3c3c] mb-4" />
-                <h2 className="text-[#cccccc] font-semibold text-lg mb-1">No project open</h2>
-                <p className="text-[#858585] text-sm mb-6 max-w-[320px]">Open an existing project or create a new one to start coding.</p>
-                <div className="flex gap-3">
-                  <button onClick={openProjectsModal}
-                    className="px-4 py-2 rounded bg-[#2d2d2d] border border-[#3c3c3c] text-[#cccccc] font-semibold hover:border-[#007acc] transition-colors">
-                    Open Project
-                  </button>
-                  <button onClick={() => setShowCreateModal(true)}
-                    className="px-4 py-2 rounded bg-primary text-on-primary font-semibold hover:bg-orange-600 transition-colors">
-                    New Project
-                  </button>
-                </div>
-              </div>
-            ) : !editorReady ? (
-              <div className="w-full h-full flex items-center justify-center bg-[#1e1e1e] text-[#858585]">
-                <Loader2 className="animate-spin" />
-              </div>
-            ) : activeFilePath ? (
-              <Editor
-                height="100%"
-                language={getLangFromPath(activeFilePath)}
-                theme={theme === 'dark' ? "vs-dark" : "light"}
-                value={code}
-                onChange={onCodeChange}
-                options={{
-                  minimap: { enabled: false },
-                  fontSize: 14,
-                  fontFamily: "var(--font-jetbrains-mono), 'Cascadia Code', 'Fira Code', Consolas, monospace",
-                  padding: { top: 12 },
-                  scrollBeyondLastLine: false,
-                  smoothScrolling: true,
-                  cursorBlinking: "smooth",
-                  wordWrap: "on",
-                  renderLineHighlight: "all",
-                  bracketPairColorization: { enabled: true },
-                  fixedOverflowWidgets: true,
-                }}
-                onMount={handleEditorMount}
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-[#858585] select-none gap-4">
-                <div className="opacity-20 text-8xl font-bold">{"</>"}</div>
-                <p className="text-sm">Select a file to start editing</p>
-              </div>
-            )}
-          </div>
-
-          <div onMouseDown={onConsoleDragStart}
-            className="h-[3px] hover:bg-[#007acc] cursor-row-resize transition-colors shrink-0 z-10 bg-[#252526]" />
-
-          <EditorBottomPanel 
-            consoleHeight={consoleHeight}
-            bottomTab={bottomTab}
-            setBottomTab={setBottomTab}
-            problems={problems}
-            interactiveMode={interactiveMode}
-            staticStdin={staticStdin}
-            setStaticStdin={setStaticStdin}
-            loading={loading}
-            consoleText={consoleText}
-            streamRunning={streamRunning}
-            sessionId={sessionId}
-            consoleInputRef={consoleInputRef}
-            currentLine={currentLine}
-            setCurrentLine={setCurrentLine}
-            handleConsoleKeyDown={handleConsoleKeyDown}
-            consoleRef={consoleRef}
-            output={output}
-          />
-        </div>
       </div>
 
       <EditorStatusBar 

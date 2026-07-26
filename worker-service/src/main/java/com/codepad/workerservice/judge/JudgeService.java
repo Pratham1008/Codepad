@@ -42,6 +42,7 @@ public class JudgeService {
             return new SubmissionResultDto("SYSTEM_ERROR", "No container", null, 0, 0, 0, 0);
         }
 
+        session.sessionLock.lock();
         try {
             // Write source code
             dockerExecutor.overwriteFileInContainer(containerId, strategy.sourceFileName(), req.sourceCode());
@@ -87,7 +88,14 @@ public class JudgeService {
                     tcVerdict = "WA";
                 }
 
-                TestCaseResultDto tcResult = new TestCaseResultDto(tc.testCaseId(), tcVerdict, timeMs, memKb, runRes.stdout());
+                String actualOut = runRes.stdout() != null ? runRes.stdout().trim() : "";
+                String actualErr = runRes.stderr() != null ? runRes.stderr().trim() : "";
+                String combinedOutput = actualOut;
+                if (!actualErr.isEmpty()) {
+                    combinedOutput = combinedOutput.isEmpty() ? actualErr : combinedOutput + "\n" + actualErr;
+                }
+
+                TestCaseResultDto tcResult = new TestCaseResultDto(tc.testCaseId(), tcVerdict, timeMs, memKb, combinedOutput);
                 results.add(tcResult);
 
                 if (session.getWebSocketSession() != null && session.getWebSocketSession().isOpen()) {
@@ -120,6 +128,8 @@ public class JudgeService {
         } catch (Exception e) {
             log.error("Judge error", e);
             return new SubmissionResultDto("SYSTEM_ERROR", e.getMessage(), null, 0, 0, 0, req.testCases().size());
+        } finally {
+            session.sessionLock.unlock();
         }
     }
 }
