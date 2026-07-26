@@ -9,13 +9,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   compress: true,
   poweredByHeader: false,
   experimental: {
     useCache: true,
-  },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   images: {
     formats: ["image/avif", "image/webp"],
