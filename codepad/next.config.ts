@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
   experimental: {
     useCache: true,
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
   },
