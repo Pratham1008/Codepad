@@ -11,7 +11,6 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
-  cacheComponents: true,
   images: {
     formats: ["image/avif", "image/webp"],
   },
