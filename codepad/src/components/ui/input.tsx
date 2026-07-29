@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -11,10 +13,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         ref={ref}
         className={cn(
-          "bg-surface rounded-ui px-md py-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 outline-none transition-shadow w-full",
+          "bg-surface-2 rounded-md px-4 py-2 text-base text-on-surface placeholder:text-on-surface-variant/50 outline-none transition-colors duration-150 w-full",
           error
-            ? "border-2 border-error"
-            : "border border-outline focus:border-primary focus:ring-1 focus:ring-primary",
+            ? "border-2 border-error focus:border-error"
+            : "border border-outline focus:border-primary focus:ring-1 focus:ring-primary/50",
           className
         )}
         {...props}

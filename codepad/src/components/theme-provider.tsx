@@ -12,26 +12,33 @@ export function ThemeProvider({
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-import { flushSync } from "react-dom";
 
 export function useThemeTransition() {
-  const { theme, setTheme, systemTheme } = useNextTheme();
+  const { theme, setTheme, systemTheme, resolvedTheme } = useNextTheme();
 
   const toggleTheme = React.useCallback(() => {
     const currentTheme = theme === "system" ? systemTheme : theme;
     const nextTheme = currentTheme === "dark" ? "light" : "dark";
-    
-    if (!document.startViewTransition) {
+
+    const root = document.documentElement;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
       setTheme(nextTheme);
       return;
     }
-    
-    document.startViewTransition(() => {
-      flushSync(() => {
-        setTheme(nextTheme);
-      });
-    });
+
+    root.classList.add("theme-transitioning");
+    setTheme(nextTheme);
+
+    window.setTimeout(() => {
+      root.classList.remove("theme-transitioning");
+    }, 300);
   }, [theme, systemTheme, setTheme]);
 
-  return { theme, setTheme, toggleTheme, systemTheme };
+  // resolvedTheme is "dark" | "light" even when theme === "system" —
+  // this is what Monaco needs to read, not the raw "system" string.
+  return { theme, setTheme, toggleTheme, systemTheme, resolvedTheme };
 }

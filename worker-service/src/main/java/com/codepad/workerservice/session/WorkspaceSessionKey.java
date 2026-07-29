@@ -8,7 +8,7 @@ public record WorkspaceSessionKey(String value) {
         return new WorkspaceSessionKey("project:" + projectId);
     }
 
-    public static WorkspaceSessionKey forSolve(UUID userId, UUID problemId) {
-        return new WorkspaceSessionKey("solve:" + userId + ":" + problemId);
+    public static WorkspaceSessionKey forSolve(UUID userId, UUID problemId, String language) {
+        return new WorkspaceSessionKey("solve:" + userId + ":" + problemId + ":" + language.toUpperCase());
     }
 }

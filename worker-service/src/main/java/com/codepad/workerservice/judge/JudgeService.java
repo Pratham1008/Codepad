@@ -33,7 +33,7 @@ public class JudgeService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public SubmissionResultDto judge(JudgeRequestDto req) {
-        WorkspaceSessionKey sessionKey = WorkspaceSessionKey.forSolve(req.userId(), req.problemId());
+        WorkspaceSessionKey sessionKey = WorkspaceSessionKey.forSolve(req.userId(), req.problemId(), req.language());
         WorkspaceSession session = sessionManager.getOrCreate(sessionKey, req.language());
         LanguageStrategy strategy = strategyFactory.getStrategy(Language.valueOf(req.language().toUpperCase()));
 
@@ -44,7 +44,8 @@ public class JudgeService {
 
         session.sessionLock.lock();
         try {
-            // Write source code
+            // Clean workspace and write source code
+            dockerExecutor.cleanWorkspace(containerId);
             dockerExecutor.overwriteFileInContainer(containerId, strategy.sourceFileName(), req.sourceCode());
 
             // Compile
@@ -52,7 +53,8 @@ public class JudgeService {
             if (compileCmd != null) {
                 DockerExecutor.ExecutionResult compileRes = dockerExecutor.dockerExec(containerId, compileCmd, null, 10000);
                 if (compileRes.exitCode() != 0) {
-                    return new SubmissionResultDto("COMPILE_ERROR", compileRes.stderr(), null, 0, 0, 0, req.testCases().size());
+                    String err = (compileRes.stdout() + "\n" + compileRes.stderr()).trim();
+                    return new SubmissionResultDto("COMPILE_ERROR", err, null, 0, 0, 0, req.testCases().size());
                 }
             }
 

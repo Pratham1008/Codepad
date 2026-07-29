@@ -59,8 +59,12 @@ export function useEditorState(
   const handleSelectFile = async (path: string) => {
     if (activeFilePath && projectId && dirtyFiles.has(activeFilePath)) {
       const cleanPath = activeFilePath.startsWith('/') ? activeFilePath.slice(1) : activeFilePath;
-      await writeFile(projectId, cleanPath, code);
-      setDirtyFiles(prev => { const n = new Set(prev); n.delete(activeFilePath!); return n; });
+      try {
+        await writeFile(projectId, cleanPath, code);
+        setDirtyFiles(prev => { const n = new Set(prev); n.delete(activeFilePath!); return n; });
+      } catch (err) {
+        console.error("Autosave failed on tab switch", err);
+      }
     }
     if (activeFilePath) {
       setFileContents(prev => ({ ...prev, [activeFilePath!]: code }));
@@ -146,6 +150,12 @@ export function useEditorState(
     if (menuOpen) document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, [menuOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (liveDebounceRef.current) clearTimeout(liveDebounceRef.current);
+    };
+  }, []);
 
   return {
     code, setCode,

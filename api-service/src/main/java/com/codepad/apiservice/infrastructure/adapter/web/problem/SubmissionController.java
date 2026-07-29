@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.core.task.TaskRejectedException;
 
 @Slf4j
 @RestController
@@ -31,19 +33,23 @@ public class SubmissionController {
     private final SubmissionService submissionService;
     private final SessionPushService sessionPushService;
     private final ThreadPoolTaskExecutor judgeExecutor;
-    private final Map<UUID, Bucket> buckets = new ConcurrentHashMap<>();
+    private final StringRedisTemplate redisTemplate;
 
-    public SubmissionController(SubmissionService submissionService, SessionPushService sessionPushService, ThreadPoolTaskExecutor judgeExecutor) {
+    public SubmissionController(SubmissionService submissionService, SessionPushService sessionPushService, ThreadPoolTaskExecutor judgeExecutor, StringRedisTemplate redisTemplate) {
         this.submissionService = submissionService;
         this.sessionPushService = sessionPushService;
         this.judgeExecutor = judgeExecutor;
+        this.redisTemplate = redisTemplate;
     }
 
-    private Bucket resolveBucket(UUID userId) {
-        return buckets.computeIfAbsent(userId, id -> {
-            Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
-            return Bucket.builder().addLimit(limit).build();
-        });
+    private boolean checkRateLimit(UUID userId) {
+        String key = "ratelimit:submit:" + userId.toString();
+        Long count = redisTemplate.opsForValue().increment(key);
+        if (count == null) return false;
+        if (count == 1) {
+            redisTemplate.expire(key, Duration.ofMinutes(1));
+        }
+        return count <= 10;
     }
 
     @PostMapping("/run")
@@ -51,7 +57,7 @@ public class SubmissionController {
         User user = (User) auth.getPrincipal();
         UUID userId = user.getUserId();
 
-        if (!resolveBucket(userId).tryConsume(1)) {
+        if (!checkRateLimit(userId)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Please wait.");
         }
 
@@ -63,24 +69,29 @@ public class SubmissionController {
         User user = (User) auth.getPrincipal();
         UUID userId = user.getUserId();
 
-        if (!resolveBucket(userId).tryConsume(1)) {
+        if (!checkRateLimit(userId)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Please wait.");
         }
 
         UUID submissionId = submissionService.createPending(userId, problemId, req.language(), req.sourceCode());
 
-        judgeExecutor.submit(() -> {
-            try {
-                var result = submissionService.judgeAndPersist(submissionId, userId, problemId, req.language(), req.sourceCode());
-                sessionPushService.pushToUserSession(userId, problemId, "submissionResult",
-                        Map.of("submissionId", submissionId, "result", result));
-            } catch (Exception e) {
-                log.error("Failed to judge and persist submission {}", submissionId, e);
-                var errorResult = new SubmissionResultDto("IE", e.getMessage(), null, 0, 0, 0, 0);
-                sessionPushService.pushToUserSession(userId, problemId, "submissionResult",
-                        Map.of("submissionId", submissionId, "result", errorResult));
-            }
-        });
+        try {
+            judgeExecutor.submit(() -> {
+                try {
+                    var result = submissionService.judgeAndPersist(submissionId, userId, problemId, req.language(), req.sourceCode());
+                    sessionPushService.pushToUserSession(userId, problemId, req.language(), "submissionResult",
+                            Map.of("submissionId", submissionId, "result", result));
+                } catch (Exception e) {
+                    log.error("Failed to judge and persist submission {}", submissionId, e);
+                    var errorResult = new SubmissionResultDto("IE", e.getMessage(), null, 0, 0, 0, 0);
+                    sessionPushService.pushToUserSession(userId, problemId, req.language(), "submissionResult",
+                            Map.of("submissionId", submissionId, "result", errorResult));
+                }
+            });
+        } catch (TaskRejectedException e) {
+            log.error("Judge queue full, rejected submission {}", submissionId);
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("submissionId", submissionId, "error", "System busy, please try again"));
+        }
 
         return ResponseEntity.accepted().body(Map.of("submissionId", submissionId.toString()));
     }

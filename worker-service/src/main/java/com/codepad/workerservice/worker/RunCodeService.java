@@ -103,7 +103,7 @@ public class RunCodeService {
                 }
             }
 
-            String[] runCmd = strategy.getRunCommand();
+            String[] runCmd = strategy.getInteractiveRunCommand();
             java.util.List<String> fullCmd = new java.util.ArrayList<>();
             fullCmd.addAll(java.util.List.of("docker", "exec", "-i", "-w", "/workspace", containerId));
             fullCmd.addAll(java.util.List.of(runCmd));

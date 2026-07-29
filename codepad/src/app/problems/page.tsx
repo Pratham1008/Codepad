@@ -2,8 +2,6 @@ import { getProblemsPublic } from "./actions";
 import { ProblemsClient } from "./ProblemsClient";
 import { Metadata } from "next";
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: "Coding Challenges - CodePad",
   description: "Master algorithmic problem solving with our curated collection of coding challenges.",

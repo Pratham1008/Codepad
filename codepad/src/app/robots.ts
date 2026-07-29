@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: ["/", "/problems", "/problems/"],
       disallow: ["/api/", "/editor/", "/settings/", "/solve/", "/auth/"],
     },
-    sitemap: "https://code.prathameshcorporations.site/sitemap.xml",
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/sitemap.xml`,
   };
 }

@@ -26,7 +26,7 @@ import java.util.List;
 public class SecurityConfig {
     private final UserRepositoryPort userRepositoryPort;
 
-    @org.springframework.beans.factory.annotation.Value("${app.webauthn.allowed-origins:http://localhost:3000}")
+    @org.springframework.beans.factory.annotation.Value("${app.webauthn.allowed-origins}")
     private String[] allowedOrigins;
 
     @Bean

@@ -6,7 +6,10 @@ public class PythonStrategy implements LanguageStrategy {
     
     @Override
     public String[] getCompileCommand() {
-        return new String[]{"python3", "-m", "py_compile", "/workspace/main.py"};
+        String script = "MAIN_FILE=$(find /workspace -name '*.py' | head -n 1); " +
+                        "if [ -z \"$MAIN_FILE\" ]; then echo 'No python file found' >&2; exit 1; fi; " +
+                        "python3 -m py_compile \"$MAIN_FILE\"";
+        return new String[]{"sh", "-c", script};
     }
 
     @Override
@@ -16,6 +19,14 @@ public class PythonStrategy implements LanguageStrategy {
                         "if [ -z \"$MAIN_FILE\" ]; then echo 'No python file found' >&2; exit 1; fi; " +
                         "t=$(date +%s%3N); /usr/bin/time -f \"\\n__MEM__%M\" python3 $MAIN_FILE; " +
                         "EXIT_CODE=$?; echo \"\" >&2; echo \"__TIME__$(($(date +%s%3N)-t))\" >&2; exit $EXIT_CODE";
+        return new String[]{"sh", "-c", script};
+    }
+
+    @Override
+    public String[] getInteractiveRunCommand() {
+        String script = "MAIN_FILE=$(find /workspace -name '*.py' | head -n 1); " +
+                        "if [ -z \"$MAIN_FILE\" ]; then echo 'No python file found' >&2; exit 1; fi; " +
+                        "python3 $MAIN_FILE";
         return new String[]{"sh", "-c", script};
     }
 

@@ -117,6 +117,15 @@ public class ProblemService {
         return toDetailDto(problem);
     }
 
+    public void delete(UUID problemId) {
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new IllegalArgumentException("Problem not found"));
+        
+        testCaseRepository.deleteAll(problem.getTestCases());
+        problemRepository.delete(problem);
+        evictProblemCache(problem.getSlug());
+    }
+
     public void addTestCase(UUID problemId, AddTestCaseRequest req) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new IllegalArgumentException("Problem not found"));

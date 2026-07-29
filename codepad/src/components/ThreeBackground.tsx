@@ -38,7 +38,7 @@ function ParticleField() {
       <Points ref={ref} positions={positions} stride={3} frustumCulled={false}>
         <PointMaterial 
           transparent 
-          color={isDark ? "#ea580c" : "#f97316"}
+          color={isDark ? "#007acc" : "#299bfc"}
           size={0.03} 
           sizeAttenuation={true} 
           depthWrite={false} 
@@ -65,7 +65,7 @@ function WireframeCube() {
   return (
     <mesh ref={meshRef}>
       <icosahedronGeometry args={[3, 1]} />
-      <meshBasicMaterial color={isDark ? "#ea580c" : "#f97316"} wireframe transparent opacity={isDark ? 0.1 : 0.2} />
+      <meshBasicMaterial color={isDark ? "#007acc" : "#299bfc"} wireframe transparent opacity={isDark ? 0.1 : 0.2} />
     </mesh>
   );
 }

@@ -74,7 +74,11 @@ public class ContainerPool {
         try {
             ProcessBuilder pb = new ProcessBuilder(
                     "docker", "run", "-d", "--network", "none", "--memory=256m", "--cpus=1.0", "--pids-limit=128",
-                    "--read-only", "--tmpfs", "/workspace:rw,size=256m,exec", "--security-opt", "no-new-privileges",
+                    "--read-only",
+                    "--tmpfs", "/workspace:rw,size=256m,exec",
+                    "--tmpfs", "/tmp:rw,size=128m,exec",
+                    "-e", "HOME=/tmp",
+                    "--security-opt", "no-new-privileges",
                     "codepad-runtime:latest", "sleep", "infinity"
             );
             Process p = pb.start();

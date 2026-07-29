@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Home, ChevronRight, Download, Play, Search, Maximize2, Minimize2, Loader2, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -20,6 +21,7 @@ interface EditorMenuBarProps {
   toggleFullscreen: () => void;
   saving: boolean;
   saved: boolean;
+  saveError?: boolean;
   loading: boolean;
 }
 
@@ -39,6 +41,7 @@ export function EditorMenuBar({
   toggleFullscreen,
   saving,
   saved,
+  saveError,
   loading
 }: EditorMenuBarProps) {
   const router = useRouter();
@@ -46,7 +49,7 @@ export function EditorMenuBar({
   return (
     <div className="h-9 bg-[#181818] border-b border-[#2b2b2b] flex items-center px-3 shrink-0 text-[13px] text-[#cccccc] select-none z-20 relative">
       <div className="flex items-center gap-0.5 z-10">
-        <img src="/icon.svg" className="w-4 h-4 mr-2 opacity-80" alt="" />
+        <Image src="/icon.svg" width={16} height={16} className="w-4 h-4 mr-2 opacity-80" alt="" />
 
         <Link href="/editor" className="px-2 py-1 rounded hover:bg-[#2a2d2e] text-[#cccccc] hover:text-white flex items-center gap-1">
           <Home size={13} />
@@ -67,7 +70,7 @@ export function EditorMenuBar({
               <div className="px-6 py-1.5 hover:bg-[#094771] cursor-pointer" onClick={openProjectsModal}>Open Projects</div>
               <div className="h-px bg-[#454545] my-1" />
               <div className="px-6 py-1.5 hover:bg-[#094771] cursor-pointer" onClick={() => { setShowProblemsModal(true); setMenuOpen(null); }}>Problems</div>
-              <Link href="/solve/create" className="block px-6 py-1.5 hover:bg-[#094771] cursor-pointer" onClick={() => setMenuOpen(null)}>Create Problem (Admin)</Link>
+              <div className="px-6 py-1.5 hover:bg-[#094771] cursor-pointer" onClick={() => { window.open('/problems/create', '_blank'); setMenuOpen(null); }}>Create Problem (Admin)</div>
               {projectId && <div className="px-6 py-1.5 hover:bg-[#094771] cursor-pointer" onClick={() => { router.push('/editor'); setMenuOpen(null); }}>Close Project</div>}
               <div className="h-px bg-[#454545] my-1" />
               <div className="px-6 py-1.5 hover:bg-[#094771] cursor-pointer flex justify-between"
@@ -127,7 +130,9 @@ export function EditorMenuBar({
           {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
         </button>
         <div className="w-px h-4 bg-[#454545]" />
-        {saving ? <Loader2 size={14} className="animate-spin text-[#858585]" /> : saved ? <CheckCircle2 size={14} className="text-green-400" /> : null}
+        {saving ? <Loader2 size={14} className="animate-spin text-[#858585]" /> : 
+         saveError ? <span className="text-red-400 text-[11px] font-semibold flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>Save Failed</span> :
+         saved ? <CheckCircle2 size={14} className="text-green-400" /> : null}
         <button onClick={handleRun} disabled={loading} className="text-[#cccccc] hover:text-white flex items-center" title="Run (Ctrl+Enter)">
           {loading ? <Loader2 size={16} className="animate-spin text-[#858585]" /> : <Play size={16} className="text-green-400" />}
         </button>

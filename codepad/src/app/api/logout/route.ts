@@ -7,5 +7,3 @@ export async function POST() {
   response.cookies.delete("username");
   return response;
 }
-
-export const GET = POST;

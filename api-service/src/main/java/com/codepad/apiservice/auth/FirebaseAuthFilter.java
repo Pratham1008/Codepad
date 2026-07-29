@@ -41,7 +41,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         } else if (request.getRequestURI().contains("/status/stream") || request.getRequestURI().contains("/diagnostics/stream")) {
-            token = request.getParameter("token");
+            token = request.getHeader("Sec-WebSocket-Protocol");
         }
 
         if (token == null || token.isEmpty()) {
@@ -55,7 +55,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
             String email = decodedToken.getEmail();
             String name = decodedToken.getName();
             if (name == null || name.isEmpty()) {
-                name = email.split("@")[0];
+                name = (email != null && email.contains("@")) ? email.split("@")[0] : "user_" + uid.substring(0, 8);
             }
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {

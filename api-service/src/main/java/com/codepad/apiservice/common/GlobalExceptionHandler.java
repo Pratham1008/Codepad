@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
             return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
         }
         log.error("Unexpected runtime error", ex);
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request);
     }
 
     @ExceptionHandler(Exception.class)

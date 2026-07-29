@@ -43,6 +43,9 @@ DECLARE
     p50_id UUID := '00000032-0000-0000-0000-000000000000';
 BEGIN
     SELECT user_id INTO admin_id FROM users WHERE email = 'prathamesh10082004@gmail.com';
+    IF admin_id IS NULL THEN
+        RAISE EXCEPTION 'Seed admin user not found — run V-prior first';
+    END IF;
 
     DELETE FROM problems WHERE problem_id IN (p11_id, p12_id, p13_id, p14_id, p15_id, p16_id, p17_id, p18_id, p19_id, p20_id, p21_id, p22_id, p23_id, p24_id, p25_id, p26_id, p27_id, p28_id, p29_id, p30_id, p31_id, p32_id, p33_id, p34_id, p35_id, p36_id, p37_id, p38_id, p39_id, p40_id, p41_id, p42_id, p43_id, p44_id, p45_id, p46_id, p47_id, p48_id, p49_id, p50_id);
 
@@ -889,7 +892,7 @@ An integer is a **palindrome** when it reads the same forward and backward.', 'E
 
     UPDATE problems SET is_published = TRUE WHERE problem_id = p26_id;
 
-SELECT user_id INTO admin_id FROM users WHERE email = 'prathamesh10082004@gmail.com';
+
 
 -- p27: 3Sum
 INSERT INTO problems (problem_id, slug, title, description, difficulty, time_limit_ms, memory_limit_kb, is_published, created_at, updated_at, created_by)

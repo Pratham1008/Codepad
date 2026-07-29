@@ -20,6 +20,7 @@ public class ProblemController {
     private final com.codepad.apiservice.core.problem.SubmissionService submissionService;
 
     @GetMapping
+    @org.springframework.cache.annotation.Cacheable(value = "problemsList", key = "{#difficulty, #pageable.pageNumber, #pageable.pageSize}")
     public Page<ProblemSummaryDto> list(@RequestParam(required=false) String difficulty, Pageable pageable) {
         return problemService.list(difficulty, pageable);
     }
@@ -40,6 +41,12 @@ public class ProblemController {
     @PreAuthorize("hasRole('ADMIN')")
     public ProblemDetailDto update(@PathVariable UUID id, @RequestBody UpdateProblemRequest req) {
         return problemService.update(id, req);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(@PathVariable UUID id) {
+        problemService.delete(id);
     }
 
     @PostMapping("/{id}/test-cases")

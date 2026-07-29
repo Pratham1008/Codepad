@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import Editor from "@monaco-editor/react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { ExampleBlock } from "@/components/ExampleBlock";
 import { Play, Send, CheckCircle2, XCircle, Clock, AlertTriangle, Home, ChevronRight, Hash, Files, Code, Bug, Settings, Menu, FileCode, Loader2 } from "lucide-react";
@@ -12,9 +13,20 @@ import { ProblemsModal } from "@/components/ProblemsModal";
 import { runSamples, submitSolution } from "../actions";
 import { getAuth } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { RefreshCw, UploadCloud, ChevronDown, List, Code2, Moon, Sun, ArrowLeft } from "lucide-react";
+import { useThemeTransition } from "@/components/theme-provider";
+import { EditorSkeleton } from "@/components/EditorSkeleton";
+import { springs, staggers } from "@/lib/motion-tokens";
+import { defineCodepadMonacoThemes, resolveMonacoThemeName } from "@/lib/monaco-theme";
+
+const Editor = dynamic(() => import("@monaco-editor/react"), {
+  ssr: false,
+  loading: () => <EditorSkeleton />,
+});
 
 export function SolveClient({ problem, token }: { problem: any; token: string }) {
   const router = useRouter();
+  const { resolvedTheme } = useThemeTransition();
   const availableLanguages = Object.keys(problem.starterCode || {});
   const [language, setLanguage] = useState(availableLanguages.includes("JAVA") ? "JAVA" : (availableLanguages[0] || "JAVA"));
   const [code, setCode] = useState(problem.starterCode?.[availableLanguages.includes("JAVA") ? "JAVA" : availableLanguages[0]] || "");
@@ -208,7 +220,7 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
       {/* TOP MENU BAR (Matches EditorClient) */}
       <div className="h-9 bg-[#181818] border-b border-[#2b2b2b] flex items-center px-3 shrink-0 text-[13px] text-[#cccccc] select-none z-20 relative">
         <div className="flex items-center gap-0.5 z-10">
-          <img src="/icon.svg" className="w-4 h-4 mr-2 opacity-80" alt="" />
+          <Image src="/icon.svg" width={16} height={16} className="w-4 h-4 mr-2 opacity-80" alt="" />
           <Link href="/editor" className="px-2 py-1 rounded hover:bg-[#2a2d2e] text-[#cccccc] hover:text-white flex items-center gap-1">
             <Home size={13} />
           </Link>
@@ -291,15 +303,33 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
           <div className="h-9 flex items-center bg-[#1e1e1e] border-b border-[#2b2b2b]">
              <div className="px-4 py-2 text-[#cccccc] text-[13px] border-t-2 border-primary bg-[#1e1e1e] flex items-center gap-2 h-full">
                 <FileCode size={14} className="text-[#519aba]" />
-                Solution.{language.toLowerCase()}
+                Solution.{
+                  {
+                    JAVA: "java",
+                    PYTHON: "py",
+                    CPP: "cpp",
+                    JAVASCRIPT: "js",
+                    TYPESCRIPT: "ts",
+                    KOTLIN: "kt",
+                    RUST: "rs",
+                    C: "c"
+                  }[language as string] || language.toLowerCase()
+                }
              </div>
              
              <div className="ml-auto mr-4 flex items-center gap-3">
                 <select 
                   value={language}
                   onChange={(e) => {
-                    setLanguage(e.target.value);
-                    setCode(problem.starterCode?.[e.target.value] || "");
+                    const newLang = e.target.value;
+                    showConfirm(
+                      "Switch Language",
+                      "Are you sure you want to switch language? Your current code will be lost.",
+                      () => {
+                        setLanguage(newLang);
+                        setCode(problem.starterCode?.[newLang] || "");
+                      }
+                    );
                   }}
                   className="bg-[#2d2d2d] border border-[#3c3c3c] outline-none text-xs py-1 px-2 rounded text-zinc-300"
                 >
@@ -326,7 +356,9 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
           {/* Monaco */}
           <div className="flex-1 relative">
             <Editor
-              theme="vs-dark"
+              height="100%"
+              theme={resolveMonacoThemeName(resolvedTheme)}
+              beforeMount={defineCodepadMonacoThemes}
               language={language.toLowerCase()}
               value={code}
               onChange={(v) => setCode(v || "")}
@@ -474,20 +506,41 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
                     <div className="text-zinc-500 text-sm">Run or submit to see results</div>
                   ) : (
                     <div className="space-y-4">
-                      {verdict && (
-                        <div className={`text-lg font-bold ${verdict.verdict === 'AC' ? 'text-emerald-500' : 'text-red-500'}`}>
-                          {verdict.verdict === 'AC' ? 'Accepted' : verdict.verdict === 'WA' ? 'Wrong Answer' : verdict.verdict}
-                        </div>
-                      )}
+                      <AnimatePresence mode="popLayout">
+                        {verdict && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={springs.bouncy}
+                            className={`text-lg font-bold ${verdict.verdict === 'AC' ? 'text-emerald-500' : 'text-red-500'}`}
+                          >
+                            {verdict.verdict === 'AC' ? 'Accepted' : verdict.verdict === 'WA' ? 'Wrong Answer' : verdict.verdict}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                       
-                      {verdict && verdict.verdict === 'COMPILE_ERROR' && verdict.compileError && (
-                        <div className="bg-[#2d2d2d] p-3 rounded border border-red-500/30 overflow-auto text-xs font-mono text-red-400 max-h-96">
-                          <pre className="whitespace-pre-wrap">{verdict.compileError}</pre>
-                        </div>
-                      )}
+                      <AnimatePresence>
+                        {verdict && verdict.verdict === 'COMPILE_ERROR' && verdict.compileError && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            className="bg-[#2d2d2d] p-3 rounded border border-red-500/30 overflow-auto text-xs font-mono text-red-400 max-h-96"
+                          >
+                            <pre className="whitespace-pre-wrap">{verdict.compileError}</pre>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                       
                       {/* Sequential List Animation */}
-                      <div className="flex flex-col gap-2 max-w-2xl">
+                      <motion.div
+                        className="flex flex-col gap-2 max-w-2xl"
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                          visible: { transition: { staggerChildren: 0.05 } },
+                          hidden: {}
+                        }}
+                      >
                         {(() => {
                           const ICONS = {
                             pending: <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>,
@@ -521,8 +574,13 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
                                 }[state];
 
                                 return (
-                                  <div 
+                                  <motion.div 
                                     key={i} 
+                                    variants={{
+                                      hidden: { opacity: 0, x: -10 },
+                                      visible: { opacity: 1, x: 0, transition: springs.gentle }
+                                    }}
+                                    layout
                                     onClick={() => setActiveTestCase(i)}
                                     className={`flex items-center justify-between p-3.5 rounded-lg transition-colors cursor-pointer border ${activeTestCase === i ? 'border-primary/50 ring-1 ring-primary/20' : 'border-transparent'} ${styleClasses}`}
                                   >
@@ -530,22 +588,46 @@ export function SolveClient({ problem, token }: { problem: any; token: string })
                                       {label}
                                       {!isSample && <span className="opacity-60 flex items-center">{ICONS.lock}</span>}
                                     </div>
-                                    <div className="flex items-center justify-center w-5 h-5 text-current">
-                                      {ICONS[state as keyof typeof ICONS]}
-                                    </div>
-                                  </div>
+                                    <AnimatePresence mode="popLayout">
+                                      <motion.div
+                                        key={state}
+                                        initial={{ scale: 0.5, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.5, opacity: 0 }}
+                                        transition={springs.bouncy}
+                                        className="flex items-center justify-center w-5 h-5 text-current"
+                                      >
+                                        {ICONS[state as keyof typeof ICONS]}
+                                      </motion.div>
+                                    </AnimatePresence>
+                                  </motion.div>
                                 );
                               })}
                               
-                              {!isJudging && verdict && (
-                                <div className={`mt-2 p-4 rounded-lg text-[15px] font-bold ${verdict.verdict === 'AC' ? 'bg-[#10240f] text-[#4caf50]' : 'bg-[#2e1f05] text-[#e0932c]'}`}>
-                                  {verdict.passedCount}/{totalCases} test cases passed
-                                </div>
-                              )}
+                              <AnimatePresence>
+                                {!isJudging && verdict && (
+                                  <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, ...springs.bouncy }}
+                                    className={`mt-2 p-4 rounded-lg text-[15px] font-bold overflow-hidden relative ${verdict.verdict === 'AC' ? 'bg-[#10240f] text-[#4caf50]' : 'bg-[#2e1f05] text-[#e0932c]'}`}
+                                  >
+                                    {verdict.passedCount}/{totalCases} test cases passed
+                                    {verdict.verdict === 'AC' && (
+                                      <motion.div
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        animate={{ opacity: [0, 1, 0], scale: [0, 2, 4] }}
+                                        transition={{ duration: 1.5, ease: "easeOut" }}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-emerald-500/20 blur-md pointer-events-none"
+                                      />
+                                    )}
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                             </>
                           );
                         })()}
-                      </div>
+                      </motion.div>
                       
                       {/* Detailed diff for active test case */}
                       {testResults.length > 0 && activeTestCase !== null && activeTestCase < testResults.length && (

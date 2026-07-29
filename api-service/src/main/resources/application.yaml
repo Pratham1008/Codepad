@@ -3,9 +3,11 @@ server:
   compression:
     enabled: true
     mime-types: application/json,text/plain,text/event-stream
-
+  shutdown: graceful
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
   application:
     name: api-service
   threads:
@@ -39,14 +41,14 @@ spring:
       hibernate:
         format_sql: false
 
-
 app:
   worker:
     url: ${WORKER_URL:http://localhost:8081}
     ws-url: ${WORKER_WS_URL:ws://localhost:8081}
   internal:
     secret: ${INTERNAL_SECRET}
-
+  webauthn:
+    allowed-origins: ${WEBAUTHN_ALLOWED_ORIGINS:http://localhost:3000}
 
 springdoc:
   api-docs:
@@ -62,3 +64,12 @@ logging:
     org.springframework.web: INFO
     com.codepad.apiservice: INFO
     org.flywaydb: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized

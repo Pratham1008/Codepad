@@ -9,12 +9,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   compress: true,
   poweredByHeader: false,
-  experimental: {
-    useCache: true,
-  },
+  cacheComponents: true,
   images: {
     formats: ["image/avif", "image/webp"],
   },

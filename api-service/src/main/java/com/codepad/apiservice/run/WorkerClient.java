@@ -26,6 +26,10 @@ public class WorkerClient {
     private HttpHeaders headers() {
         HttpHeaders h = new HttpHeaders();
         h.set("X-Internal-Secret", internalSecret);
+        String requestId = org.slf4j.MDC.get("requestId");
+        if (requestId != null) {
+            h.set("X-Request-Id", requestId);
+        }
         return h;
     }
 
@@ -100,8 +104,8 @@ public class WorkerClient {
         return restTemplate.postForObject(workerUrl + "/internal/judge", new HttpEntity<>(req, jsonHeaders()), com.codepad.apiservice.core.problem.dto.SubmissionResultDto.class);
     }
 
-    public void pushToUserSession(UUID userId, UUID problemId, String type, java.util.Map<String, Object> data) {
-        var body = java.util.Map.of("userId", userId.toString(), "problemId", problemId.toString(), "type", type, "data", data);
+    public void pushToUserSession(UUID userId, UUID problemId, String language, String type, java.util.Map<String, Object> data) {
+        var body = java.util.Map.of("userId", userId.toString(), "problemId", problemId.toString(), "language", language, "type", type, "data", data);
         restTemplate.postForEntity(workerUrl + "/internal/push", new HttpEntity<>(body, jsonHeaders()), Void.class);
     }
 }

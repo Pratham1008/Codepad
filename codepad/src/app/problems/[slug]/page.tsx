@@ -7,8 +7,6 @@ import { ExampleBlock } from "@/components/ExampleBlock";
 import Link from "next/link";
 import { Clock, Cpu, ArrowLeft, ChevronRight, Play } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const problem = await getProblemBySlug(slug);
@@ -81,7 +79,7 @@ export default async function PublicProblemPage({ params }: { params: Promise<{ 
           
           <div className="shrink-0">
             {isLoggedIn ? (
-              <Link href={`/solve/${problem.slug}`} className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-bold rounded-lg hover:bg-orange-600 transition-all shadow-md shadow-primary/20 scale-100 hover:scale-105">
+              <Link href={`/solve/${problem.slug}`} className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary/90 transition-all shadow-md shadow-primary/20 scale-100 hover:scale-105">
                 <Play size={18} fill="currentColor" /> Solve This Problem
               </Link>
             ) : (

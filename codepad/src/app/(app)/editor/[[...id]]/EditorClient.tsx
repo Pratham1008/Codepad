@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import Editor from "@monaco-editor/react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Files, FileCode, Loader2 } from "lucide-react";
 
@@ -9,6 +9,13 @@ import { writeFile, runDiagnostics, createProject, getProjects } from "../action
 import { FileExplorer } from "./FileExplorer";
 import { useThemeTransition } from "@/components/theme-provider";
 import { useDiagnosticsSocket } from "./useDiagnosticsSocket";
+import { EditorSkeleton } from "@/components/EditorSkeleton";
+import { defineCodepadMonacoThemes, resolveMonacoThemeName } from "@/lib/monaco-theme";
+
+const Editor = dynamic(() => import("@monaco-editor/react"), {
+  ssr: false,
+  loading: () => <EditorSkeleton />,
+});
 
 import { getLangFromPath } from "./editor-utils";
 import { useEditorState } from "./useEditorState";
@@ -32,7 +39,7 @@ export function EditorClient({
   token?: string;
 }) {
   const router = useRouter();
-  const { theme, toggleTheme } = useThemeTransition();
+  const { theme, toggleTheme, resolvedTheme } = useThemeTransition();
 
   const handleLogout = async () => {
     const { signOut } = await import("firebase/auth");
@@ -61,7 +68,9 @@ export function EditorClient({
   const [editorReady, setEditorReady] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showStdinModal, setShowStdinModal] = useState(false);
 
   const [isMobile, setIsMobile] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<"explorer" | "editor" | "console">("editor");
@@ -200,6 +209,7 @@ export function EditorClient({
     if (!projectId || !activeFilePath) return;
     setSaving(true);
     setSaved(false);
+    setSaveError(false);
     
     const cleanPath = activeFilePath.startsWith('/') ? activeFilePath.slice(1) : activeFilePath;
     const res = await writeFile(projectId, cleanPath, code);
@@ -220,6 +230,9 @@ export function EditorClient({
       } else {
         setProblems([]);
       }
+    } else {
+      setSaveError(true);
+      setTimeout(() => setSaveError(false), 3000);
     }
   };
 
@@ -337,6 +350,7 @@ export function EditorClient({
         toggleFullscreen={toggleFullscreen}
         saving={saving}
         saved={saved}
+        saveError={saveError}
         loading={loading}
       />
 
@@ -383,7 +397,8 @@ export function EditorClient({
                 <Editor
                   height="100%"
                   language={getLangFromPath(activeFilePath)}
-                  theme={theme === "dark" ? "vs-dark" : "light"}
+                  theme={resolveMonacoThemeName(resolvedTheme)}
+                  beforeMount={defineCodepadMonacoThemes}
                   value={code}
                   onChange={onCodeChange}
                   options={{
@@ -424,6 +439,7 @@ export function EditorClient({
                   handleConsoleKeyDown={handleConsoleKeyDown}
                   consoleRef={consoleRef}
                   output={output}
+                  setShowStdinModal={setShowStdinModal}
                 />
               )}
             </div>
@@ -480,7 +496,7 @@ export function EditorClient({
                         Open Project
                       </button>
                       <button onClick={() => setShowCreateModal(true)}
-                        className="px-4 py-2 rounded bg-primary text-on-primary font-semibold hover:bg-orange-600 transition-colors">
+                        className="px-4 py-2 rounded bg-primary text-on-primary font-semibold hover:bg-primary/90 transition-colors">
                         New Project
                       </button>
                     </div>
@@ -493,7 +509,8 @@ export function EditorClient({
                   <Editor
                     height="100%"
                     language={getLangFromPath(activeFilePath)}
-                    theme={theme === 'dark' ? "vs-dark" : "light"}
+                    theme={resolveMonacoThemeName(resolvedTheme)}
+                    beforeMount={defineCodepadMonacoThemes}
                     value={code}
                     onChange={onCodeChange}
                     options={{
@@ -541,6 +558,7 @@ export function EditorClient({
                 handleConsoleKeyDown={handleConsoleKeyDown}
                 consoleRef={consoleRef}
                 output={output}
+                setShowStdinModal={setShowStdinModal}
               />
             </div>
           </>
@@ -574,6 +592,11 @@ export function EditorClient({
         showProblemsModal={showProblemsModal}
         setShowProblemsModal={setShowProblemsModal}
         token={token}
+
+        showStdinModal={showStdinModal}
+        setShowStdinModal={setShowStdinModal}
+        staticStdin={staticStdin}
+        setStaticStdin={setStaticStdin}
       />
     </div>
   );

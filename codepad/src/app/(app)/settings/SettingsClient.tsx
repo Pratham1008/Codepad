@@ -18,6 +18,7 @@ export function SettingsClient({ userProfile: initialUserProfile, initialError }
 
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [errorModal, setErrorModal] = useState<string | null>(null);
 
   const reloadData = async () => {
     setLoading(true);
@@ -33,7 +34,7 @@ export function SettingsClient({ userProfile: initialUserProfile, initialError }
     if (!res?.error) {
       router.push("/");
     } else {
-      alert(res.error);
+      setErrorModal(res.error);
       setShowDeleteAccount(false);
     }
   };
@@ -118,6 +119,22 @@ export function SettingsClient({ userProfile: initialUserProfile, initialError }
       >
         <p className="mb-2">Are you sure you want to completely delete your account?</p>
         <p className="font-semibold text-error">This action cannot be undone. All your snippets and settings will be permanently destroyed.</p>
+      </Modal>
+
+      <Modal
+        isOpen={!!errorModal}
+        onClose={() => setErrorModal(null)}
+        title={<span className="flex items-center gap-2"><AlertTriangle size={20} className="text-error" /> Error</span>}
+        footer={
+          <button 
+            onClick={() => setErrorModal(null)}
+            className="px-4 py-2 text-sm font-semibold bg-primary text-on-primary hover:bg-primary/90 rounded transition-colors"
+          >
+            OK
+          </button>
+        }
+      >
+        <p>{errorModal}</p>
       </Modal>
       </div>
     </div>

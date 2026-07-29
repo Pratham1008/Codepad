@@ -20,6 +20,14 @@ public class JavaStrategy implements LanguageStrategy {
     }
 
     @Override
+    public String[] getInteractiveRunCommand() {
+        String script = "if [ -f /workspace/Main.class ]; then MAIN_CLASS=Main; else MAIN_CLASS=$(grep -rl 'public static void main' /workspace | grep '\\.java$' | head -n 1 | xargs basename -s .java); fi; " +
+                        "if [ -z \"$MAIN_CLASS\" ]; then echo 'No main class found' >&2; exit 1; fi; " +
+                        "java -Xms32m -Xmx160m -XX:TieredStopAtLevel=1 -cp /workspace $MAIN_CLASS";
+        return new String[]{"sh", "-c", script};
+    }
+
+    @Override
     public String[] getDiagnosticsCommand() {
         return new String[]{"sh", "-c", "mkdir -p /workspace/out && find /workspace -name '*.java' > /workspace/sources.txt && javac -Xlint -d /workspace/out @/workspace/sources.txt"};
     }

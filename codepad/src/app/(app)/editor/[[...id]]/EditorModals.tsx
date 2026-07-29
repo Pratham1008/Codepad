@@ -1,6 +1,7 @@
 "use client";
 
 import { X, Loader2, FileCode } from "lucide-react";
+import { createPortal } from "react-dom";
 import { ProblemsModal } from "@/components/ProblemsModal";
 import { SUPPORTED_LANGUAGES } from "./editor-utils";
 
@@ -22,6 +23,7 @@ interface EditorModalsProps {
   
   showProblemsModal: boolean;
   setShowProblemsModal: (val: boolean) => void;
+  
   token: string;
 }
 
@@ -43,8 +45,18 @@ export function EditorModals({
   
   showProblemsModal,
   setShowProblemsModal,
-  token
-}: EditorModalsProps) {
+  token,
+
+  showStdinModal,
+  setShowStdinModal,
+  staticStdin,
+  setStaticStdin
+}: EditorModalsProps & {
+  showStdinModal?: boolean;
+  setShowStdinModal?: (val: boolean) => void;
+  staticStdin?: string;
+  setStaticStdin?: (val: string) => void;
+}) {
   return (
     <>
       {showProjectsModal && (
@@ -119,6 +131,82 @@ export function EditorModals({
 
       {showProblemsModal && (
         <ProblemsModal onClose={() => setShowProblemsModal(false)} token={token} />
+      )}
+
+      {showStdinModal && setShowStdinModal && setStaticStdin && typeof document !== 'undefined' && createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '16px',
+          }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowStdinModal(false); }}
+        >
+          <div style={{ width: '100%', maxWidth: '32rem' }}>
+            <div style={{ backgroundColor: '#1e1e1e', border: '1px solid #333333', borderRadius: '8px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
+              <div style={{ padding: '12px 16px', borderBottom: '1px solid #333333', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#252526' }}>
+                <h3 style={{ color: '#e1e4e8', fontWeight: 500, fontSize: '14px', margin: 0 }}>Standard Input (Stdin)</h3>
+                <button 
+                  onClick={() => setShowStdinModal(false)}
+                  style={{ color: '#858585', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              <div style={{ padding: '16px', backgroundColor: '#1e1e1e' }}>
+                <textarea
+                  value={staticStdin || ''}
+                  onChange={(e) => setStaticStdin(e.target.value)}
+                  placeholder="Enter multi-line input here..."
+                  style={{
+                    width: '100%',
+                    height: '192px',
+                    backgroundColor: '#0d1117',
+                    border: '1px solid #3c3c3c',
+                    borderRadius: '6px',
+                    padding: '12px',
+                    fontSize: '13px',
+                    color: '#cccccc',
+                    outline: 'none',
+                    resize: 'none',
+                    fontFamily: 'monospace',
+                    boxSizing: 'border-box',
+                  }}
+                  autoFocus
+                />
+              </div>
+              <div style={{ padding: '12px 16px', borderTop: '1px solid #333333', display: 'flex', justifyContent: 'flex-end', gap: '8px', backgroundColor: '#252526' }}>
+                <button
+                  onClick={() => setShowStdinModal(false)}
+                  style={{
+                    padding: '6px 16px',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    backgroundColor: '#007acc',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#005f9e')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#007acc')}
+                >
+                  Save &amp; Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </>
   );

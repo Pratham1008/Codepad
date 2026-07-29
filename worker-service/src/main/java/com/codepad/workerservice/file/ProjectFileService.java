@@ -47,7 +47,12 @@ public class ProjectFileService {
             case "JAVA" -> "Main.java";
             case "PYTHON" -> "main.py";
             case "CPP" -> "main.cpp";
-            default -> "main.txt";
+            case "C" -> "main.c";
+            case "JAVASCRIPT" -> "main.js";
+            case "TYPESCRIPT" -> "main.ts";
+            case "RUST" -> "main.rs";
+            case "KOTLIN" -> "Solution.kt";
+            default -> throw new IllegalArgumentException("Unsupported language: " + language);
         };
         Files.writeString(root.resolve(starterFile), "// Starter code for " + language);
     }

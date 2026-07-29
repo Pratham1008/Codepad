@@ -1,12 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { Suspense } from "react";
 import { NetworkChecker } from "@/components/NetworkChecker";
-const inter = Inter({
-  variable: "--font-inter",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+});
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
 });
 const jetbrainsMono = JetBrains_Mono({
@@ -14,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
-  metadataBase: new URL("https://code.prathameshcorporations.site"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   alternates: {
     canonical: "/",
   },
@@ -60,6 +64,7 @@ export const viewport: Viewport = {
 import { TokenRefresher } from "@/components/TokenRefresher";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
+
 export default function RootLayout({
                                      children,
                                    }: Readonly<{
@@ -70,14 +75,13 @@ export default function RootLayout({
           lang="en"
           dir="ltr"
           suppressHydrationWarning
-          className={`${inter.variable} ${jetbrainsMono.variable} antialiased w-full h-full m-0 p-0`}
+          className={`${spaceGrotesk.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} antialiased w-full h-full m-0 p-0`}
       >
       <body className="min-h-screen w-full h-full m-0 p-0 flex flex-col ember-bg">
       <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
-          disableTransitionOnChange
       >
         <Suspense fallback={<div className="fixed inset-0 -z-20" style={{ background: 'var(--background)' }} />}>
           <GlobalBackground />

@@ -130,7 +130,7 @@ export function AuthClient() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-primary-container text-on-primary-container font-semibold py-2.5 rounded hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-offset-2"
+            className="w-full bg-primary-container text-on-primary-container font-semibold py-2.5 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-offset-2"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (isLogin ? "Sign In" : "Create Account")}
           </button>

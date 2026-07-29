@@ -31,10 +31,11 @@ public class PushController {
         
         String userId = (String) req.get("userId");
         String problemId = (String) req.get("problemId");
+        String language = (String) req.get("language");
         String type = (String) req.get("type");
         Map<String, Object> data = (Map<String, Object>) req.get("data");
 
-        WorkspaceSessionKey sessionKey = WorkspaceSessionKey.forSolve(java.util.UUID.fromString(userId), java.util.UUID.fromString(problemId));
+        WorkspaceSessionKey sessionKey = WorkspaceSessionKey.forSolve(java.util.UUID.fromString(userId), java.util.UUID.fromString(problemId), language);
         WorkspaceSession session = sessionManager.get(sessionKey);
         
         if (session != null && session.getWebSocketSession() != null && session.getWebSocketSession().isOpen()) {

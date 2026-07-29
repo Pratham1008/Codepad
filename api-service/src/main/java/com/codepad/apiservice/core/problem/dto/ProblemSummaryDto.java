@@ -10,4 +10,4 @@ public record ProblemSummaryDto(
         String title,
         String difficulty,
         List<String> tags
-) {}
+) implements java.io.Serializable {}

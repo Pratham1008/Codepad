@@ -1,55 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import "tailwindcss";
 
+/* Scoped theme-switch transition. Applied to <html> for ~300ms via
+   useThemeTransition() in theme-provider.tsx. Only color/background/border
+   properties ever transition — never layout — so nothing jumps or reflows. */
+.theme-transitioning,
+.theme-transitioning * {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke !important;
+  transition-duration: 300ms !important;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transitioning,
+  .theme-transitioning * {
+    transition: none !important;
+  }
+}
 
 :root {
-  --primary-fixed: #ffdbca;
-  --on-secondary-container: #775b01;
-  --on-surface-variant: #382921;
-  --on-background: #0f0b09;
-  --inverse-on-surface: #fbeeea;
-  --primary: #783100;
-  --inverse-surface: #362f2d;
-  --surface-container-low: #fef1ed;
-  --inverse-primary: #ffb690;
-  --tertiary-container: #7d5260;
-  --error: #ba1a1a;
-  --surface-variant: #ece0dc;
-  --on-error-container: #93000a;
-  --on-tertiary-fixed-variant: #633b48;
-  --secondary-fixed-dim: #e8c266;
+  /* Neutrals - VS Code Light Theme */
+  --background: #ffffff;
+  --on-background: #333333;
+  --surface-1: #f3f3f3;
+  --surface-2: #e8e8e8;
+  --surface-3: #dddddd;
+  --on-surface: #333333;
+  --on-surface-variant: #616161;
+  --outline: #cccccc;
+
+  /* Accent (VS Code Blue) */
+  --blue-50: #eef8ff;
+  --blue-100: #d8f0ff;
+  --blue-200: #b9e4ff;
+  --blue-300: #88d3ff;
+  --blue-400: #51baff;
+  --blue-500: #299bfc;
+  --blue-600: #107ce0; /* VS Code iconic blue is close to this or #007acc */
+  --blue-700: #0d63b6;
+  --blue-800: #0f5495;
+  --blue-900: #12467b;
+  --blue-950: #0c2d53;
+
+  --primary: #007acc;
   --on-primary: #ffffff;
-  --on-primary-fixed-variant: #783200;
-  --on-tertiary-fixed: #31111d;
-  --background: #fff8f6;
-  --surface-container-high: #f2e5e2;
-  --on-secondary: #ffffff;
-  --outline-variant: #ddc1b4;
-  --surface-container-highest: #ece0dc;
-  --on-primary-fixed: #341100;
-  --primary-container: #9d4300;
-  --surface: #fff8f6;
-  --on-surface: #0f0b09;
-  --secondary: #765a00;
-  --tertiary-fixed: #ffd9e3;
-  --surface-tint: #9d4300;
-  --surface-bright: #fff8f6;
-  --primary-fixed-dim: #ffb690;
-  --on-primary-container: #ffceb6;
-  --secondary-fixed: #ffdf96;
-  --on-tertiary: #ffffff;
-  --secondary-container: #fdd677;
-  --surface-dim: #e4d7d4;
-  --on-secondary-fixed: #251a00;
-  --surface-container: #f8ebe7;
-  --tertiary: #633b48;
-  --error-container: #ffdad6;
-  --on-tertiary-container: #ffcbda;
-  --outline: #635046;
-  --tertiary-fixed-dim: #eeb8c8;
-  --surface-container-lowest: #ffffff;
-  --on-error: #ffffff;
-  --on-secondary-fixed-variant: #5a4400;
+  --primary-container: var(--blue-100);
+  --on-primary-container: var(--blue-900);
+
+  /* Semantic Verdicts */
+  --accepted: #10b981;
+  --accepted-bg: #d1fae5;
+  --wrong-answer: #ef4444;
+  --wrong-answer-bg: #fee2e2;
+  --time-limit: #f59e0b;
+  --time-limit-bg: #fef3c7;
+  --compile-error: #8b5cf6;
+  --compile-error-bg: #ede9fe;
 
   --spacing-gutter: 16px;
   --spacing-toolbar-height: 48px;
@@ -59,164 +65,118 @@
   --spacing-sidebar-width: 260px;
   --spacing-margin-sm: 12px;
 
-  --font-code-md: 'JetBrains Mono', monospace;
-  --font-headline-lg: 'Inter', sans-serif;
-  --font-body-lg: 'Inter', sans-serif;
-  --font-body-sm: 'Inter', sans-serif;
-  --font-body-md: 'Inter', sans-serif;
-  --font-code-sm: 'JetBrains Mono', monospace;
-  --font-headline-md: 'Inter', sans-serif;
-  --font-headline-sm: 'Inter', sans-serif;
-  --font-label-caps: 'Inter', sans-serif;
+  /* Typography Scale */
+  --font-code: var(--font-jetbrains-mono), monospace;
+  --font-display: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-plus-jakarta), sans-serif;
 }
 
 .dark {
-  --primary-fixed: #ffdbca;
-  --on-secondary-container: #ffdf96;
-  --on-surface-variant: #ddc1b4;
-  --on-background: #f2dfd9;
-  --inverse-on-surface: #362f2d;
-  --primary: #ffb690;
-  --inverse-surface: #f2dfd9;
-  --surface-container-low: #1d1b1a;
-  --inverse-primary: #9d4300;
-  --tertiary-container: #633b48;
-  --error: #ffb4ab;
-  --surface-variant: #584237;
-  --on-error-container: #ffdad6;
-  --on-tertiary-fixed-variant: #633b48;
-  --secondary-fixed-dim: #e8c266;
-  --on-primary: #552100;
-  --on-primary-fixed-variant: #783200;
-  --on-tertiary-fixed: #31111d;
-  --background: #151312;
-  --surface-container-high: #2c2928;
-  --on-secondary: #3f2e00;
-  --outline-variant: #584237;
-  --surface-container-highest: #373433;
-  --on-primary-fixed: #341100;
-  --primary-container: #783100;
-  --surface: #151312;
-  --on-surface: #f2dfd9;
-  --secondary: #e8c266;
-  --tertiary-fixed: #ffd9e3;
-  --surface-tint: #ffb690;
-  --surface-bright: #3b3937;
-  --primary-fixed-dim: #ffb690;
-  --on-primary-container: #ffdbca;
-  --secondary-fixed: #ffdf96;
-  --on-tertiary: #4e2633;
-  --secondary-container: #5a4400;
-  --surface-dim: #151312;
-  --on-secondary-fixed: #251a00;
-  --surface-container: #221f1e;
-  --tertiary: #eeb8c8;
-  --error-container: #93000a;
-  --on-tertiary-container: #ffd9e3;
-  --outline: #a78b7d;
-  --tertiary-fixed-dim: #eeb8c8;
-  --surface-container-lowest: #100e0d;
-  --on-error: #690005;
-  --on-secondary-fixed-variant: #5a4400;
+  /* Neutrals - VS Code Dark Theme */
+  --background: #1e1e1e;
+  --on-background: #cccccc;
+  --surface-1: #252526;
+  --surface-2: #2d2d30;
+  --surface-3: #333333;
+  --on-surface: #cccccc;
+  --on-surface-variant: #999999;
+  --outline: #3e3e42;
+
+  --primary: #007acc;
+  --on-primary: #ffffff;
+  --primary-container: var(--blue-900);
+  --on-primary-container: var(--blue-100);
+
+  /* Semantic Verdicts */
+  --accepted: #10b981;
+  --accepted-bg: #064e3b;
+  --wrong-answer: #ef4444;
+  --wrong-answer-bg: #7f1d1d;
+  --time-limit: #f59e0b;
+  --time-limit-bg: #78350f;
+  --compile-error: #8b5cf6;
+  --compile-error-bg: #4c1d95;
 }
 
 @theme inline {
-  --color-primary-fixed: var(--primary-fixed);
-  --color-on-secondary-container: var(--on-secondary-container);
-  --color-on-surface-variant: var(--on-surface-variant);
-  --color-on-background: var(--on-background);
-  --color-inverse-on-surface: var(--inverse-on-surface);
-  --color-primary: var(--primary);
-  --color-inverse-surface: var(--inverse-surface);
-  --color-surface-container-low: var(--surface-container-low);
-  --color-inverse-primary: var(--inverse-primary);
-  --color-tertiary-container: var(--tertiary-container);
-  --color-error: var(--error);
-  --color-surface-variant: var(--surface-variant);
-  --color-on-error-container: var(--on-error-container);
-  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
-  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
-  --color-on-primary: var(--on-primary);
-  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
-  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
   --color-background: var(--background);
-  --color-surface-container-high: var(--surface-container-high);
-  --color-on-secondary: var(--on-secondary);
-  --color-outline-variant: var(--outline-variant);
-  --color-surface-container-highest: var(--surface-container-highest);
-  --color-on-primary-fixed: var(--on-primary-fixed);
-  --color-primary-container: var(--primary-container);
-  --color-surface: var(--surface);
+  --color-on-background: var(--on-background);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-on-surface: var(--on-surface);
-  --color-secondary: var(--secondary);
-  --color-tertiary-fixed: var(--tertiary-fixed);
-  --color-surface-tint: var(--surface-tint);
-  --color-surface-bright: var(--surface-bright);
-  --color-primary-fixed-dim: var(--primary-fixed-dim);
-  --color-on-primary-container: var(--on-primary-container);
-  --color-secondary-fixed: var(--secondary-fixed);
-  --color-on-tertiary: var(--on-tertiary);
-  --color-secondary-container: var(--secondary-container);
-  --color-surface-dim: var(--surface-dim);
-  --color-on-secondary-fixed: var(--on-secondary-fixed);
-  --color-surface-container: var(--surface-container);
-  --color-tertiary: var(--tertiary);
-  --color-error-container: var(--error-container);
-  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-on-surface-variant: var(--on-surface-variant);
   --color-outline: var(--outline);
-  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
-  --color-surface-container-lowest: var(--surface-container-lowest);
-  --color-on-error: var(--on-error);
-  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
-
-  --spacing-gutter: var(--spacing-gutter);
-  --spacing-toolbar-height: var(--spacing-toolbar-height);
-  --spacing-unit: var(--spacing-unit);
-  --spacing-margin-lg: var(--spacing-margin-lg);
-  --spacing-margin-md: var(--spacing-margin-md);
-  --spacing-sidebar-width: var(--spacing-sidebar-width);
-  --spacing-margin-sm: var(--spacing-margin-sm);
-
-  --spacing-xs: var(--spacing-unit);
-  --spacing-sm: var(--spacing-margin-sm);
-  --spacing-md: var(--spacing-margin-md);
-  --spacing-lg: var(--spacing-margin-lg);
-  --spacing-xl: 64px;
-
-  /* Restore container/size scale overridden by spacing */
-  --size-xs: 20rem;
-  --size-sm: 24rem;
-  --size-md: 28rem;
-  --size-lg: 32rem;
-  --size-xl: 36rem;
-  --size-2xl: 42rem;
-  --size-3xl: 48rem;
-  --size-4xl: 56rem;
-  --size-5xl: 64rem;
-  --size-6xl: 72rem;
-  --size-7xl: 80rem;
-
-  --font-code-md: var(--font-code-md);
-  --font-headline-lg: var(--font-headline-lg);
-  --font-body-lg: var(--font-body-lg);
-  --font-body-sm: var(--font-body-sm);
-  --font-body-md: var(--font-body-md);
-  --font-code-sm: var(--font-code-sm);
-  --font-headline-md: var(--font-headline-md);
-  --font-headline-sm: var(--font-headline-sm);
-  --font-label-caps: var(--font-label-caps);
   
-  --shadow-brand-glow: 0 0 24px rgba(249, 115, 22, 0.25);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+
+  --color-accepted: var(--accepted);
+  --color-accepted-bg: var(--accepted-bg);
+  --color-wrong-answer: var(--wrong-answer);
+  --color-wrong-answer-bg: var(--wrong-answer-bg);
+  --color-time-limit: var(--time-limit);
+  --color-time-limit-bg: var(--time-limit-bg);
+  --color-compile-error: var(--compile-error);
+  --color-compile-error-bg: var(--compile-error-bg);
+
+  --color-blue-50: var(--blue-50);
+  --color-blue-100: var(--blue-100);
+  --color-blue-200: var(--blue-200);
+  --color-blue-300: var(--blue-300);
+  --color-blue-400: var(--blue-400);
+  --color-blue-500: var(--blue-500);
+  --color-blue-600: var(--blue-600);
+  --color-blue-700: var(--blue-700);
+  --color-blue-800: var(--blue-800);
+  --color-blue-900: var(--blue-900);
+  --color-blue-950: var(--blue-950);
+
+  /* Typography */
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-code: var(--font-code);
+
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 20px;
+  --text-lg--line-height: 28px;
+  --text-lg--letter-spacing: -0.01em;
+  --text-xl: 24px;
+  --text-xl--line-height: 32px;
+  --text-xl--letter-spacing: -0.02em;
+  --text-2xl: 32px;
+  --text-2xl--line-height: 40px;
+  --text-2xl--letter-spacing: -0.02em;
+  --text-3xl: 48px;
+  --text-3xl--line-height: 56px;
+  --text-3xl--letter-spacing: -0.03em;
+  --text-4xl: 64px;
+  --text-4xl--line-height: 72px;
+  --text-4xl--letter-spacing: -0.04em;
+
+  --shadow-brand-glow: 0 0 24px rgba(0, 122, 204, 0.25);
+  --shadow-elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-elevation-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 body {
   background: var(--background);
   color: var(--on-background);
   font-family: var(--font-body-md);
+  /* Smooth theme transition */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .ember-bg {
-  background: radial-gradient(circle at 50% -20%, rgba(249, 115, 22, 0.15) 0%, var(--background) 70%);
+  background: radial-gradient(circle at 50% -20%, rgba(0, 122, 204, 0.1) 0%, var(--background) 70%);
 }
 
 @media (max-width: 767px) {
@@ -247,21 +207,6 @@ body {
   animation: shimmer 1.5s infinite linear;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 2;
-  animation: clip 0.5s ease-in-out;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -270,25 +215,6 @@ body {
 
 .monaco-editor-hover {
   z-index: 9999 !important;
-}
-
-@keyframes clip {
-  0% {
-    clip-path: circle(0% at top right);
-  }
-  100% {
-    clip-path: circle(150% at top right);
-  }
-}
-
-.dark::view-transition-old(root) {
-  z-index: 2;
-  animation: clip 0.5s ease-in-out reverse;
-}
-
-.dark::view-transition-new(root) {
-  z-index: 1;
-  animation: none;
 }
 
 @keyframes shimmer {

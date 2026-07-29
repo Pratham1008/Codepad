@@ -37,3 +37,76 @@ export async function getProblemsAuthenticated(page = 0, size = 20, difficulty?:
     return { error: "Connection error" };
   }
 }
+
+const API_BASE = process.env.BACKEND_API_URL || "http://localhost:8080";
+import { getSession } from "@/lib/session";
+
+export async function createProblem(data: any) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/problems`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!res.ok) {
+      const txt = await res.text();
+      return { error: `Failed to create problem: ${txt || res.statusText}` };
+    }
+    return await res.json();
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function updateProblem(id: string, data: any) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/problems/${id}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!res.ok) {
+      const txt = await res.text();
+      return { error: `Failed to update problem: ${txt || res.statusText}` };
+    }
+    return await res.json();
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}
+
+export async function deleteProblem(id: string) {
+  const { token } = await getSession();
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${API_BASE}/api/problems/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    
+    if (!res.ok) {
+      const txt = await res.text();
+      return { error: `Failed to delete problem: ${txt || res.statusText}` };
+    }
+    return { success: true };
+  } catch (error) {
+    return { error: "Connection error" };
+  }
+}

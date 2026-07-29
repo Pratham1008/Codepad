@@ -131,14 +131,19 @@ public class SubmissionService {
         submission.setMaxMemoryKb(result.maxMemoryKb());
 
         if (result.results() != null) {
-            var results = result.results().stream().map(res -> SubmissionTestResult.builder()
-                    .submission(submission)
-                    .testCase(problem.getTestCases().stream().filter(t -> t.getTestCaseId().equals(res.testCaseId())).findFirst().orElseThrow())
-                    .verdict(res.verdict())
-                    .timeMs(res.timeMs())
-                    .memoryKb(res.memoryKb())
-                    .actualOutput(res.actualOutput())
-                    .build()).collect(Collectors.toList());
+            var testCaseById = problem.getTestCases().stream()
+                    .collect(Collectors.toMap(TestCase::getTestCaseId, tc -> tc));
+            var results = result.results().stream()
+                    .filter(res -> testCaseById.containsKey(res.testCaseId()))
+                    .map(res -> SubmissionTestResult.builder()
+                            .submission(submission)
+                            .testCase(testCaseById.get(res.testCaseId()))
+                            .verdict(res.verdict())
+                            .timeMs(res.timeMs())
+                            .memoryKb(res.memoryKb())
+                            .actualOutput(res.actualOutput())
+                            .build())
+                    .collect(Collectors.toList());
             submission.getTestResults().clear();
             submission.getTestResults().addAll(results);
         }

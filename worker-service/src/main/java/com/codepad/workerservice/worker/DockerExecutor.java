@@ -127,7 +127,8 @@ public class DockerExecutor {
         try {
             ProcessBuilder pb = new ProcessBuilder(
                     "docker", "run", "-d", "--network", "none", "--memory=256m", "--cpus=0.5", "--pids-limit=64",
-                    "--read-only", "--tmpfs", "/workspace:rw,size=128m,exec", "--security-opt", "no-new-privileges",
+                    "--read-only", "--tmpfs", "/workspace:rw,size=128m,exec", "--tmpfs", "/tmp:rw,size=64m,exec",
+                    "-e", "HOME=/tmp", "--security-opt", "no-new-privileges",
                     dockerImage, "sleep", "infinity"
             );
             Process p = pb.start();

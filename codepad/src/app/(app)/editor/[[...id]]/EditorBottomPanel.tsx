@@ -21,6 +21,7 @@ interface EditorBottomPanelProps {
   handleConsoleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   consoleRef: RefObject<HTMLDivElement | null>;
   output: { stdout?: string, stderr?: string, exitCode?: number, executionTimeMs?: number, memoryUsageKb?: number } | null;
+  setShowStdinModal?: (val: boolean) => void;
 }
 
 export function EditorBottomPanel({
@@ -40,7 +41,8 @@ export function EditorBottomPanel({
   setCurrentLine,
   handleConsoleKeyDown,
   consoleRef,
-  output
+  output,
+  setShowStdinModal
 }: EditorBottomPanelProps) {
   return (
     <div style={{ height: consoleHeight }} className="shrink-0 overflow-hidden bg-[#1e1e1e] flex flex-col">
@@ -72,14 +74,14 @@ export function EditorBottomPanel({
         {bottomTab === 'output' && !interactiveMode && (
           <div className="flex items-center gap-2 text-[11px] text-[#858585]">
             <span>Stdin:</span>
-            <input
-              type="text"
-              value={staticStdin}
-              onChange={(e) => setStaticStdin(e.target.value)}
-              placeholder="Enter input..."
-              className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-2 py-0.5 text-[12px] text-[#cccccc] outline-none focus:border-[#007acc] w-40"
+            <button
+              onClick={() => setShowStdinModal?.(true)}
               disabled={loading}
-            />
+              className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-0.5 text-[12px] text-[#cccccc] hover:bg-[#2d2d2d] transition-colors outline-none focus:border-[#007acc] disabled:opacity-50 flex items-center justify-between min-w-[120px]"
+            >
+              <span className="truncate max-w-[80px]">{staticStdin ? staticStdin.replace(/\n/g, '↵ ') : "Enter input..."}</span>
+              <span className="text-[#858585] ml-2">Edit</span>
+            </button>
           </div>
         )}
       </div>

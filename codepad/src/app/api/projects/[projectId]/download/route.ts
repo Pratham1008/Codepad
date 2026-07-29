@@ -14,7 +14,7 @@ export async function GET(
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/projects/${resolvedParams.projectId}/download`, {
+    const res = await fetch(`${API_BASE}/api/projects/${resolvedParams.projectId}/files/download`, {
       headers: { "Authorization": `Bearer ${token}` },
       cache: "no-store"
     });

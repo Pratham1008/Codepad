@@ -17,6 +17,11 @@ public class CppStrategy implements LanguageStrategy {
     }
 
     @Override
+    public String[] getInteractiveRunCommand() {
+        return new String[]{"/workspace/a.out"};
+    }
+
+    @Override
     public String[] getDiagnosticsCommand() {
         return new String[]{"sh", "-c", "g++ -fsyntax-only -std=c++17 -Wall -Wextra $(find /workspace -name '*.cpp' -o -name '*.c')"};
     }
