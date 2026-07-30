@@ -167,7 +167,6 @@ public class DiagnosticsService {
                 entries.add(new DiagnosticEntry(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), m.group(4), m.group(3).contains("error") ? "error" : "warning"));
             }
         } else if (language == Language.RUST) {
-            // rustc: error[E0308]: expected `i32`, found `&str` --> src/main.rs:3:5
             Pattern p = Pattern.compile("^(error|warning)(?:\\[E\\d+\\])?: (.*)$", Pattern.MULTILINE);
             Matcher m = p.matcher(stderr);
             Pattern lineP = Pattern.compile("--> (?:[^:]+):(\\d+):(\\d+)");
@@ -178,14 +177,12 @@ public class DiagnosticsService {
                 entries.add(new DiagnosticEntry(line, col, m.group(2), m.group(1)));
             }
         } else if (language == Language.KOTLIN) {
-            // kotlinc: file.kt:3:5: error: ...
             Pattern p = Pattern.compile("^[^:]+:(\\d+):(\\d+): (error|warning): (.*)$", Pattern.MULTILINE);
             Matcher m = p.matcher(stderr);
             while (m.find()) {
                 entries.add(new DiagnosticEntry(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), m.group(4), m.group(3)));
             }
         } else if (language == Language.JAVASCRIPT || language == Language.TYPESCRIPT) {
-            // Node.js / tsc errors: file.ts(3,5): error TS1005: ... OR SyntaxError style
             Pattern p = Pattern.compile("^[^(]+\\((\\d+),(\\d+)\\): (error|warning) \\w+: (.*)$", Pattern.MULTILINE);
             Matcher m = p.matcher(stderr);
             if (m.find()) {
@@ -193,7 +190,6 @@ public class DiagnosticsService {
                     entries.add(new DiagnosticEntry(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), m.group(4), m.group(3)));
                 } while (m.find());
             } else {
-                // Fallback: SyntaxError at line N
                 Pattern fallback = Pattern.compile("(?:SyntaxError|TypeError|ReferenceError): (.*)");
                 Matcher fm = fallback.matcher(stderr);
                 if (fm.find()) {
