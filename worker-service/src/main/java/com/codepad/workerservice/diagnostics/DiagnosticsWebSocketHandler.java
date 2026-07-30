@@ -79,9 +79,12 @@ public class DiagnosticsWebSocketHandler extends TextWebSocketHandler {
                 }
             } else {
                 // Fallback to fast in-memory / exec pipe for solve mode or missing activeFile
-                entries = session.language.name().equals("JAVA")
-                    ? InProcessJavaChecker.check(content)
-                    : parseExecOutput(session.language, session.execPipe.check(content));
+                if (session.language.name().equals("JAVA")) {
+                    entries = InProcessJavaChecker.check(content);
+                } else if (session.execPipe != null) {
+                    entries = parseExecOutput(session.language, session.execPipe.check(content));
+                }
+                // Languages without a resident checker (C, JS, TS, Rust, Kotlin) return empty diagnostics in solve mode
             }
 
             if (session.lastRequestId.get() != requestId) return; // a newer keystroke superseded this — drop it server-side too

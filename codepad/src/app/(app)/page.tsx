@@ -85,8 +85,13 @@ export default function DashboardPage() {
               className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2 text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none"
             >
               <option value="JAVA">Java</option>
-              <option value="CPP">C++</option>
               <option value="PYTHON">Python</option>
+              <option value="CPP">C++</option>
+              <option value="C">C</option>
+              <option value="JAVASCRIPT">JavaScript</option>
+              <option value="TYPESCRIPT">TypeScript</option>
+              <option value="RUST">Rust</option>
+              <option value="KOTLIN">Kotlin</option>
             </select>
           </div>
           <div className="flex gap-2 w-full md:w-auto">

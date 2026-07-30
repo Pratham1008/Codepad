@@ -80,9 +80,13 @@ export function useEditorState(
     if (type === 'file' && !cleanPath.includes('.')) {
       const lang = initialProject?.language;
       if (lang === 'JAVA') cleanPath += '.java';
-      else if (lang === 'CPP' || lang === 'C') cleanPath += '.cpp';
+      else if (lang === 'CPP') cleanPath += '.cpp';
+      else if (lang === 'C') cleanPath += '.c';
       else if (lang === 'PYTHON') cleanPath += '.py';
       else if (lang === 'JAVASCRIPT') cleanPath += '.js';
+      else if (lang === 'TYPESCRIPT') cleanPath += '.ts';
+      else if (lang === 'RUST') cleanPath += '.rs';
+      else if (lang === 'KOTLIN') cleanPath += '.kt';
     }
 
     await createFile(projectId, cleanPath, type);

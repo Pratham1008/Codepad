@@ -42,7 +42,7 @@ services:
       - WORKER_URL=http://${WORKER_EC2_PRIVATE_IP:-worker-service}:8081
       - WORKER_WS_URL=ws://${WORKER_EC2_PRIVATE_IP:-worker-service}:8081
       - INTERNAL_SECRET=${INTERNAL_SECRET}
-      - APP_WEBAUTHN_ALLOWED-ORIGINS=${FRONTEND_URL:-https://code.prathameshcorporations.site}
+      - APP_WEBAUTHN_ALLOWED_ORIGINS=${FRONTEND_URL:-https://code.prathameshcorporations.site}
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - FIREBASE_SERVICE_ACCOUNT_BASE64=${FIREBASE_SERVICE_ACCOUNT_BASE64}

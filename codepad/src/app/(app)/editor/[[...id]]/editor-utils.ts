@@ -11,10 +11,13 @@ export const SUPPORTED_LANGUAGES = [
 
 export function getLangFromPath(path: string) {
   if (path.endsWith('.java')) return 'java';
-  if (path.endsWith('.cpp') || path.endsWith('.c') || path.endsWith('.h')) return 'cpp';
+  if (path.endsWith('.cpp') || path.endsWith('.h')) return 'cpp';
+  if (path.endsWith('.c')) return 'c';
   if (path.endsWith('.py')) return 'python';
   if (path.endsWith('.js') || path.endsWith('.jsx')) return 'javascript';
   if (path.endsWith('.ts') || path.endsWith('.tsx')) return 'typescript';
+  if (path.endsWith('.rs')) return 'rust';
+  if (path.endsWith('.kt') || path.endsWith('.kts')) return 'kotlin';
   if (path.endsWith('.json')) return 'json';
   if (path.endsWith('.xml')) return 'xml';
   if (path.endsWith('.md')) return 'markdown';

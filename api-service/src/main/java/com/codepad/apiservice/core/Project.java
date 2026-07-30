@@ -26,7 +26,7 @@ public class Project {
     private String name;
 
     @Column(nullable = false, length = 20)
-    private String language; // JAVA | PYTHON | CPP
+    private String language; // JAVA | PYTHON | CPP | C | JAVASCRIPT | TYPESCRIPT | RUST | KOTLIN
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

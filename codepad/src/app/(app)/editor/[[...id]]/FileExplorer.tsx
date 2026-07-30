@@ -24,6 +24,10 @@ function getFileIcon(name: string) {
   if (name.endsWith('.java')) return <FileCode size={14} className="text-[#cc7832] shrink-0" />;
   if (name.endsWith('.cpp') || name.endsWith('.c') || name.endsWith('.h')) return <FileCode size={14} className="text-[#519aba] shrink-0" />;
   if (name.endsWith('.py')) return <FileCode size={14} className="text-[#4584b6] shrink-0" />;
+  if (name.endsWith('.js') || name.endsWith('.jsx')) return <FileCode size={14} className="text-yellow-400 shrink-0" />;
+  if (name.endsWith('.ts') || name.endsWith('.tsx')) return <FileCode size={14} className="text-blue-400 shrink-0" />;
+  if (name.endsWith('.rs')) return <FileCode size={14} className="text-orange-500 shrink-0" />;
+  if (name.endsWith('.kt') || name.endsWith('.kts')) return <FileCode size={14} className="text-purple-400 shrink-0" />;
   if (name.endsWith('.json')) return <FileCode size={14} className="text-[#cbcb41] shrink-0" />;
   if (name.endsWith('.xml') || name.endsWith('.html')) return <FileCode size={14} className="text-[#e37933] shrink-0" />;
   if (name.endsWith('.md') || name.endsWith('.txt')) return <FileText size={14} className="text-[#858585] shrink-0" />;
