@@ -5,6 +5,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Coding Challenges - CodePad",
   description: "Master algorithmic problem solving with our curated collection of coding challenges.",
+  alternates: {
+    canonical: "/problems",
+  },
 };
 
 export default async function PublicProblemsPage() {

@@ -23,11 +23,22 @@ public class DockerExecutor {
     }
     
     public void overwriteFileInContainer(String containerId, String path, String content) throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder("docker", "exec", "-i", containerId, "sh", "-c", "cat > /workspace/" + path);
+        // SECURITY (CWE-78): `path` is attacker-controlled (activeFile from the diagnostics
+        // request). Never interpolate it into a shell string ("sh -c \"cat > /workspace/\" + path")
+        // -- that lets an attacker break out with ';', '|', '$()', backticks, '>', etc. Validate
+        // it the same way local filesystem paths are validated, then pass it as a single argv
+        // element (no shell involved), so metacharacters are inert.
+        com.codepad.workerservice.file.PathValidator.validatePath(path);
+        java.nio.file.Path normalized = java.nio.file.Paths.get("/workspace").resolve(path).normalize();
+        if (!normalized.startsWith("/workspace")) {
+            throw new IllegalArgumentException("Path traversal attempt detected");
+        }
+        ProcessBuilder pb = new ProcessBuilder("docker", "exec", "-i", containerId, "tee", normalized.toString());
         Process p = pb.start();
         try (OutputStream os = p.getOutputStream()) {
             os.write(content.getBytes(StandardCharsets.UTF_8));
         }
+        p.getInputStream().readAllBytes(); // drain tee's stdout echo so the process can exit cleanly
         p.waitFor();
     }
 

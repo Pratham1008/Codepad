@@ -125,7 +125,7 @@ export function EditorBottomPanel({
                     <span className="text-[#007acc] mr-2">{">"}</span>
                     <input ref={consoleInputRef} type="text" value={currentLine}
                       onChange={(e) => setCurrentLine(e.target.value)} onKeyDown={handleConsoleKeyDown}
-                      className="flex-1 bg-transparent outline-none border-none text-[#d4d4d4] font-mono text-[13px] placeholder-white/20"
+                      className="flex-1 bg-transparent outline-none border border-transparent text-[#d4d4d4] font-mono text-[13px] placeholder-white/20 focus-visible:ring-2 focus-visible:ring-[#007acc] focus-visible:ring-offset-1 focus-visible:ring-offset-[#1e1e1e]"
                       placeholder="Type input and press Enter..." autoFocus />
                   </div>
                 )}
@@ -183,7 +183,7 @@ export function EditorBottomPanel({
                   <span className="text-[#007acc] mr-2">{"$"}</span>
                   <input ref={consoleInputRef} type="text" value={currentLine}
                     onChange={(e) => setCurrentLine(e.target.value)} onKeyDown={handleConsoleKeyDown}
-                    className="flex-1 bg-transparent outline-none border-none text-[#d4d4d4] font-mono text-[13px] placeholder-white/20"
+                    className="flex-1 bg-transparent outline-none border border-transparent text-[#d4d4d4] font-mono text-[13px] placeholder-white/20 focus-visible:ring-2 focus-visible:ring-[#007acc] focus-visible:ring-offset-1 focus-visible:ring-offset-[#1e1e1e]"
                     placeholder="Type input..." autoFocus />
                 </div>
               )}

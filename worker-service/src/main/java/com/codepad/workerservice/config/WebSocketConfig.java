@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
                                             org.springframework.http.server.ServerHttpResponse response,
                                             WebSocketHandler wsHandler, java.util.Map<String, Object> attributes) {
                 String secret = request.getHeaders().getFirst("X-Internal-Secret");
-                return internalSecret.equals(secret);
+                return com.codepad.workerservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret);
             }
             @Override public void afterHandshake(org.springframework.http.server.ServerHttpRequest r, org.springframework.http.server.ServerHttpResponse s, WebSocketHandler h, Exception e) {}
         };

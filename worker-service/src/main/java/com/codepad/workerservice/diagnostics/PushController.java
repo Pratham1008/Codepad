@@ -27,7 +27,7 @@ public class PushController {
 
     @PostMapping
     public ResponseEntity<Void> pushMessage(@RequestBody Map<String, Object> req, @RequestHeader("X-Internal-Secret") String secret) {
-        if (!internalSecret.equals(secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!com.codepad.workerservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         
         String userId = (String) req.get("userId");
         String problemId = (String) req.get("problemId");

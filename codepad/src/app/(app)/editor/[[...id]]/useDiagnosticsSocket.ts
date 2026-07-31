@@ -39,8 +39,12 @@ export function useDiagnosticsSocket(
           }
       }
 
+      // SECURITY (CWE-598): pass the token via Sec-WebSocket-Protocol instead of
+      // a query-string parameter. Query strings land in server access logs, browser
+      // history, and proxy logs — a leaked ID token is a full session hijack.
       const ws = new WebSocket(
-        `${wsBase}?sessionKey=${sessionKey}&language=${language}&token=${token}`
+        `${wsBase}?sessionKey=${sessionKey}&language=${language}`,
+        [token]
       );
 
       ws.onopen = () => { retryRef.current = 0; setStatus("connected"); };

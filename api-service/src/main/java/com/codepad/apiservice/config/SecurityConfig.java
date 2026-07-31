@@ -35,13 +35,12 @@ public class SecurityConfig {
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/swagger-ui.html").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/api-docs/**").permitAll()
-                .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**")
+                    .access((authentication, ctx) -> new org.springframework.security.authorization.AuthorizationDecision(!java.util.Arrays.asList(ctx.getRequest().getEnvironment().getActiveProfiles()).contains("prod")))
+                .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
+                .requestMatchers("/actuator/**").hasRole("ADMIN") // Protects /actuator/prometheus from exposing internal metrics (CWE-200)
                 .requestMatchers("/api/run/internal/**").permitAll()
                 .requestMatchers("/api/projects/diagnostics/stream").permitAll() // auth is enforced by WsAuthInterceptor instead
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/problems").permitAll()

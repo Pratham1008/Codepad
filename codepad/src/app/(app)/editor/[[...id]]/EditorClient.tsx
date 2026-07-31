@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Files, FileCode, Loader2 } from "lucide-react";
@@ -330,7 +330,12 @@ export function EditorClient({
   };
 
   const showExplorer = activityTab === 'explorer';
-  const consoleText = consoleLines.join("\n");
+  const consoleText = useMemo(() => consoleLines.join("\n"), [consoleLines]);
+
+  const handleMobileSelectFile = useCallback((path: string) => {
+    handleSelectFile(path);
+    setMobilePanel("editor");
+  }, [handleSelectFile]);
 
   return (
     <div ref={containerRef} className="flex flex-col h-full bg-[#1e1e1e]" style={{ overflow: "hidden" }}>
@@ -386,7 +391,7 @@ export function EditorClient({
                 <FileExplorer
                   tree={tree}
                   activeFilePath={activeFilePath}
-                  onSelectFile={(path) => { handleSelectFile(path); setMobilePanel("editor"); }}
+                  onSelectFile={handleMobileSelectFile}
                   onCreateFile={handleCreateFile}
                   onDeleteFile={handleDeleteFile}
                   onRenameFile={handleRenameFile}

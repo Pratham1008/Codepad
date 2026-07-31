@@ -52,6 +52,7 @@ public class RunCodeController {
 
         try {
             emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().name("session").data(java.util.Map.of("sessionId", sessionId)));
+            emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().name("phase").data(java.util.Map.of("phase", "queued")));
         } catch (java.io.IOException ignored) {}
         return emitter;
     }
@@ -65,7 +66,7 @@ public class RunCodeController {
 
     @PostMapping("/api/run/internal/{sessionId}/output")
     public ResponseEntity<Void> receiveOutput(@PathVariable String sessionId, @RequestHeader("X-Internal-Secret") String secret, @RequestBody java.util.Map<String, String> body) {
-        if (!internalSecret.equals(secret)) return ResponseEntity.status(401).build();
+        if (!com.codepad.apiservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) return ResponseEntity.status(401).build();
         playgroundRegistry.sendOutput(sessionId, body.get("chunk"), body.get("type"));
         return ResponseEntity.ok().build();
     }
@@ -75,7 +76,7 @@ public class RunCodeController {
             @PathVariable String sessionId, @RequestHeader("X-Internal-Secret") String secret) {
         var deferred = new org.springframework.web.context.request.async.DeferredResult<ResponseEntity<java.util.Map<String, String>>>(20_000L,
                 ResponseEntity.noContent().build());
-        if (!internalSecret.equals(secret)) {
+        if (!com.codepad.apiservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) {
             deferred.setResult(ResponseEntity.status(401).build());
             return deferred;
         }

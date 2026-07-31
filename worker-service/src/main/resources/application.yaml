@@ -14,7 +14,7 @@ app:
   monolith:
     url: ${API_SERVICE_URL:http://localhost:8080}
   internal:
-    secret: ${INTERNAL_SECRET:change-me-in-production}
+    secret: ${INTERNAL_SECRET}
   judge:
     pool-size: ${POOL_SIZE:5}
   projects:

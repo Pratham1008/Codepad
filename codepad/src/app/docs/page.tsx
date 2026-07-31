@@ -15,6 +15,9 @@ async function NavWithCookies() {
 export const metadata = {
   title: "Documentation | CodePad",
   description: "Learn how to use CodePad, from basic setup to advanced multi-file projects.",
+  alternates: {
+    canonical: "/docs",
+  },
 };
 
 const SECTIONS = [

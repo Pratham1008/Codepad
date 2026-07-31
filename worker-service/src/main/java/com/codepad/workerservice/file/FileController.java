@@ -17,7 +17,7 @@ public class FileController {
     private String internalSecret;
 
     private void checkSecret(String secret) {
-        if (!internalSecret.equals(secret)) throw new RuntimeException("Unauthorized");
+        if (!com.codepad.workerservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) throw new RuntimeException("Unauthorized");
     }
 
     @PostMapping("/init")

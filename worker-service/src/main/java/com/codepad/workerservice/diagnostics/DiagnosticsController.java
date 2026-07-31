@@ -19,7 +19,7 @@ public class DiagnosticsController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> check(@PathVariable UUID projectId, @RequestBody Map<String, String> req, @RequestHeader("X-Internal-Secret") String secret) {
-        if (!internalSecret.equals(secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!com.codepad.workerservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         
         Map<String, List<DiagnosticEntry>> res = diagnosticsService.getDiagnostics(projectId, req.get("language"), req.get("activeFile"), req.get("content"));
         

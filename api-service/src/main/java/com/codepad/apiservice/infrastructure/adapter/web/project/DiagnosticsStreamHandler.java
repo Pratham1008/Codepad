@@ -9,6 +9,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.net.URI;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @RequiredArgsConstructor
@@ -19,8 +21,14 @@ public class DiagnosticsStreamHandler extends TextWebSocketHandler {
     @Value("${app.internal.secret}")
     private String internalSecret;
 
+    private static final int MAX_MESSAGES_PER_WINDOW = 20;
+    private static final long WINDOW_MILLIS = 1000;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession browserSession) throws Exception {
+        browserSession.getAttributes().put("rl_windowStart", new AtomicLong(System.currentTimeMillis()));
+        browserSession.getAttributes().put("rl_count", new AtomicInteger(0));
+
         UUID userId = (UUID) browserSession.getAttributes().get("userId");
         String sessionKey = qp(browserSession, "sessionKey");
         String language = qp(browserSession, "language");
@@ -41,7 +49,7 @@ public class DiagnosticsStreamHandler extends TextWebSocketHandler {
             sessionKey = "solve:" + userId.toString() + ":" + problemIdStr;
         }
         if (language == null || language.trim().isEmpty()) {
-            language = "JAVA"; // Fallback language if not provided
+            language = "JAVA";
         }
 
         String upstreamUrl = workerWsUrl + "/internal/projects/diagnostics/stream"
@@ -65,8 +73,23 @@ public class DiagnosticsStreamHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession browserSession, TextMessage message) throws Exception {
+        if (isRateLimited(browserSession)) return;
+
         WebSocketSession workerSession = (WebSocketSession) browserSession.getAttributes().get("workerSession");
         if (workerSession != null && workerSession.isOpen()) workerSession.sendMessage(message);
+    }
+
+    private boolean isRateLimited(WebSocketSession session) {
+        AtomicLong windowStart = (AtomicLong) session.getAttributes().get("rl_windowStart");
+        AtomicInteger count = (AtomicInteger) session.getAttributes().get("rl_count");
+        if (windowStart == null || count == null) return false;
+
+        long now = System.currentTimeMillis();
+        if (now - windowStart.get() > WINDOW_MILLIS) {
+            windowStart.set(now);
+            count.set(0);
+        }
+        return count.incrementAndGet() > MAX_MESSAGES_PER_WINDOW;
     }
 
     @Override

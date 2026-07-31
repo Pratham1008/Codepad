@@ -19,9 +19,7 @@ export async function fetchAuthenticated(path: string, options: RequestInit = {}
 // Next 16 explicitly cached function
 export async function fetchPublicCached(path: string, tag: string) {
   try {
-    return await fetch(`${getApiBase()}${path}`, {
-      next: { tags: [tag] }
-    });
+    return await fetch(`${getApiBase()}${path}`);
   } catch (e) {
     console.warn(`[fetchPublicCached] Backend unavailable for ${path}`);
     return new Response(JSON.stringify({ content: [] }), { status: 503 });

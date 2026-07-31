@@ -68,9 +68,9 @@ export function ProblemsClient({ initialProblems }: { initialProblems: any[] }) 
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty?.toLowerCase()) {
-      case 'easy': return 'text-green-400 bg-green-400/10 border-green-400/20';
-      case 'medium': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
-      case 'hard': return 'text-red-400 bg-red-400/10 border-red-400/20';
+      case 'easy': return 'text-green-300 bg-green-950 border-green-800';
+      case 'medium': return 'text-yellow-300 bg-yellow-950 border-yellow-800';
+      case 'hard': return 'text-red-300 bg-red-950 border-red-800';
       default: return 'text-on-surface-variant bg-surface-2 border-outline';
     }
   };

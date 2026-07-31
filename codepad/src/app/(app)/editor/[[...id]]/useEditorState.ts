@@ -1,6 +1,17 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { getProjectTree, readFile, writeFile, createFile, deleteFile, renameFile } from "../actions";
 import { FileNode } from "./FileExplorer";
+
+function useEvent<T extends (...args: any[]) => any>(handler: T): T {
+  const handlerRef = useRef(handler);
+  useEffect(() => {
+    handlerRef.current = handler;
+  });
+  return useCallback((...args: Parameters<T>): ReturnType<T> => {
+    const fn = handlerRef.current;
+    return fn(...args);
+  }, []) as T;
+}
 
 export function useEditorState(
   projectId: string | null,
@@ -17,7 +28,7 @@ export function useEditorState(
   const [activityTab, setActivityTab] = useState<string>('explorer');
   const liveDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const refreshTree = async () => {
+  const refreshTree = useEvent(async () => {
     if (!projectId) return null;
     const newTree = await getProjectTree(projectId);
     if (newTree && !newTree.error) {
@@ -25,9 +36,9 @@ export function useEditorState(
       return newTree;
     }
     return null;
-  };
+  });
 
-  const openFile = async (path: string) => {
+  const openFile = useEvent(async (path: string) => {
     setOpenTabs(prev => prev.includes(path) ? prev : [...prev, path]);
     setActiveFilePath(path);
 
@@ -40,9 +51,9 @@ export function useEditorState(
     } else {
       setCode(fileContents[path] || "");
     }
-  };
+  });
 
-  const closeTab = (path: string, e?: React.MouseEvent) => {
+  const closeTab = useEvent((path: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
     setOpenTabs(prev => {
       const next = prev.filter(p => p !== path);
@@ -54,9 +65,9 @@ export function useEditorState(
       return next;
     });
     setDirtyFiles(prev => { const n = new Set(prev); n.delete(path); return n; });
-  };
+  });
 
-  const handleSelectFile = async (path: string) => {
+  const handleSelectFile = useEvent(async (path: string) => {
     if (activeFilePath && projectId && dirtyFiles.has(activeFilePath)) {
       const cleanPath = activeFilePath.startsWith('/') ? activeFilePath.slice(1) : activeFilePath;
       try {
@@ -70,9 +81,9 @@ export function useEditorState(
       setFileContents(prev => ({ ...prev, [activeFilePath!]: code }));
     }
     await openFile(path);
-  };
+  });
 
-  const handleCreateFile = async (path: string, type: string) => {
+  const handleCreateFile = useEvent(async (path: string, type: string) => {
     if (!projectId) return;
     
     let cleanPath = path.startsWith('/') ? path.slice(1) : path;
@@ -106,18 +117,18 @@ export function useEditorState(
     if (type === 'file') {
       await openFile(cleanPath);
     }
-  };
+  });
 
-  const handleDeleteFile = async (path: string) => {
+  const handleDeleteFile = useEvent(async (path: string) => {
     if (!projectId) return;
     await deleteFile(projectId, path);
     await refreshTree();
     if (openTabs.includes(path)) {
       closeTab(path);
     }
-  };
+  });
 
-  const handleRenameFile = async (oldPath: string, newPath: string) => {
+  const handleRenameFile = useEvent(async (oldPath: string, newPath: string) => {
     if (!projectId) return;
     await renameFile(projectId, oldPath, newPath);
     await refreshTree();
@@ -125,9 +136,9 @@ export function useEditorState(
       setActiveFilePath(newPath);
     }
     setOpenTabs(prev => prev.map(p => p === oldPath ? newPath : p));
-  };
+  });
 
-  const onCodeChange = (val: string | undefined) => {
+  const onCodeChange = useEvent((val: string | undefined) => {
     const v = val || "";
     setCode(v);
     if (activeFilePath) {
@@ -144,7 +155,7 @@ export function useEditorState(
          checkLive(v, lang, cleanFile);
       }, 1000);
     }
-  };
+  });
 
   // Close menus when clicking outside
   useEffect(() => {

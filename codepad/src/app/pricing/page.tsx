@@ -15,6 +15,9 @@ async function NavWithCookies() {
 export const metadata = {
   title: "Pricing | CodePad",
   description: "Flexible pricing for developers. Choose the plan that fits your needs.",
+  alternates: {
+    canonical: "/pricing",
+  },
 };
 
 export default function PricingPage() {

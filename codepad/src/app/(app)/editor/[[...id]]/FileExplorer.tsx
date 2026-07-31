@@ -34,7 +34,7 @@ function getFileIcon(name: string) {
   return <File size={14} className="text-[#858585] shrink-0" />;
 }
 
-export function FileExplorer({
+export const FileExplorer = React.memo(function FileExplorer({
   tree,
   activeFilePath,
   onSelectFile,
@@ -88,7 +88,7 @@ export function FileExplorer({
               <input type="text" autoFocus value={newItemName} onChange={(e) => setNewItemName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") handleCreateSubmit(); if (e.key === "Escape") setCreatingPath(null); }}
                 onBlur={() => { if (newItemName.trim()) handleCreateSubmit(); else setCreatingPath(null); }}
-                className="bg-[#3c3c3c] border border-[#007acc] text-[#cccccc] text-[13px] px-1 py-0 rounded w-full outline-none" />
+                className="bg-[#3c3c3c] border border-[#007acc] text-[#cccccc] text-[13px] px-1 py-0 rounded w-full outline-none focus-visible:ring-2 focus-visible:ring-[#007acc] focus-visible:ring-offset-1 focus-visible:ring-offset-[#1e1e1e]" />
             </div>
           )}
         </div>
@@ -98,13 +98,34 @@ export function FileExplorer({
     return (
       <div key={displayPath}>
         <div 
-          className={`group flex items-center justify-between cursor-pointer select-none text-[13px] transition-colors
+          role="treeitem"
+          tabIndex={isActive ? 0 : -1}
+          aria-selected={isActive}
+          aria-expanded={isDir ? isExpanded : undefined}
+          className={`group flex items-center justify-between cursor-pointer select-none text-[13px] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#007acc] focus-visible:ring-inset
             ${isActive ? "bg-[#094771] text-white" : "text-[#cccccc] hover:bg-[#2a2d2e]"}
           `}
           style={{ paddingLeft: `${level * 16 + 8}px`, paddingRight: '8px', paddingTop: '2px', paddingBottom: '2px' }}
           onClick={() => {
             if (isDir) toggleExpand(displayPath);
             else onSelectFile(displayPath);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              if (isDir) toggleExpand(displayPath);
+              else onSelectFile(displayPath);
+            } else if (e.key === 'ArrowRight' && isDir && !isExpanded) {
+              e.preventDefault();
+              const next = new Set(expanded);
+              next.add(displayPath);
+              setExpanded(next);
+            } else if (e.key === 'ArrowLeft' && isDir && isExpanded) {
+              e.preventDefault();
+              const next = new Set(expanded);
+              next.delete(displayPath);
+              setExpanded(next);
+            }
           }}
         >
           <div className="flex items-center gap-1 overflow-hidden min-w-0">
@@ -164,7 +185,7 @@ export function FileExplorer({
                 <input type="text" autoFocus value={newItemName} onChange={(e) => setNewItemName(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") handleCreateSubmit(); if (e.key === "Escape") setCreatingPath(null); }}
                   onBlur={() => { if (newItemName.trim()) handleCreateSubmit(); else setCreatingPath(null); }}
-                  className="bg-[#3c3c3c] border border-[#007acc] text-[#cccccc] text-[13px] px-1 py-0 rounded w-full outline-none" />
+                  className="bg-[#3c3c3c] border border-[#007acc] text-[#cccccc] text-[13px] px-1 py-0 rounded w-full outline-none focus-visible:ring-2 focus-visible:ring-[#007acc] focus-visible:ring-offset-1 focus-visible:ring-offset-[#1e1e1e]" />
               </div>
             )}
           </div>
@@ -197,9 +218,9 @@ export function FileExplorer({
       </div>
       
       {/* File tree */}
-      <div className="flex-1 overflow-y-auto py-1">
+      <div className="flex-1 overflow-y-auto py-1" role="tree" aria-label="Project files">
         {renderNode(tree)}
       </div>
     </div>
   );
-}
+});

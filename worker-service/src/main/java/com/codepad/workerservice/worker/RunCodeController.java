@@ -23,14 +23,14 @@ public class RunCodeController {
 
     @PostMapping
     public ResponseEntity<RunCodeResponse> runCode(@RequestBody RunCodeRequest request, @RequestHeader("X-Internal-Secret") String secret) {
-        if (!internalSecret.equals(secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!com.codepad.workerservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         RunCodeResponse response = runCodeService.runCode(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/stream")
     public ResponseEntity<Void> runStream(@RequestHeader("X-Internal-Secret") String secret, @RequestBody java.util.Map<String, String> body) {
-        if (!internalSecret.equals(secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!com.codepad.workerservice.common.SecurityUtils.constantTimeEquals(internalSecret, secret)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         RunCodeRequest req = new RunCodeRequest(UUID.fromString(body.get("projectId")), body.get("language"), null);
         String sessionId = body.get("sessionId");
         runCodeService.runCodeStreaming(req, sessionId);
